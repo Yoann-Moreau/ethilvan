@@ -1,0 +1,1 @@
+[Fri Oct 21 14:59:54.389500 2022] [php:notice] [pid 36332:tid 1952] [client 127.0.0.1:11741] [error] Uncaught PHP Exception Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException: "No route found for "GET http://ethilvan.local/"" at C:\\dev\\ethilvan\\ev_new\\vendor\\symfony\\http-kernel\\EventListener\\RouterListener.php line 128\r\n
