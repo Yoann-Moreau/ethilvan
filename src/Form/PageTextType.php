@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
-class TextType extends AbstractType {
+class PageTextType extends AbstractType {
 
 	public function buildForm(FormBuilderInterface $builder, array $options): void {
 		$builder

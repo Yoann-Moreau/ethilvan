@@ -17,11 +17,9 @@ class IndexController extends AbstractController {
 
 		$index_texts = $text_repository->findBy(['page' => 'index'], ['text_order' => 'ASC']);
 
-		return $this->render('index.html.twig',
-		                     [
-				                     'texts' => $index_texts,
-		                     ]
-		);
+		return $this->render('index.html.twig', [
+				'texts' => $index_texts,
+		]);
 	}
 
 }

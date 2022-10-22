@@ -5,7 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Text;
-use App\Form\TextType;
+use App\Form\PageTextType;
 use App\Repository\TextRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ class TextController extends AbstractController {
 	#[Route('/new', name: 'app_text_new', methods: ['GET', 'POST'])]
 	public function new(Request $request, TextRepository $textRepository): Response {
 		$text = new Text();
-		$form = $this->createForm(TextType::class, $text);
+		$form = $this->createForm(PageTextType::class, $text);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
@@ -53,7 +53,7 @@ class TextController extends AbstractController {
 
 	#[Route('/{id}/edit', name: 'app_text_edit', methods: ['GET', 'POST'])]
 	public function edit(Request $request, Text $text, TextRepository $textRepository): Response {
-		$form = $this->createForm(TextType::class, $text);
+		$form = $this->createForm(PageTextType::class, $text);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
