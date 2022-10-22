@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Text index{% endblock %}
+
+{% block body %}
+	<h1>Text index</h1>
+
+	<table class="table">
+		<thead>
+		<tr>
+			<th>Id</th>
+			<th>Page</th>
+			<th>Title</th>
+			<th>Text</th>
+			<th>Text_order</th>
+			<th>actions</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for text in texts %}
+			<tr>
+				<td>{{ text.id }}</td>
+				<td>{{ text.page }}</td>
+				<td>{{ text.title }}</td>
+				<td>{{ text.text }}</td>
+				<td>{{ text.textOrder }}</td>
+				<td>
+					<a href="{{ path('app_text_show', {'id': text.id}) }}">show</a>
+					<a href="{{ path('app_text_edit', {'id': text.id}) }}">edit</a>
+				</td>
+			</tr>
+		{% else %}
+			<tr>
+				<td colspan="6">no records found</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_text_new') }}">Create new</a>
+{% endblock %}
