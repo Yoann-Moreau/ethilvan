@@ -12,9 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
-class RegistrationController extends AbstractController {
+class IdentificationController extends AbstractController {
 
 	#[Route('/registration', name: 'app_registration')]
 	public function registration(Request $request, UserPasswordHasherInterface $password_hasher,
@@ -53,9 +54,24 @@ class RegistrationController extends AbstractController {
 			}
 		}
 
-		return $this->render('registration/registration.html.twig', [
+		return $this->render('identification/registration.html.twig', [
 				'errors' => $errors,
 				'form'   => $form->createView(),
+		]);
+	}
+
+
+	#[Route('/login', name: 'app_login')]
+	public function login(AuthenticationUtils $authentication_utils): Response {
+		// get the login error if there is one
+		$error = $authentication_utils->getLastAuthenticationError();
+
+		// last username entered by the user
+		$last_username = $authentication_utils->getLastUsername();
+
+		return $this->render('identification/login.html.twig', [
+				'last_username' => $last_username,
+				'error'         => $error,
 		]);
 	}
 
