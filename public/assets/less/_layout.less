@@ -12,6 +12,7 @@ body {
 	position: fixed;
 	width: 100%;
 	height: 8rem;
+	padding-left: 15rem;
 	background: linear-gradient(180deg, @bg-main, fade(@bg-main, 50%));
 
 	nav {
@@ -21,13 +22,12 @@ body {
 
 		.img-container {
 			height: 80%;
-			margin-left: 2em;
-			margin-right: 1em;
+			margin-right: 2.5em;
 		}
 
 		a {
 			color: @tc-main;
-			margin-right: 1em;
+			margin-right: 2.5em;
 			text-transform: uppercase;
 
 			&:hover {
@@ -50,6 +50,19 @@ body {
 
 	p {
 		width: 50%;
+	}
+}
+
+.join {
+	display: flex;
+	height: 60rem;
+
+	.container {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+		padding: 0 6rem;
 	}
 }
 
