@@ -4,11 +4,25 @@
 
 {% block body %}
 
-	<h1>Ethil Van</h1>
+	<section id="introduction" class="introduction">
+		<h1>{{ texts[0].title }}</h1>
+		<p>{{ texts[0].text|nl2br }}</p>
+		<a class="btn">Voir nos jeux</a>
+	</section>
 
-	{% for text in texts %}
-		<h2>{{ text.title }}</h2>
-		<p>{{ text.text }}</p>
-	{% endfor %}
+	<section id="join" class="join">
+		<h2>{{ texts[1].title }}</h2>
+		<p>{{ texts[1].text|nl2br }}</p>
+	</section>
+
+	<section id="games" class="games">
+		<h2>{{ texts[2].title }}</h2>
+		<p>{{ texts[2].text|nl2br }}</p>
+	</section>
+
+	<section id="us" class="us">
+		<h2>{{ texts[3].title }}</h2>
+		<p>{{ texts[3].text|nl2br }}</p>
+	</section>
 
 {% endblock %}

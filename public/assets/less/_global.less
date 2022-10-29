@@ -5,7 +5,7 @@ html {
 }
 
 body {
-	font-size: 1.6rem;
+	font-size: 2rem;
 	font-family: Asap, sans-serif;
 }
 
@@ -14,10 +14,11 @@ h1, h2, h3, h4, h5, h6 {
 	color: @tc-title;
 	font-weight: 900;
 	margin-bottom: 0.5em;
+	text-transform: uppercase;
 }
 
 h1 {
-	font-size: 5rem;
+	font-size: 6rem;
 }
 
 a {
@@ -30,7 +31,14 @@ a {
 
 button,
 .btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40rem;
+	height: 6rem;
+	margin-top: 2em;
 	background-color: @bg-button;
+	color: @tc-main;
 }
 
 img {
