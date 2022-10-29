@@ -1,0 +1,57 @@
+@import "_var.less";
+
+body {
+	background-color: @bg-main;
+	color: @tc-main;
+}
+
+// ==============================================
+// Header
+// ==============================================
+.main-header {
+	height: 8rem;
+	background: linear-gradient(180deg, @bg-main, fade(@bg-main, 50%));
+
+	nav {
+		display: flex;
+		align-items: center;
+		height: 100%;
+
+		.img-container {
+			height: 80%;
+			margin-left: 2em;
+			margin-right: 1em;
+		}
+
+		a {
+			color: @tc-main;
+			margin-right: 1em;
+
+			&:hover {
+				color: @tc-link;
+			}
+		}
+	}
+}
+
+// ==============================================
+// Footer
+// ==============================================
+.main-footer {
+	height: 8rem;
+	background-color: @bg-main;
+
+	nav {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
+
+		a {
+
+			&:not(:last-child) {
+				margin-right: 1em;
+			}
+		}
+	}
+}

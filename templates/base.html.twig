@@ -7,6 +7,7 @@
 	<link rel="icon" type="image/png" href="/assets/img/favicon.png">
 	<title>{% block title %}{% endblock %} | Ethil Van</title>
 
+	<link rel="stylesheet" href="/assets/css/style.css">
 	{% block stylesheets %}
 		{{ encore_entry_link_tags('app') }}
 	{% endblock %}
@@ -18,7 +19,29 @@
 
 
 <body>
-{% block body %}{% endblock %}
+<header class="main-header">
+	<nav>
+		<div class="img-container">
+			<img src="/assets/img/EV-200_nbg.png" alt="Logo Ethil Van">
+		</div>
+		<a href="/#home">Accueil</a>
+		<a href="/#join">Rejoindre</a>
+		<a href="/#games">Nos jeux</a>
+		<a href="https://discord.gg/ZEECxNd" target="_blank">Discord</a>
+	</nav>
+</header>
+
+<main class="main-container">
+	{% block body %}{% endblock %}
+</main>
+
+<footer class="main-footer">
+	<nav>
+		<a href="/legals">Mentions légales</a>
+		<a href="https://eilea.fr/">Développé par Eilea</a>
+	</nav>
+</footer>
+
 </body>
 
 </html>
