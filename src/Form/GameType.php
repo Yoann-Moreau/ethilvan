@@ -27,9 +27,10 @@ class GameType extends AbstractType {
 												'image/png',
 												'image/jpeg',
 										],
-										'mimeTypesMessage' => 'Seuls formats PNG et JPEG sont supportés',
+										'mimeTypesMessage' => 'Seuls les formats PNG et JPEG sont supportés',
 								]),
 						],
+						'mapped'      => false,
 				])
 				->add('link', TextType::class, [
 						'label'    => 'Lien',

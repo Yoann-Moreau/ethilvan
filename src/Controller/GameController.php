@@ -31,17 +31,32 @@ class GameController extends AbstractController {
 		$form = $this->createForm(GameType::class, $game);
 		$form->handleRequest($request);
 
+		$errors = [];
+
 		if ($form->isSubmitted() && $form->isValid()) {
 			$file = $form->get('image')->getData();
-			$file_name = $tools_service->slugify($game->getName()) . '.' . $file->guessExtension();
-			$directory = $this->getParameter('game_images_directory');
 
-			$file->move($directory, $file_name);
+			if (!empty($file)) {
+				$file_name = $tools_service->slugify($game->getName()) . '.' . $file->guessExtension();
+				$directory = $this->getParameter('game_images_directory');
 
-			$game->setImage($file_name);
-			$game_repository->save($game, true);
+				$file->move($directory, $file_name);
 
-			return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
+				$game->setImage($file_name);
+			}
+			else {
+				$errors[] = 'Une image doit être fournie.';
+			}
+
+			if (empty($errors)) {
+				$game_repository->save($game, true);
+
+				return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
+			}
+		}
+
+		foreach ($errors as $error) {
+			$this->addFlash('error', $error);
 		}
 
 		return $this->renderForm('game/new.html.twig', [
@@ -60,11 +75,35 @@ class GameController extends AbstractController {
 
 
 	#[Route('/{id}/edit', name: 'app_game_edit', methods: ['GET', 'POST'])]
-	public function edit(Request $request, Game $game, GameRepository $game_repository): Response {
+	public function edit(Request $request, Game $game, GameRepository $game_repository,
+			ToolsService $tools_service): Response {
+
+		$old_image = $game->getImage();
+
 		$form = $this->createForm(GameType::class, $game);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
+			$file = $form->get('image')->getData();
+
+			if (!empty($file)) {
+				$file_name = $tools_service->slugify($game->getName()) . '.' . $file->guessExtension();
+				$directory = $this->getParameter('game_images_directory');
+
+				// Delete old image
+				if ($old_image !== $file_name) {
+					if (file_exists($directory . '/' . $old_image)) {
+						unlink($directory . '/' . $old_image);
+					}
+				}
+
+				$file->move($directory, $file_name);
+				$game->setImage($file_name);
+			}
+			else { // File not provided
+				$game->setImage($old_image);
+			}
+
 			$game_repository->save($game, true);
 
 			return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
@@ -80,6 +119,13 @@ class GameController extends AbstractController {
 	#[Route('/{id}', name: 'app_game_delete', methods: ['POST'])]
 	public function delete(Request $request, Game $game, GameRepository $game_repository): Response {
 		if ($this->isCsrfTokenValid('delete' . $game->getId(), $request->request->get('_token'))) {
+			$game_image = $game->getImage();
+			$image_directory = $this->getParameter('game_images_directory');
+
+			if (file_exists($image_directory . '/' . $game_image)) {
+				unlink($image_directory . '/' . $game_image);
+			}
+
 			$game_repository->remove($game, true);
 		}
 
