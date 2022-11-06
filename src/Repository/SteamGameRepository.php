@@ -28,12 +28,28 @@ class SteamGameRepository extends ServiceEntityRepository {
 		}
 	}
 
+
 	public function remove(SteamGame $entity, bool $flush = false): void {
 		$this->getEntityManager()->remove($entity);
 
 		if ($flush) {
 			$this->getEntityManager()->flush();
 		}
+	}
+
+
+	public function findGamesByName(string $name, int $limit = 10, int $offset = 0): array {
+		$qb = $this->createQueryBuilder('g');
+
+		return $this->createQueryBuilder('g')
+				->andWhere("g.name <> ''")
+				->andWhere("g.name LIKE :name")
+				->setParameter('name', '%' . $name . '%')
+				->setFirstResult($offset)
+				->setMaxResults($limit)
+				->orderBy($qb->expr()->length('g.name'))
+				->getQuery()
+				->getArrayResult();
 	}
 
 }

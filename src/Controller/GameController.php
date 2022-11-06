@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Form\GameType;
+use App\Form\SteamGameType;
 use App\Repository\GameRepository;
 use App\Service\ToolsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -60,6 +61,39 @@ class GameController extends AbstractController {
 		}
 
 		return $this->renderForm('game/new.html.twig', [
+				'game' => $game,
+				'form' => $form,
+		]);
+	}
+
+
+	#[Route('/steam_new', name: 'app_game_steam_new', methods: ['GET', 'POST'])]
+	public function steamNew(Request $request, GameRepository $game_repository, ToolsService $tools_service): Response {
+		$game = new Game();
+		$form = $this->createForm(SteamGameType::class, $game);
+		$form->handleRequest($request);
+
+		$errors = [];
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$app_id = $form->get('app_id')->getData();
+
+			if (empty($app_id) || $app_id <= 0) {
+				$errors[] = "Vous devez choisir un jeu Steam dans la liste.";
+			}
+
+			if (empty($errors)) {
+				$game_repository->save($game, true);
+
+				return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
+			}
+		}
+
+		foreach ($errors as $error) {
+			$this->addFlash('error', $error);
+		}
+
+		return $this->renderForm('game/steam_new.html.twig', [
 				'game' => $game,
 				'form' => $form,
 		]);
