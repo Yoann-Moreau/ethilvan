@@ -47,7 +47,7 @@ export default class Autocomplete {
 	 * @param choices An array of objects where name is the value of the choice
 	 */
 	addSuggestions(choices) {
-		for (const choice of choices) {
+		for (const [key, choice] of choices.entries()) {
 			let domChoice = document.createElement('div');
 			domChoice.classList.add('choice');
 
@@ -57,6 +57,14 @@ export default class Autocomplete {
 			}
 
 			domChoice.innerHTML = choice.name;
+
+			domChoice.addEventListener('click', () => {
+				this.hoveredChoice = key;
+				this.updateInputValue();
+				this.hoveredChoice = -1;
+				this.displayHoveredChoice();
+				this.element.focus();
+			});
 
 			this.choicesContainer.appendChild(domChoice);
 		}
@@ -72,10 +80,10 @@ export default class Autocomplete {
 
 
 	/**
-	 * Add event listener for choicesReceived
+	 * Add event listener for autocomplete-choices-received
 	 */
 	addUpdateChoicesListener() {
-		this.element.addEventListener('choicesReceived', (e) => {
+		this.element.addEventListener('autocomplete-choices-received', (e) => {
 			this.clearSuggestions();
 			if (this.element.value !== '') {
 				this.addSuggestions(e.detail.choices);
@@ -138,6 +146,12 @@ export default class Autocomplete {
 		if (this.hoveredChoice > -1) {
 			this.element.value = choices[this.hoveredChoice].dataset.name;
 			this.element.dispatchEvent(new Event('input'));
+
+			this.element.dispatchEvent(new CustomEvent('autocomplete-choice-made', {
+				detail: {
+					choice: choices[this.hoveredChoice],
+				},
+			}));
 		}
 	}
 

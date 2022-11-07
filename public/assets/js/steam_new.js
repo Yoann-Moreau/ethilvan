@@ -12,14 +12,19 @@ const appIdInput = document.getElementById('steam_game_app_id');
 // Functions
 // ============================================================================
 
+/**
+ * Fetch steam game names from backend and dispatch 'autocomplete-choices-received' event on success
+ */
 function fetchSteamGameNames() {
+	appIdInput.value = 0;
+
 	const parameters = {
 		name: appNameInput.value,
 	};
 
 	ajax('/ajax/fetch_steam_game_names', parameters).then(data => {
 		if (typeof data === 'object') {
-			appNameInput.dispatchEvent(new CustomEvent('choicesReceived', {
+			appNameInput.dispatchEvent(new CustomEvent('autocomplete-choices-received', {
 				detail: {
 					choices: data,
 				},
@@ -32,6 +37,13 @@ function fetchSteamGameNames() {
 }
 
 
+/**
+ * Update app id input value
+ */
+function updateAppId(e) {
+	appIdInput.value = e.detail.choice.dataset.app_id;
+}
+
 // ============================================================================
 // Code to execute
 // ============================================================================
@@ -42,3 +54,4 @@ function fetchSteamGameNames() {
 // ============================================================================
 
 appNameInput.addEventListener('input', fetchSteamGameNames);
+appNameInput.addEventListener('autocomplete-choice-made', updateAppId);
