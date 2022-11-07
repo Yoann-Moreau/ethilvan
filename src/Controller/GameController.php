@@ -10,9 +10,11 @@ use App\Form\SteamGameType;
 use App\Repository\GameRepository;
 use App\Service\ToolsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
 #[Route('/admin/game')]
@@ -68,7 +70,9 @@ class GameController extends AbstractController {
 
 
 	#[Route('/steam_new', name: 'app_game_steam_new', methods: ['GET', 'POST'])]
-	public function steamNew(Request $request, GameRepository $game_repository, ToolsService $tools_service): Response {
+	public function steamNew(Request $request, GameRepository $game_repository, ToolsService $tools_service,
+			HttpClientInterface $client): Response {
+
 		$game = new Game();
 		$form = $this->createForm(SteamGameType::class, $game);
 		$form->handleRequest($request);
@@ -82,7 +86,35 @@ class GameController extends AbstractController {
 				$errors[] = "Vous devez choisir un jeu Steam dans la liste.";
 			}
 
+			$url = "https://store.steampowered.com/api/appdetails?appids=" . $app_id;
+
+			$response = $client->request('GET', $url);
+			$status_code = $response->getStatusCode();
+
+			if ($status_code !== 200) {
+				$errors[] = "Erreur lors de la récupération des informations du jeu.";
+			}
+
+			$content = $response->toArray();
+
+			if (!isset($content[$app_id]['data'])) {
+				$errors[] = "Le jeu n'a pas de données associées, veuillez en choisir un autre.";
+			}
+
 			if (empty($errors)) {
+				$directory = $this->getParameter('game_images_directory');
+
+				$file_url = $content[$app_id]['data']['header_image'];
+
+				copy($file_url, $directory . '/new');
+
+				$file = new File($directory . '/new');
+				$file_name = $tools_service->slugify($game->getName()) . '.' . $file->guessExtension();
+				$file->move($directory, $file_name);
+
+				$game->setImage($file_name);
+				$game->setLink($content[$app_id]['data']['website']);
+
 				$game_repository->save($game, true);
 
 				return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);

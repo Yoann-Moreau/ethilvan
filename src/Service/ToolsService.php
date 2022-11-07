@@ -11,7 +11,8 @@ class ToolsService {
 		$slug = trim($slug);
 		$slug = strtolower($slug);
 		$slug = preg_replace('/[^a-z0-9-]+/', '-', $slug);
-		return preg_replace('/-{2,}/', '-', $slug);
+		$slug = preg_replace('/-{2,}/', '-', $slug);
+		return trim($slug, '-');
 	}
 
 
