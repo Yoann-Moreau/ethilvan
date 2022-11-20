@@ -3,37 +3,39 @@
 {% block title %}Game index{% endblock %}
 
 {% block body %}
-	<h1>Game index</h1>
+	<h1>Liste des jeux</h1>
 
-	<table class="table">
-		<thead>
-		<tr>
-			<th>Id</th>
-			<th>Name</th>
-			<th>Image</th>
-			<th>Link</th>
-			<th>actions</th>
-		</tr>
-		</thead>
-		<tbody>
+	<div class="btns">
+		<a class="btn" href="{{ path('app_game_new') }}">Ajouter un jeu</a>
+		<a class="btn" href="{{ path('app_game_steam_new') }}">Ajouter un jeu Steam</a>
+	</div>
+
+	<div class="table games">
+
+		<div class="head">
+			<div class="col col-75">Jeu</div>
+			<div class="col col-25">Actions</div>
+		</div>
+
 		{% for game in games %}
-			<tr>
-				<td>{{ game.id }}</td>
-				<td>{{ game.name }}</td>
-				<td>{{ game.image }}</td>
-				<td>{{ game.link }}</td>
-				<td>
-					<a href="{{ path('app_game_show', {'id': game.id}) }}">show</a>
-					<a href="{{ path('app_game_edit', {'id': game.id}) }}">edit</a>
-				</td>
-			</tr>
+			<div class="row">
+				<div class="col col-75">
+					<a class="game-info" href="{{ path('app_game_show', {'id': game.id}) }}">
+						<img class="game-image" src="/uploads/game/{{ game.image }}" alt="Image {{ game.name }}">
+						<span class="game-name">{{ game.name }}</span>
+					</a>
+				</div>
+				<div class="col col-25 btns">
+					<a class="btn" href="{{ path('app_game_edit', {'id': game.id}) }}">Editer</a>
+					{{ include('admin_game/_delete_form.html.twig') }}
+				</div>
+			</div>
 		{% else %}
-			<tr>
-				<td colspan="5">no records found</td>
-			</tr>
+			<div class="row">
+				Aucun jeu trouvé
+			</div>
 		{% endfor %}
-		</tbody>
-	</table>
 
-	<a href="{{ path('app_game_new') }}">Create new</a>
+	</div>
+
 {% endblock %}

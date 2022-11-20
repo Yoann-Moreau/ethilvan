@@ -23,7 +23,7 @@ class AdminGameController extends AbstractController {
 	#[Route('/', name: 'app_game_index', methods: ['GET'])]
 	public function index(GameRepository $game_repository): Response {
 		return $this->render('admin_game/index.html.twig', [
-				'games' => $game_repository->findAll(),
+				'games' => $game_repository->findBy([], ['name' => 'ASC']),
 		]);
 	}
 

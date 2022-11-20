@@ -1,11 +1,10 @@
-@import "_var.less";
+@import "var.less";
 
 html {
 	font-size: 10px;
 }
 
 body {
-	font-size: 2rem;
 	font-family: Asap, sans-serif;
 }
 
@@ -38,16 +37,49 @@ button,
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 40rem;
-	height: 6rem;
-	margin-top: 2em;
+	padding: 0.5em 1em;
 	background-color: @bg-button;
 	color: @tc-main;
 	border: none;
 	cursor: pointer;
+	font-size: 1em;
+	line-height: 1.1em;
+
+	&.large {
+		padding: 0;
+		width: 40rem;
+		height: 6rem;
+		margin-top: 2em;
+	}
+
+	&:hover {
+		background-color: @bg-button-hover;
+		color: @tc-main;
+	}
 }
 
 img {
 	max-width: 100%;
 	max-height: 100%;
+}
+
+// ==============================================
+// Global classes
+// ==============================================
+
+.btns {
+	display: flex;
+	align-items: center;
+
+	button,
+	.btn {
+
+		&:not(:last-child) {
+			margin-right: 1em;
+		}
+	}
+}
+
+.flex {
+	display: flex;
 }
