@@ -3,32 +3,43 @@
 {% block title %}Game{% endblock %}
 
 {% block body %}
-	<h1>Game</h1>
+	<h1>{{ game.name }}</h1>
 
-	<table class="table">
-		<tbody>
-		<tr>
-			<th>Id</th>
-			<td>{{ game.id }}</td>
-		</tr>
-		<tr>
-			<th>Name</th>
-			<td>{{ game.name }}</td>
-		</tr>
-		<tr>
-			<th>Image</th>
-			<td>{{ game.image }}</td>
-		</tr>
-		<tr>
-			<th>Link</th>
-			<td>{{ game.link }}</td>
-		</tr>
-		</tbody>
-	</table>
+	<div class="btns-container">
+		<div class="back">
+			<a class="btn" href="{{ path('app_game_index') }}">Retour à la liste des jeux</a>
+		</div>
+		<div class="btns right">
+			<a class="btn" href="{{ path('app_game_edit', {'id': game.id}) }}">Editer</a>
+			{{ include('admin_game/_delete_form.html.twig') }}
+		</div>
+	</div>
 
-	<a href="{{ path('app_game_index') }}">back to list</a>
 
-	<a href="{{ path('app_game_edit', {'id': game.id}) }}">edit</a>
 
-	{{ include('admin_game/_delete_form.html.twig') }}
+	<div class="game-image">
+		<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
+	</div>
+
+	<h3>ID Steam</h3>
+	<div class="game-steam-id">{{ game.steamId }}</div>
+
+	<h3>Lien</h3>
+	<div class="game-link">
+		{% if game.link %}
+			<a href="{{ game.link }}">{{ game.link }}</a>
+		{% else %}
+			<span>Non renseigné</span>
+		{% endif %}
+	</div>
+
+	<h3>Jeu du moment</h3>
+	<div class="game-current">
+		{% if game.current %}
+			Oui
+		{% else %}
+			Non
+		{% endif %}
+	</div>
+
 {% endblock %}

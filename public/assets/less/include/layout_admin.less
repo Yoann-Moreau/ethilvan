@@ -12,11 +12,19 @@ body {
 	font-size: 1.6rem;
 }
 
+.admin {
+
+	h2, h3, h4, h5, h6 {
+		margin-top: 1em;
+	}
+}
+
 // ==============================================
 // Header
 // ==============================================
 
 .main-header {
+	position: fixed;
 	width: @admin-header-width;
 	height: 100%;
 	background-color: @bg-main;
@@ -47,9 +55,13 @@ body {
 // ==============================================
 
 .main-container {
+	display: flex;
+	flex-direction: column;
 	width: calc(100% - @admin-header-width);
 	height: 100%;
 	padding: 4rem;
+	margin-left: @admin-header-width;
+	overflow-y: auto;
 }
 
 // ==============================================

@@ -9,18 +9,25 @@
 	src: url("/assets/font/Montserrat-VariableFont_wght.ttf") format("truetype");
 }
 
+// Colors
+@light-green: #83d213;
+@white: #fff;
+@dark-grey: #101816;
+@dark-grey-lighter: #15201d;
+@grey: #2e4540;
+
 
 // Text colors
-@tc-title: #83d213;
-@tc-link: @tc-title;
-@tc-link-hover: lighten(@tc-link, 20%);
-@tc-main: white;
+@tc-title: @light-green;
+@tc-link: @light-green;
+@tc-link-hover: lighten(@tc-link, 30%);
+@tc-main: @white;
 
 
 // Background colors
-@bg-main: #101816;
-@bg-main-lighter: #15201d;
-@bg-button: #2e4540;
+@bg-main: @dark-grey;
+@bg-main-lighter: @dark-grey-lighter;
+@bg-button: @grey;
 @bg-button-hover: lighten(@bg-button, 10%);
 
 
