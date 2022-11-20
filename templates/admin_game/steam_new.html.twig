@@ -1,13 +1,20 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}New Steam Game{% endblock %}
+{% block title %}Ajouter un jeu Steam{% endblock %}
 
 {% block javascripts %}
 	<script type="module" src="/assets/js/steam_new.js"></script>
 {% endblock %}
 
 {% block body %}
-	<h1>Create new Steam Game</h1>
+
+	<h1>Ajouter un jeu Steam</h1>
+
+	<div class="btns-container">
+		<div class="back">
+			<a class="btn" href="{{ path('app_game_index') }}">Retour à la liste des jeux</a>
+		</div>
+	</div>
 
 	{% for message in app.flashes('error') %}
 		<div class="error">
@@ -15,7 +22,17 @@
 		</div>
 	{% endfor %}
 
-	{{ include('admin_game/_form.html.twig') }}
+	{{ form_start(form) }}
 
-	<a href="{{ path('app_game_index') }}">back to list</a>
+	<div class="input-container">
+		{{ form_label(form.name) }}
+		{{ form_widget(form.name) }}
+	</div>
+
+	<div class="btns right">
+		<button type="submit">Ajouter le jeu Steam</button>
+	</div>
+
+	{{ form_end(form) }}
+
 {% endblock %}
