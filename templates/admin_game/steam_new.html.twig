@@ -1,9 +1,13 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}New Game{% endblock %}
+{% block title %}New Steam Game{% endblock %}
+
+{% block javascripts %}
+	<script type="module" src="/assets/js/steam_new.js"></script>
+{% endblock %}
 
 {% block body %}
-	<h1>Create new Game</h1>
+	<h1>Create new Steam Game</h1>
 
 	{% for message in app.flashes('error') %}
 		<div class="error">
@@ -11,7 +15,7 @@
 		</div>
 	{% endfor %}
 
-	{{ include('game/_form.html.twig') }}
+	{{ include('admin_game/_form.html.twig') }}
 
 	<a href="{{ path('app_game_index') }}">back to list</a>
 {% endblock %}

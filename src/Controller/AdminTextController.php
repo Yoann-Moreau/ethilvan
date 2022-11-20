@@ -14,11 +14,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 
 #[Route('/admin/text')]
-class TextController extends AbstractController {
+class AdminTextController extends AbstractController {
 
 	#[Route('/', name: 'app_text_index', methods: ['GET'])]
 	public function index(TextRepository $textRepository): Response {
-		return $this->render('text/index.html.twig', [
+		return $this->render('admin_text/index.html.twig', [
 				'texts' => $textRepository->findAll(),
 		]);
 	}
@@ -36,7 +36,7 @@ class TextController extends AbstractController {
 			return $this->redirectToRoute('app_text_index', [], Response::HTTP_SEE_OTHER);
 		}
 
-		return $this->renderForm('text/new.html.twig', [
+		return $this->renderForm('admin_text/new.html.twig', [
 				'text' => $text,
 				'form' => $form,
 		]);
@@ -45,7 +45,7 @@ class TextController extends AbstractController {
 
 	#[Route('/{id}', name: 'app_text_show', methods: ['GET'])]
 	public function show(Text $text): Response {
-		return $this->render('text/show.html.twig', [
+		return $this->render('admin_text/show.html.twig', [
 				'text' => $text,
 		]);
 	}
@@ -62,7 +62,7 @@ class TextController extends AbstractController {
 			return $this->redirectToRoute('app_text_index', [], Response::HTTP_SEE_OTHER);
 		}
 
-		return $this->renderForm('text/edit.html.twig', [
+		return $this->renderForm('admin_text/edit.html.twig', [
 				'text' => $text,
 				'form' => $form,
 		]);

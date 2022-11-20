@@ -18,11 +18,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
 #[Route('/admin/game')]
-class GameController extends AbstractController {
+class AdminGameController extends AbstractController {
 
 	#[Route('/', name: 'app_game_index', methods: ['GET'])]
 	public function index(GameRepository $game_repository): Response {
-		return $this->render('game/index.html.twig', [
+		return $this->render('admin_game/index.html.twig', [
 				'games' => $game_repository->findAll(),
 		]);
 	}
@@ -62,7 +62,7 @@ class GameController extends AbstractController {
 			$this->addFlash('error', $error);
 		}
 
-		return $this->renderForm('game/new.html.twig', [
+		return $this->renderForm('admin_game/new.html.twig', [
 				'game' => $game,
 				'form' => $form,
 		]);
@@ -125,7 +125,7 @@ class GameController extends AbstractController {
 			$this->addFlash('error', $error);
 		}
 
-		return $this->renderForm('game/steam_new.html.twig', [
+		return $this->renderForm('admin_game/steam_new.html.twig', [
 				'game' => $game,
 				'form' => $form,
 		]);
@@ -134,7 +134,7 @@ class GameController extends AbstractController {
 
 	#[Route('/{id}', name: 'app_game_show', methods: ['GET'])]
 	public function show(Game $game): Response {
-		return $this->render('game/show.html.twig', [
+		return $this->render('admin_game/show.html.twig', [
 				'game' => $game,
 		]);
 	}
@@ -175,7 +175,7 @@ class GameController extends AbstractController {
 			return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
 		}
 
-		return $this->renderForm('game/edit.html.twig', [
+		return $this->renderForm('admin_game/edit.html.twig', [
 				'game' => $game,
 				'form' => $form,
 		]);
