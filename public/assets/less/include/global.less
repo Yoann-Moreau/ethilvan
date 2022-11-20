@@ -71,6 +71,17 @@ img {
 	max-height: 100%;
 }
 
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+	background-color: @dark-grey;
+	color: @tc-main;
+	font-size: 1em;
+	padding: 0.5em;
+}
+
+
 // ==============================================
 // Global classes
 // ==============================================
@@ -96,6 +107,12 @@ img {
 			margin-right: 1em;
 		}
 	}
+}
+
+.input-container {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 1em;
 }
 
 .flex {

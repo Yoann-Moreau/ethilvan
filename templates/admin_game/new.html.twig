@@ -3,7 +3,14 @@
 {% block title %}New Game{% endblock %}
 
 {% block body %}
-	<h1>Create new Game</h1>
+
+	<h1>Ajouter un jeu</h1>
+
+	<div class="btns-container">
+		<div class="back">
+			<a class="btn" href="{{ path('app_game_index') }}">Retour à la liste des jeux</a>
+		</div>
+	</div>
 
 	{% for message in app.flashes('error') %}
 		<div class="error">
@@ -11,7 +18,27 @@
 		</div>
 	{% endfor %}
 
-	{{ include('admin_game/_form.html.twig') }}
+	{{ form_start(form) }}
 
-	<a href="{{ path('app_game_index') }}">back to list</a>
+	<div class="input-container">
+		{{ form_label(form.name) }}
+		{{ form_widget(form.name) }}
+	</div>
+
+	<div class="input-container">
+		{{ form_label(form.image) }}
+		{{ form_widget(form.image) }}
+	</div>
+
+	<div class="input-container">
+		{{ form_label(form.link) }}
+		{{ form_widget(form.link) }}
+	</div>
+
+	<div class="btns right">
+		<button type="submit">Ajouter le jeu</button>
+	</div>
+
+	{{ form_end(form, {render_rest: false}) }}
+
 {% endblock %}
