@@ -52,6 +52,8 @@ class AdminGameController extends AbstractController {
 			}
 
 			if (empty($errors)) {
+				$game->setCurrent(false);
+
 				$game_repository->save($game, true);
 
 				return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
@@ -102,6 +104,9 @@ class AdminGameController extends AbstractController {
 			}
 
 			if (empty($errors)) {
+				$game->setSteamId($app_id);
+				$game->setCurrent(false);
+
 				$directory = $this->getParameter('game_images_directory');
 
 				$file_url = $content[$app_id]['data']['header_image'];

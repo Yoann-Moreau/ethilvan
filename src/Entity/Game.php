@@ -26,6 +26,12 @@ class Game {
 	#[ORM\Column(type: Types::TEXT, nullable: true)]
 	private ?string $link = null;
 
+	#[ORM\Column(nullable: true)]
+	private ?int $steam_id = null;
+
+	#[ORM\Column]
+	private ?bool $current = null;
+
 
 	public function getId(): ?int {
 		return $this->id;
@@ -60,6 +66,28 @@ class Game {
 
 	public function setLink(?string $link): self {
 		$this->link = $link;
+
+		return $this;
+	}
+
+
+	public function getSteamId(): ?int {
+		return $this->steam_id;
+	}
+
+	public function setSteamId(?int $steam_id): self {
+		$this->steam_id = $steam_id;
+
+		return $this;
+	}
+
+
+	public function isCurrent(): ?bool {
+		return $this->current;
+	}
+
+	public function setCurrent(bool $current): self {
+		$this->current = $current;
 
 		return $this;
 	}
