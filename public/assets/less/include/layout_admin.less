@@ -77,6 +77,13 @@ body {
 
 	.game-image {
 		width: 12rem;
+		height: 12rem * 215 / 460; // Aspect ratio of steam images
 		margin-right: 1em;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
 	}
 }

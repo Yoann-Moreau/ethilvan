@@ -21,7 +21,9 @@
 			<div class="row">
 				<div class="col col-75">
 					<a class="game-info" href="{{ path('app_game_show', {'id': game.id}) }}">
-						<img class="game-image" src="/uploads/game/{{ game.image }}" alt="Image {{ game.name }}">
+						<div class="game-image">
+							<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
+						</div>
 						<span class="game-name">{{ game.name }}</span>
 					</a>
 				</div>

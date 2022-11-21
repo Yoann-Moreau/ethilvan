@@ -20,13 +20,30 @@
 	</section>
 
 	<section id="games" class="games">
-		<h2>{{ texts[2].title }}</h2>
-		<p>{{ texts[2].text|nl2br }}</p>
+		<div class="container text">
+			<h2>{{ texts[2].title }}</h2>
+			<p>{{ texts[2].text|nl2br }}</p>
+			<a class="btn large" href="">Voir la liste complète</a>
+		</div>
+		<div class="container current-games">
+			<h2>Les jeux du moment</h2>
+			{% for game in current_games %}
+				<div class="current-game">
+					<div class="game-image">
+						<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
+					</div>
+					<span class="game-name">{{ game.name }}</span>
+				</div>
+			{% endfor %}
+		</div>
 	</section>
 
 	<section id="us" class="us">
-		<h2>{{ texts[3].title }}</h2>
-		<p>{{ texts[3].text|nl2br }}</p>
+		<img src="/assets/img/minecraft.webp" alt="Image Minecraft">
+		<div class="container">
+			<h2>{{ texts[3].title }}</h2>
+			<p>{{ texts[3].text|nl2br }}</p>
+		</div>
 	</section>
 
 {% endblock %}

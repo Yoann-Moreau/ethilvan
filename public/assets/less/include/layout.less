@@ -57,13 +57,70 @@ body {
 .join {
 	display: flex;
 	height: 60rem;
+	background-color: @bg-main-lighter;
 
 	.container {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		height: 100%;
-		padding: 0 6rem;
+		padding: 0 @margin-index;
+	}
+}
+
+.games {
+	display: flex;
+	padding: @margin-index;
+
+	.text {
+		width: 40%;
+	}
+
+	.current-games {
+		width: 60%;
+		padding: 0 @margin-index 0 @margin-index * 2;
+
+		.game-image {
+			width: 25rem;
+			height: 25rem * 215 / 460; // Aspect ratio of steam images
+			margin-right: 2em;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
+
+		.game-name {
+			font-size: 3rem;
+			text-transform: uppercase;
+			font-weight: bold;
+			color: @tc-title;
+		}
+
+		.current-game {
+			display: flex;
+			align-items: center;
+			padding: 1em 2em;
+		}
+	}
+}
+
+.us {
+	display: flex;
+	height: 60rem;
+	background-color: @bg-main-lighter;
+
+	img {
+		width: 50%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.container {
+		width: 50%;
+		padding: @margin-index;
 	}
 }
 
