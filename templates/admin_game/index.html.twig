@@ -1,6 +1,10 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Game index{% endblock %}
+{% block title %}Liste des jeux{% endblock %}
+
+{% block javascripts %}
+	<script type="module" src="/assets/js/admin_games.js"></script>
+{% endblock %}
 
 {% block body %}
 	<h1>Liste des jeux</h1>
@@ -13,13 +17,14 @@
 	<div class="table games">
 
 		<div class="head">
-			<div class="col col-75">Jeu</div>
+			<div class="col col-65">Jeu</div>
 			<div class="col col-25">Actions</div>
+			<div class="col col-10">Jeu du moment</div>
 		</div>
 
 		{% for game in games %}
 			<div class="row">
-				<div class="col col-75">
+				<div class="col col-65">
 					<a class="game-info" href="{{ path('app_game_show', {'id': game.id}) }}">
 						<div class="game-image">
 							<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
@@ -30,6 +35,15 @@
 				<div class="col col-25 btns">
 					<a class="btn" href="{{ path('app_game_edit', {'id': game.id}) }}">Editer</a>
 					{{ include('admin_game/_delete_form.html.twig') }}
+				</div>
+				<div class="col col-10 flex center">
+					{% set id = game.id %}
+					{% if game.current %}
+						{% set active = 'active' %}
+					{% else %}
+						{% set active = '' %}
+					{% endif %}
+					{{ include('include/toggle.html.twig') }}
 				</div>
 			</div>
 		{% else %}

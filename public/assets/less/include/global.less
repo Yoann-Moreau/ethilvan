@@ -117,4 +117,38 @@ textarea {
 
 .flex {
 	display: flex;
+
+	&.center {
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+// ==============================================
+// Toggle
+// ==============================================
+@toggle-size: 2rem;
+
+.toggle {
+	width: @toggle-size * 2;
+	height: @toggle-size;
+	border-radius: @toggle-size;
+	background-color: grey;
+	cursor: pointer;
+
+	&.active {
+		background-color: green;
+
+		.pin {
+			position: relative;
+			left: @toggle-size;
+		}
+	}
+
+	.pin {
+		background-color: white;
+		width: @toggle-size;
+		height: @toggle-size;
+		border-radius: 50%;
+	}
 }
