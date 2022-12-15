@@ -1,12 +1,19 @@
 .autocomplete-container {
+	position: relative;
 
 	.choices-container {
+		position: absolute;
+		top: 100%;
+		width: 100%;
 
 		.choice {
+			padding: 0.3em 0.5em;
+			background-color: @bg-button;
+			width: 100%;
 
 			&:hover,
 			&.hovered {
-				background-color: red;
+				background-color: @bg-button-hover;
 			}
 		}
 	}

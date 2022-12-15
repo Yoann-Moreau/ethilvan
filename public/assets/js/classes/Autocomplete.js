@@ -62,7 +62,7 @@ export default class Autocomplete {
 				this.hoveredChoice = key;
 				this.updateInputValue();
 				this.hoveredChoice = -1;
-				this.displayHoveredChoice();
+				this.clearSuggestions();
 				this.element.focus();
 			});
 
@@ -138,14 +138,14 @@ export default class Autocomplete {
 
 
 	/**
-	 * Update the input value accrding to the selected choice
+	 * Update the input value according to the selected choice
 	 */
 	updateInputValue() {
 		const choices = this.choicesContainer.getElementsByClassName('choice');
 
 		if (this.hoveredChoice > -1) {
 			this.element.value = choices[this.hoveredChoice].dataset.name;
-			this.element.dispatchEvent(new Event('input'));
+			// this.element.dispatchEvent(new Event('input'));
 
 			this.element.dispatchEvent(new CustomEvent('autocomplete-choice-made', {
 				detail: {
@@ -175,7 +175,7 @@ export default class Autocomplete {
 				e.preventDefault();
 				this.updateInputValue();
 				this.hoveredChoice = -1;
-				this.displayHoveredChoice();
+				this.clearSuggestions();
 			}
 			else if (e.location === 0 || e.location === 3) { // letter, space or number
 				this.hoveredChoice = -1;

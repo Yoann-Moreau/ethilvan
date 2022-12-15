@@ -6,7 +6,6 @@ namespace App\Form;
 
 use App\Entity\Game;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,8 +22,12 @@ class SteamGameType extends AbstractType {
 								'autocomplete' => 'off',
 						],
 				])
-				->add('app_id', HiddenType::class, [
+				->add('app_id', TextType::class, [
+						'label'  => 'ID Steam',
 						'mapped' => false,
+						'attr'   => [
+								'readonly' => 'readonly',
+						],
 				]);
 	}
 
