@@ -5,39 +5,41 @@
 {% block body %}
 	<h1>Nouveau texte</h1>
 
-	<div class="btns-container">
-		<div class="back">
-			<a class="btn" href="{{ path('app_text_index') }}">Retour à la liste des textes</a>
+	<div class="col-50">
+		<div class="btns-container">
+			<div class="back">
+				<a class="btn" href="{{ path('app_text_index') }}">Retour à la liste des textes</a>
+			</div>
 		</div>
+
+		{{ form_start(form) }}
+
+		<div class="input-container">
+			{{ form_label(form.page) }}
+			{{ form_widget(form.page) }}
+		</div>
+
+		<div class="input-container">
+			{{ form_label(form.title) }}
+			{{ form_widget(form.title) }}
+		</div>
+
+		<div class="input-container">
+			{{ form_label(form.text) }}
+			{{ form_widget(form.text) }}
+		</div>
+
+		<div class="input-container">
+			{{ form_label(form.text_order) }}
+			{{ form_widget(form.text_order) }}
+		</div>
+
+		{{ form_widget(form._token) }}
+
+		<div class="btns right">
+			<button type="submit">Sauvegarder</button>
+		</div>
+
+		{{ form_end(form, {render_rest: false}) }}
 	</div>
-
-	{{ form_start(form) }}
-
-	<div class="input-container">
-		{{ form_label(form.page) }}
-		{{ form_widget(form.page) }}
-	</div>
-
-	<div class="input-container">
-		{{ form_label(form.title) }}
-		{{ form_widget(form.title) }}
-	</div>
-
-	<div class="input-container">
-		{{ form_label(form.text) }}
-		{{ form_widget(form.text) }}
-	</div>
-
-	<div class="input-container">
-		{{ form_label(form.text_order) }}
-		{{ form_widget(form.text_order) }}
-	</div>
-
-	{{ form_widget(form._token) }}
-
-	<div class="btns right">
-		<button type="submit">Sauvegarder</button>
-	</div>
-
-	{{ form_end(form, {render_rest: false}) }}
 {% endblock %}

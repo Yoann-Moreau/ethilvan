@@ -10,29 +10,30 @@
 
 	<h1>Ajouter un jeu Steam</h1>
 
-	<div class="btns-container">
-		<div class="back">
-			<a class="btn" href="{{ path('app_game_index') }}">Retour à la liste des jeux</a>
+	<div class="col-50">
+		<div class="btns-container">
+			<div class="back">
+				<a class="btn" href="{{ path('app_game_index') }}">Retour à la liste des jeux</a>
+			</div>
 		</div>
-	</div>
 
-	{% for message in app.flashes('error') %}
-		<div class="error">
-			{{ message }}
+		{% for message in app.flashes('error') %}
+			<div class="error">
+				{{ message }}
+			</div>
+		{% endfor %}
+
+		{{ form_start(form) }}
+
+		<div class="input-container">
+			{{ form_label(form.name) }}
+			{{ form_widget(form.name) }}
 		</div>
-	{% endfor %}
 
-	{{ form_start(form) }}
+		<div class="btns right">
+			<button type="submit">Ajouter le jeu Steam</button>
+		</div>
 
-	<div class="input-container">
-		{{ form_label(form.name) }}
-		{{ form_widget(form.name) }}
+		{{ form_end(form) }}
 	</div>
-
-	<div class="btns right">
-		<button type="submit">Ajouter le jeu Steam</button>
-	</div>
-
-	{{ form_end(form) }}
-
 {% endblock %}

@@ -19,7 +19,8 @@ class SteamGameType extends AbstractType {
 				->add('name', TextType::class, [
 						'label' => 'Nom du jeu Steam',
 						'attr'  => [
-								'class' => 'autocomplete',
+								'class'        => 'autocomplete col-100',
+								'autocomplete' => 'off',
 						],
 				])
 				->add('app_id', HiddenType::class, [

@@ -64,6 +64,14 @@ button,
 		background-color: @bg-button-hover;
 		color: @tc-main;
 	}
+
+	&.delete {
+		background-color: @bg-delete;
+
+		&:hover {
+			background-color: lighten(@bg-delete, 15%);
+		}
+	}
 }
 
 img {
@@ -80,6 +88,12 @@ textarea {
 	color: @tc-main;
 	font-size: 1em;
 	padding: 0.5em;
+}
+
+textarea {
+	min-height: 20rem;
+	min-width: 100%;
+	max-width: 100%;
 }
 
 
@@ -122,6 +136,11 @@ textarea {
 	&.center {
 		justify-content: center;
 		align-items: center;
+	}
+
+	&.jcc {
+		justify-content: center;
+		width: 100%;
 	}
 }
 
