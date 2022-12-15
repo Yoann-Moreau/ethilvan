@@ -36,10 +36,6 @@ class GameType extends AbstractType {
 				->add('link', TextType::class, [
 						'label'    => 'Lien',
 						'required' => false,
-				])
-				->add('current', CheckboxType::class, [
-						'label'    => 'Jeu du moment',
-						'required' => false,
 				]);
 	}
 

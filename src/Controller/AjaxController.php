@@ -30,6 +30,8 @@ class AjaxController extends AbstractController {
 	#[Route('/toggle_current_game', name: 'ajax_toggle_current_game', methods: ['POST'])]
 	public function ajaxToggleCurrentGame(Request $request, GameRepository $game_repository): Response {
 
+		$max_current_games = 3;
+
 		if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
 			return new JsonResponse('Unauthorized');
 		}
@@ -47,10 +49,13 @@ class AjaxController extends AbstractController {
 			$game->setCurrent(false);
 		}
 		elseif ($mode === 'toggle-on') {
-			if ($game_repository->count(['current' => true]) >= 3) {
-				return new JsonResponse('Error - Already 3 current games');
+			if ($game_repository->count(['current' => true]) >= $max_current_games) {
+				return new JsonResponse('Error - Already ' . $max_current_games . ' current games');
 			}
 			$game->setCurrent(true);
+		}
+		else {
+			return new JsonResponse('Error - Unknown mode');
 		}
 
 		$game_repository->save($game, true);
