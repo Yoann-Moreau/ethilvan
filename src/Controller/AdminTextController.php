@@ -17,21 +17,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminTextController extends AbstractController {
 
 	#[Route('/', name: 'app_text_index', methods: ['GET'])]
-	public function index(TextRepository $textRepository): Response {
+	public function index(TextRepository $text_repository): Response {
 		return $this->render('admin_text/index.html.twig', [
-				'texts' => $textRepository->findAll(),
+				'texts' => $text_repository->findBy([], ['page' => 'ASC', 'text_order' => 'ASC']),
 		]);
 	}
 
 
 	#[Route('/new', name: 'app_text_new', methods: ['GET', 'POST'])]
-	public function new(Request $request, TextRepository $textRepository): Response {
+	public function new(Request $request, TextRepository $text_repository): Response {
 		$text = new Text();
 		$form = $this->createForm(PageTextType::class, $text);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$textRepository->save($text, true);
+			$text_repository->save($text, true);
 
 			return $this->redirectToRoute('app_text_index', [], Response::HTTP_SEE_OTHER);
 		}
@@ -52,12 +52,12 @@ class AdminTextController extends AbstractController {
 
 
 	#[Route('/{id}/edit', name: 'app_text_edit', methods: ['GET', 'POST'])]
-	public function edit(Request $request, Text $text, TextRepository $textRepository): Response {
+	public function edit(Request $request, Text $text, TextRepository $text_repository): Response {
 		$form = $this->createForm(PageTextType::class, $text);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$textRepository->save($text, true);
+			$text_repository->save($text, true);
 
 			return $this->redirectToRoute('app_text_index', [], Response::HTTP_SEE_OTHER);
 		}
@@ -70,9 +70,9 @@ class AdminTextController extends AbstractController {
 
 
 	#[Route('/{id}', name: 'app_text_delete', methods: ['POST'])]
-	public function delete(Request $request, Text $text, TextRepository $textRepository): Response {
+	public function delete(Request $request, Text $text, TextRepository $text_repository): Response {
 		if ($this->isCsrfTokenValid('delete' . $text->getId(), $request->request->get('_token'))) {
-			$textRepository->remove($text, true);
+			$text_repository->remove($text, true);
 		}
 
 		return $this->redirectToRoute('app_text_index', [], Response::HTTP_SEE_OTHER);

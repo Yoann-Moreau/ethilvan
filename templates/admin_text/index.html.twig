@@ -1,41 +1,37 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Text index{% endblock %}
+{% block title %}Liste des textes{% endblock %}
 
 {% block body %}
-	<h1>Text index</h1>
+	<h1>Liste des textes</h1>
 
-	<table class="table">
-		<thead>
-		<tr>
-			<th>Id</th>
-			<th>Page</th>
-			<th>Title</th>
-			<th>Text</th>
-			<th>Text_order</th>
-			<th>actions</th>
-		</tr>
-		</thead>
-		<tbody>
+	<div class="btns">
+		<a class="btn" href="{{ path('app_text_new') }}">Ajouter un texte</a>
+	</div>
+
+	<div class="table texts">
+
+		<div class="head">
+			<div class="col col-65">Texte</div>
+			<div class="col col-10">Page</div>
+			<div class="col col-25">Actions</div>
+		</div>
+
 		{% for text in texts %}
-			<tr>
-				<td>{{ text.id }}</td>
-				<td>{{ text.page }}</td>
-				<td>{{ text.title }}</td>
-				<td>{{ text.text }}</td>
-				<td>{{ text.textOrder }}</td>
-				<td>
-					<a href="{{ path('app_text_show', {'id': text.id}) }}">show</a>
-					<a href="{{ path('app_text_edit', {'id': text.id}) }}">edit</a>
-				</td>
-			</tr>
+			<div class="row">
+				<div class="col col-65">
+					<a href="{{ path('app_text_show', {'id': text.id}) }}">{{ text.title }}</a>
+				</div>
+				<div class="col col-10">{{ text.page }}</div>
+				<div class="col col-25 btns">
+					<a class="btn" href="{{ path('app_text_edit', {'id': text.id}) }}">Editer</a>
+					{{ include('admin_text/_delete_form.html.twig') }}
+				</div>
+			</div>
 		{% else %}
-			<tr>
-				<td colspan="6">no records found</td>
-			</tr>
+			<div class="row">
+				Aucun texte trouvé
+			</div>
 		{% endfor %}
-		</tbody>
-	</table>
-
-	<a href="{{ path('app_text_new') }}">Create new</a>
+	</div>
 {% endblock %}

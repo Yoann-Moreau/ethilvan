@@ -1,13 +1,46 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Edit Text{% endblock %}
+{% block title %}Edition de texte{% endblock %}
 
 {% block body %}
-	<h1>Edit Text</h1>
+	<h1>Edition de texte</h1>
 
-	{{ include('admin_text/_form.html.twig', {'button_label': 'Update'}) }}
+	<div class="btns-container">
+		<div class="back">
+			<a class="btn" href="{{ path('app_text_index') }}">Retour à la liste des textes</a>
+		</div>
+		<div class="btns right">
+			{{ include('admin_text/_delete_form.html.twig') }}
+		</div>
+	</div>
 
-	<a href="{{ path('app_text_index') }}">back to list</a>
+	{{ form_start(form) }}
 
-	{{ include('admin_text/_delete_form.html.twig') }}
+	<div class="input-container">
+		{{ form_label(form.page) }}
+		{{ form_widget(form.page) }}
+	</div>
+
+	<div class="input-container">
+		{{ form_label(form.title) }}
+		{{ form_widget(form.title) }}
+	</div>
+
+	<div class="input-container">
+		{{ form_label(form.text) }}
+		{{ form_widget(form.text) }}
+	</div>
+
+	<div class="input-container">
+		{{ form_label(form.text_order) }}
+		{{ form_widget(form.text_order) }}
+	</div>
+
+	{{ form_widget(form._token) }}
+
+	<div class="btns right">
+		<button type="submit">Mettre à jour le texte</button>
+	</div>
+
+	{{ form_end(form, {render_rest: false}) }}
 {% endblock %}

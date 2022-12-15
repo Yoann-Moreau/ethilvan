@@ -1,38 +1,29 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Text{% endblock %}
+{% block title %}Texte{% endblock %}
 
 {% block body %}
-	<h1>Text</h1>
+	<h1>Texte</h1>
 
-	<table class="table">
-		<tbody>
-		<tr>
-			<th>Id</th>
-			<td>{{ text.id }}</td>
-		</tr>
-		<tr>
-			<th>Page</th>
-			<td>{{ text.page }}</td>
-		</tr>
-		<tr>
-			<th>Title</th>
-			<td>{{ text.title }}</td>
-		</tr>
-		<tr>
-			<th>Text</th>
-			<td>{{ text.text }}</td>
-		</tr>
-		<tr>
-			<th>Text_order</th>
-			<td>{{ text.textOrder }}</td>
-		</tr>
-		</tbody>
-	</table>
+	<div class="btns-container">
+		<div class="back">
+			<a class="btn" href="{{ path('app_text_index') }}">Retour à la liste des textes</a>
+		</div>
+		<div class="btns right">
+			<a class="btn" href="{{ path('app_text_edit', {'id': text.id}) }}">Editer</a>
+			{{ include('admin_text/_delete_form.html.twig') }}
+		</div>
+	</div>
 
-	<a href="{{ path('app_text_index') }}">back to list</a>
+	<h2>Page</h2>
+	<p>{{ text.page }}</p>
 
-	<a href="{{ path('app_text_edit', {'id': text.id}) }}">edit</a>
+	<h2>Titre</h2>
+	<p>{{ text.title }}</p>
 
-	{{ include('admin_text/_delete_form.html.twig') }}
+	<h2>Texte</h2>
+	<div>{{ text.text|nl2br }}</div>
+
+	<h2>Ordre du texte</h2>
+	<p>{{ text.textOrder }}</p>
 {% endblock %}
