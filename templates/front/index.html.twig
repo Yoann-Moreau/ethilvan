@@ -7,7 +7,10 @@
 	<section id="introduction" class="home-introduction">
 		<h1 class="home-main-title">{{ texts[0].title }}</h1>
 		<p>{{ texts[0].text|nl2br }}</p>
-		<a class="btn large" href="/#games">Voir nos jeux</a>
+		<a class="btn large" href="/#games">
+			<i class="fa-solid fa-gamepad"></i>
+			<span>Voir nos jeux</span>
+		</a>
 	</section>
 
 	<section id="join" class="home-join">
@@ -15,7 +18,10 @@
 		<div class="container">
 			<h2>{{ texts[1].title }}</h2>
 			<p>{{ texts[1].text|nl2br }}</p>
-			<a class="btn large" href="https://discord.gg/ZEECxNd" target="_blank">Rejoignez-nous sur Discord</a>
+			<a class="btn large" href="https://discord.gg/ZEECxNd" target="_blank">
+				<i class="fa-brands fa-discord"></i>
+				<span>Rejoignez-nous sur Discord</span>
+			</a>
 		</div>
 	</section>
 
@@ -23,7 +29,10 @@
 		<div class="container text">
 			<h2>{{ texts[2].title }}</h2>
 			<p>{{ texts[2].text|nl2br }}</p>
-			<a class="btn large" href="{{ path('app_games') }}">Voir la liste complète</a>
+			<a class="btn large" href="{{ path('app_games') }}">
+				<i class="fa-solid fa-gamepad"></i>
+				<span>Voir la liste complète</span>
+			</a>
 		</div>
 		<div class="container current-games">
 			<h2>Les jeux du moment</h2>

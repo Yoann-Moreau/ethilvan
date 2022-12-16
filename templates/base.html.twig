@@ -7,6 +7,7 @@
 	<link rel="icon" type="image/png" href="/assets/img/favicon.png">
 	<title>{% block title %}{% endblock %} | Ethil Van</title>
 
+	<link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
 	<link rel="stylesheet" href="/assets/css/style.css">
 	{% block stylesheets %}
 		{{ encore_entry_link_tags('app') }}
@@ -22,13 +23,21 @@
 <body>
 <header class="main-header">
 	<nav>
-		<div class="img-container">
-			<img src="/assets/img/EV-200_nbg.png" alt="Logo Ethil Van">
+		<div class="container left">
+			<div class="img-container">
+				<a href="{{ path('app_index') }}"><img src="/assets/img/EV-200_nbg.png" alt="Logo Ethil Van"></a>
+			</div>
+			<a href="/#introduction">Accueil</a>
+			<a href="/#join">Rejoindre</a>
+			<a href="/#games">Nos jeux</a>
+			<a href="https://discord.gg/ZEECxNd" target="_blank">Discord</a>
 		</div>
-		<a href="/#introduction">Accueil</a>
-		<a href="/#join">Rejoindre</a>
-		<a href="/#games">Nos jeux</a>
-		<a href="https://discord.gg/ZEECxNd" target="_blank">Discord</a>
+		<div class="container right">
+			<a href="{{ path('app_login') }}">
+				<i class="fa-solid fa-user"></i>
+				<span>Espace membre</span>
+			</a>
+		</div>
 	</nav>
 </header>
 

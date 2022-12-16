@@ -19,18 +19,30 @@ body {
 
 	nav {
 		display: flex;
+		justify-content: space-between;
 		align-items: center;
 		height: 100%;
 
+		.container {
+			display: flex;
+			align-items: center;
+			height: 100%;
+
+			&.left {
+
+				a {
+					text-transform: uppercase;
+				}
+			}
+		}
+
 		.img-container {
 			height: 80%;
-			margin-right: 2.5em;
 		}
 
 		a {
 			color: @tc-main;
 			margin-right: 2.5em;
-			text-transform: uppercase;
 
 			&:hover {
 				color: @tc-link;
