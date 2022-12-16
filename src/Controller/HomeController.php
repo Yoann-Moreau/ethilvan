@@ -40,4 +40,15 @@ class HomeController extends AbstractController {
 		]);
 	}
 
+
+	#[Route('/legals', name: 'app_legals')]
+	public function legals(TextRepository $text_repository): Response {
+
+		$legals_texts = $text_repository->findBy(['page' => 'legals'], ['text_order' => 'ASC']);
+
+		return $this->render('front/legals.html.twig', [
+				'texts' => $legals_texts,
+		]);
+	}
+
 }
