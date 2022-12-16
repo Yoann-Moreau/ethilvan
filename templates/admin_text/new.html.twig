@@ -8,7 +8,10 @@
 	<div class="col-50">
 		<div class="btns-container">
 			<div class="back">
-				<a class="btn" href="{{ path('app_text_index') }}">Retour à la liste des textes</a>
+				<a class="btn" href="{{ path('app_text_index') }}">
+					<i class="fa-solid fa-arrow-left"></i>
+					<span>Retour à la liste des textes</span>
+				</a>
 			</div>
 		</div>
 
@@ -37,7 +40,10 @@
 		{{ form_widget(form._token) }}
 
 		<div class="btns right">
-			<button type="submit">Sauvegarder</button>
+			<button type="submit">
+				<i class="fa-solid fa-floppy-disk"></i>
+				<span>Sauvegarder</span>
+			</button>
 		</div>
 
 		{{ form_end(form, {render_rest: false}) }}

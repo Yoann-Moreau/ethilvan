@@ -13,7 +13,10 @@
 	<div class="col-50">
 		<div class="btns-container">
 			<div class="back">
-				<a class="btn" href="{{ path('app_game_index') }}">Retour à la liste des jeux</a>
+				<a class="btn" href="{{ path('app_game_index') }}">
+					<i class="fa-solid fa-arrow-left"></i>
+					<span>Retour à la liste des jeux</span>
+				</a>
 			</div>
 		</div>
 
@@ -36,7 +39,10 @@
 		</div>
 
 		<div class="btns right">
-			<button type="submit">Ajouter le jeu Steam</button>
+			<button type="submit">
+				<i class="fa-solid fa-floppy-disk"></i>
+				<span>Ajouter le jeu Steam</span>
+			</button>
 		</div>
 
 		{{ form_end(form) }}
