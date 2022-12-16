@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos jeux{% endblock %}
+
+{% block body %}
+	<img class="banner" src="/assets/img/banniere-jeux.jpg" alt="Bannière nos jeux">
+
+	<div class="games-text-and-current">
+		<section class="container text">
+			<h1>{{ texts[0].title }}</h1>
+			<p>{{ texts[0].text|nl2br }}</p>
+			<a class="btn large" href="https://discord.gg/ZEECxNd" target="_blank">Rejoignez-nous sur Discord</a>
+			<img class="currently" src="/assets/img/en-ce-moment.png" alt="En ce moment">
+		</section>
+		<section class="container current-games">
+			{% for game in current_games %}
+				<div class="current-game">
+					<div class="game-image">
+						<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
+					</div>
+					<span class="game-name">{{ game.name }}</span>
+				</div>
+			{% endfor %}
+		</section>
+	</div>
+
+	<section class="games-game-list">
+		{% for game in games %}
+			<div class="game">
+				<div class="game-image">
+					<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
+				</div>
+				<span class="game-name">{{ game.name }}</span>
+			</div>
+		{% endfor %}
+	</section>
+
+{% endblock %}

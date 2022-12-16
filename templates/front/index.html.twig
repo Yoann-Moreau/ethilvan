@@ -4,13 +4,13 @@
 
 {% block body %}
 
-	<section id="introduction" class="introduction">
-		<h1>{{ texts[0].title }}</h1>
+	<section id="introduction" class="home-introduction">
+		<h1 class="home-main-title">{{ texts[0].title }}</h1>
 		<p>{{ texts[0].text|nl2br }}</p>
 		<a class="btn large" href="/#games">Voir nos jeux</a>
 	</section>
 
-	<section id="join" class="join">
+	<section id="join" class="home-join">
 		<img class="gaming" src="/assets/img/gaming.jpg" alt="Photo clavier souris gaming">
 		<div class="container">
 			<h2>{{ texts[1].title }}</h2>
@@ -19,11 +19,11 @@
 		</div>
 	</section>
 
-	<section id="games" class="games">
+	<section id="games" class="home-games">
 		<div class="container text">
 			<h2>{{ texts[2].title }}</h2>
 			<p>{{ texts[2].text|nl2br }}</p>
-			<a class="btn large" href="">Voir la liste complète</a>
+			<a class="btn large" href="{{ path('app_games') }}">Voir la liste complète</a>
 		</div>
 		<div class="container current-games">
 			<h2>Les jeux du moment</h2>
@@ -38,7 +38,7 @@
 		</div>
 	</section>
 
-	<section id="us" class="us">
+	<section id="us" class="home-us">
 		<img src="/assets/img/minecraft.webp" alt="Image Minecraft">
 		<div class="container">
 			<h2>{{ texts[3].title }}</h2>
