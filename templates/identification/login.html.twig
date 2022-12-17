@@ -9,6 +9,14 @@
 	<section class="window">
 		<h1>Connexion</h1>
 
+		<ul class="errors">
+			{% if error is not empty %}
+				<li class="error">
+					<i class="fa-solid fa-triangle-exclamation"></i> {{ error.messageKey|trans(error.messageData, 'security') }}
+				</li>
+			{% endif %}
+		</ul>
+
 		<form action="{{ path('app_login') }}" method="post">
 			<div class="input-container">
 				<label for="username">Nom d'utilisateur</label>
