@@ -2,17 +2,51 @@
 
 {% block title %}Enregistrement{% endblock %}
 
+{% block main_class %}registration{% endblock %}
+
 {% block body %}
 
-	<h1>Enregistrement</h1>
+	<section class="window">
+		<h1>Enregistrement</h1>
 
-	{% for error in errors %}
-		<div class="error">{{ error }}</div>
-	{% endfor %}
+		{% if errors is not empty %}
+			<ul class="errors">
+				{% for error in errors %}
+					<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
 
-	{{ form_start(form) }}
-	{{ form_widget(form) }}
-	<button type="submit">{{ button_label|default("S'enregistrer") }}</button>
-	{{ form_end(form) }}
+		{{ form_start(form) }}
+
+		<div class="input-container">
+			{{ form_label(form.username) }}
+			{{ form_widget(form.username) }}
+		</div>
+
+		<div class="input-container">
+			{{ form_label(form.email) }}
+			{{ form_widget(form.email) }}
+		</div>
+
+		<div class="input-container">
+			{{ form_label(form.password) }}
+			{{ form_widget(form.password) }}
+		</div>
+
+		<div class="input-container">
+			{{ form_label(form.confirmPassword) }}
+			{{ form_widget(form.confirmPassword) }}
+		</div>
+
+		<p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></p>
+
+		{{ form_widget(form._token) }}
+
+		<div class="btns center">
+			<button type="submit">{{ button_label|default("S'enregistrer") }}</button>
+		</div>
+		{{ form_end(form) }}
+	</section>
 
 {% endblock %}

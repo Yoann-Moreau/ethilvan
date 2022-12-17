@@ -41,7 +41,7 @@ class IdentificationController extends AbstractController {
 			}
 
 			$password = $form->get('password')->getData();
-			$c_password = $form->get('confirm-password')->getData();
+			$c_password = $form->get('confirmPassword')->getData();
 			if ($password !== $c_password) {
 				$errors[] = 'Les deux mots de passe ne sont pas identiques';
 			}
