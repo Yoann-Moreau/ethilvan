@@ -9,13 +9,14 @@
 	<section class="window">
 		<h1>Enregistrement</h1>
 
-		{% if errors is not empty %}
-			<ul class="errors">
-				{% for error in errors %}
-					<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</li>
-				{% endfor %}
-			</ul>
-		{% endif %}
+		<ul class="errors">
+			{% for error in form_errors %}
+				<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error.message }}</li>
+			{% endfor %}
+			{% for error in errors %}
+				<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</li>
+			{% endfor %}
+		</ul>
 
 		{{ form_start(form) }}
 

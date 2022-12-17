@@ -13,18 +13,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 class IdentificationController extends AbstractController {
 
 	#[Route('/registration', name: 'app_registration')]
 	public function registration(Request $request, UserPasswordHasherInterface $password_hasher,
-			UserRepository $user_repository): Response {
+			UserRepository $user_repository, ValidatorInterface $validator): Response {
 
 		$user = new User();
 		$form = $this->createForm(RegistrationType::class, $user);
 		$form->handleRequest($request);
 
+		$form_errors = [];
 		$errors = [];
 
 		if ($form->isSubmitted() && $form->isValid()) {
@@ -55,10 +57,14 @@ class IdentificationController extends AbstractController {
 				$user_repository->save($user, true);
 			}
 		}
+		elseif ($form->isSubmitted() && !$form->isValid()) {
+			$form_errors = $validator->validate($user);
+		}
 
 		return $this->render('identification/registration.html.twig', [
-				'errors' => $errors,
-				'form'   => $form->createView(),
+				'form_errors' => $form_errors,
+				'errors'      => $errors,
+				'form'        => $form->createView(),
 		]);
 	}
 
