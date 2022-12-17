@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/png" href="/assets/img/favicon.png">
+	<title>{% block title %}{% endblock %} | Ethil Van</title>
+
+	<link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="/assets/css/member.css">
+	{% block stylesheets %}{% endblock %}
+
+	<script type="module" src="/assets/js/global.js"></script>
+	{% block javascripts %}{% endblock %}
+</head>
+
+
+<body class="member">
+<header class="main-header">
+	<nav>
+		<div class="subnav top">
+			<a class="img-container" href="{{ path('app_member') }}">
+				<img src="/assets/img/EV-200_nbg.png" alt="Logo Ethil Van">
+			</a>
+			<a href="">
+				<i class="fa-solid fa-user"></i>
+				<span>Profil</span>
+			</a>
+			<a href="">
+				<i class="fa-solid fa-medal"></i>
+				<span>Défis</span>
+			</a>
+		</div>
+		<div class="subnav bottom">
+			{% if is_granted('ROLE_ADMIN') %}
+				<a href="{{ path('app_admin') }}">
+					<i class="fa-solid fa-lock"></i>
+					<span>Administration</span>
+				</a>
+			{% endif %}
+			<a href="{{ path('app_logout') }}">
+				<i class="fa-solid fa-right-from-bracket"></i>
+				<span>Déconnexion</span>
+			</a>
+		</div>
+	</nav>
+</header>
+
+<main class="main-container">
+	{% block body %}{% endblock %}
+</main>
+</body>
+
+</html>
