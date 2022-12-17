@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Service\MailjetService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,11 +23,26 @@ class AdminUserController extends AbstractController {
 
 
 	#[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
-	public function edit(Request $request, User $user, UserRepository $user_repository): Response {
+	public function edit(Request $request, User $user, UserRepository $user_repository,
+			MailjetService $mailjet_service): Response {
+
+		$old_user_roles = $user->getRoles();
+
 		$form = $this->createForm(UserType::class, $user);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
+			$new_user_roles = $user->getRoles();
+
+			// Send email on user validation
+			if (!in_array('ROLE_EV', $old_user_roles) && in_array('ROLE_EV', $new_user_roles)) {
+				$subject = 'Votre compte vient d\'être activé sur ethilvan.fr';
+				$mailjet_service->send($user->getEmail(), $user->getUsername(), $subject,
+						$_ENV['ACCOUNT_ACTIVATION_TEMPLATE_ID'], [
+								'username' => $user->getUsername(),
+						]);
+			}
+
 			$user_repository->save($user, true);
 
 			return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);

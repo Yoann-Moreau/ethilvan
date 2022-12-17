@@ -12,6 +12,12 @@ APP_ENV=dev
 APP_SECRET=app_secret
 
 DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?charset=utf8"
+
+MJ_APIKEY_PUBLIC=public_key_here
+MJ_APIKEY_PRIVATE=secret_key_here
+SENDER_EMAIL="email@email.email"
+ADMIN_EMAIL="email@email.email"
+ACCOUNT_ACTIVATION_TEMPLATE_ID=template_id_here
 ```
 
 ## Contributing
