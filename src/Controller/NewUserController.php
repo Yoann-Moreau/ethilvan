@@ -9,13 +9,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-#[Route('/member')]
-class MemberController extends AbstractController {
+class NewUserController extends AbstractController {
 
-	#[Route('/', name: 'app_member')]
+	#[Route('/new_user', name: 'app_new_user')]
 	public function index(): Response {
-		return $this->render('member/index.html.twig', [
-				'controller_name' => 'MemberController',
-		]);
+
+		if ($this->isGranted('ROLE_EV')) {
+			return $this->redirectToRoute('app_member');
+		}
+
+		return $this->render('new_user/index.html.twig');
 	}
 }
