@@ -5,6 +5,12 @@
 {% block body %}
 	<h1>Editer l'utilisateur</h1>
 
+	<ul class="errors">
+		{% for message in app.flashes('error') %}
+			<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ message }}</li>
+		{% endfor %}
+	</ul>
+
 	<div class="col-50">
 		<div class="btns-container">
 			<div class="back">

@@ -18,6 +18,7 @@
 				<div class="col col-35">{{ user.username }}</div>
 				<div class="col col-35">
 					{% for role in user.roles %}
+						{% if role == 'ROLE_USER' %}Utilisateur{% endif %}
 						{% if role == 'ROLE_EV' %}Ethil-Vannien{% endif %}
 						{% if role == 'ROLE_ADMIN' %}Admin{% endif %}
 						{% if role == 'ROLE_SUPER_ADMIN' %}Super-Admin{% endif %}

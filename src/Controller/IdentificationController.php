@@ -49,6 +49,8 @@ class IdentificationController extends AbstractController {
 			if (empty($errors)) {
 				$hashed_password = $password_hasher->hashPassword($user, $user->getPassword());
 				$user->setPassword($hashed_password);
+				$user->setRoles(['ROLE_USER']);
+				$user->setDeleted(false);
 
 				$user_repository->save($user, true);
 			}
