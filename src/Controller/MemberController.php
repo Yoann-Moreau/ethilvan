@@ -18,4 +18,10 @@ class MemberController extends AbstractController {
 				'controller_name' => 'MemberController',
 		]);
 	}
+
+
+	#[Route('/profile', name: 'app_member_profile')]
+	public function profile(): Response {
+		return $this->render('member/profile.html.twig');
+	}
 }
