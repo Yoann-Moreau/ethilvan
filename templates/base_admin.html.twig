@@ -23,11 +23,25 @@
 <body class="admin">
 <header class="main-header">
 	<nav>
-		<a class="img-container" href="{{ path('app_admin') }}">
-			<img src="/assets/img/EV-200_nbg.png" alt="Logo Ethil Van">
-		</a>
-		<a href="{{ path('app_text_index') }}">Textes</a>
-		<a href="{{ path('app_game_index') }}">Jeux</a>
+		<div class="subnav top">
+			<a class="img-container" href="{{ path('app_admin') }}">
+				<img src="/assets/img/EV-200_nbg.png" alt="Logo Ethil Van">
+			</a>
+			<a href="{{ path('app_text_index') }}">
+				<i class="fa-solid fa-align-left"></i>
+				<span>Textes</span>
+			</a>
+			<a href="{{ path('app_game_index') }}">
+				<i class="fa-solid fa-gamepad"></i>
+				<span>Jeux</span>
+			</a>
+		</div>
+		<div class="subnav bottom">
+			<a href="{{ path('app_member') }}">
+				<i class="fa-solid fa-user"></i>
+				<span>Espace membre</span>
+			</a>
+		</div>
 	</nav>
 </header>
 

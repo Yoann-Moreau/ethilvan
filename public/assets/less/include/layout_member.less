@@ -44,8 +44,22 @@ body {
 		}
 
 		a {
-			font-size: 2rem;
+			font-size: 1.9rem;
 			margin-bottom: 1em;
 		}
 	}
+}
+
+// ==============================================
+// Main
+// ==============================================
+
+.main-container {
+	display: flex;
+	flex-direction: column;
+	width: calc(100% - @member-header-width);
+	height: 100%;
+	padding: 4rem;
+	margin-left: @member-header-width;
+	overflow-y: auto;
 }
