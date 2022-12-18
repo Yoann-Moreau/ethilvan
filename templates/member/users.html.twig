@@ -1,0 +1,33 @@
+{% extends 'base_member.html.twig' %}
+
+{% block title %}Ethil-Vanniens{% endblock %}
+
+{% block body %}
+	<h1>Liste des Ethil-Vanniens</h1>
+
+	<section class="user-list">
+
+		{% for user in users %}
+			<article class="user-card">
+				<div class="left">
+					<div class="avatar-container">
+						{% if user.avatar %}
+							<img class="avatar" src="/uploads/img/avatars/{{ user.avatar }}" alt="Avatar de {{ user.username }}">
+						{% else %}
+							<img class="avatar" src="/assets/img/EV-200_nbg.png" alt="Logo d'Ethil Van">
+						{% endif %}
+					</div>
+				</div>
+				<div class="info-container right">
+					<h2 class="username">{{ user.username }}</h2>
+					<a class="see-profile" href="">
+						<span>Voir le profil</span>
+						<i class="fa-solid fa-chevron-right"></i>
+					</a>
+				</div>
+			</article>
+		{% endfor %}
+
+	</section>
+
+{% endblock %}

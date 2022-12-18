@@ -23,6 +23,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 		parent::__construct($registry, User::class);
 	}
 
+
 	public function save(User $entity, bool $flush = false): void {
 		$this->getEntityManager()->persist($entity);
 
@@ -31,6 +32,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 		}
 	}
 
+
 	public function remove(User $entity, bool $flush = false): void {
 		$this->getEntityManager()->remove($entity);
 
@@ -38,6 +40,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 			$this->getEntityManager()->flush();
 		}
 	}
+
 
 	/**
 	 * Used to upgrade (rehash) the user's password automatically over time.
@@ -50,6 +53,31 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 		$user->setPassword($newHashedPassword);
 
 		$this->save($user, true);
+	}
+
+
+	/**
+	 * Find not deleted users with the role ROLE_EV or superior
+	 * @return User[]
+	 */
+	public function findEv(): array {
+		$rsm = $this->createResultSetMappingBuilder('u');
+
+		$sql = sprintf(
+				"SELECT %s 
+				FROM user u 
+				WHERE (JSON_SEARCH(u.roles, 'one', :role_ev) IS NOT NULL
+				OR JSON_SEARCH(u.roles, 'one', :role_admin) IS NOT NULL
+				OR JSON_SEARCH(u.roles, 'one', :role_sa) IS NOT NULL)
+				AND u.deleted = 0"
+				, $rsm->generateSelectClause());
+
+		$query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+		$query->setParameter('role_ev', 'ROLE_EV');
+		$query->setParameter('role_admin', 'ROLE_ADMIN');
+		$query->setParameter('role_sa', 'ROLE_SUPER_ADMIN');
+
+		return $query->getResult();
 	}
 
 }
