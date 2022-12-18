@@ -20,7 +20,7 @@
 				</div>
 				<div class="info-container right">
 					<h2 class="username">{{ user.username }}</h2>
-					<a class="see-profile" href="">
+					<a class="see-profile" href="{{ path('app_member_user', {'id': user.id}) }}">
 						<span>Voir le profil</span>
 						<i class="fa-solid fa-chevron-right"></i>
 					</a>

@@ -72,6 +72,8 @@ class AdminUserController extends AbstractController {
 			$user->setUsername('[Utilisateur supprimé]');
 			$user->setEmail('contact@ethilvan.fr');
 			$user->setPassword('');
+			$user->setAvatar(null);
+			$user->setFavoriteGames(null);
 			$user->setDeleted(true);
 
 			$user_repository->save($user, true);

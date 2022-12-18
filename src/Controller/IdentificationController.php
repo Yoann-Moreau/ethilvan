@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use App\Repository\UserRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,6 +53,7 @@ class IdentificationController extends AbstractController {
 				$hashed_password = $password_hasher->hashPassword($user, $user->getPassword());
 				$user->setPassword($hashed_password);
 				$user->setRoles(['ROLE_USER']);
+				$user->setInscriptionDate(new DateTime());
 				$user->setDeleted(false);
 
 				$user_repository->save($user, true);

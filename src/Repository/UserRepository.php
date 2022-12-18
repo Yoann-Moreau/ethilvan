@@ -69,7 +69,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 				WHERE (JSON_SEARCH(u.roles, 'one', :role_ev) IS NOT NULL
 				OR JSON_SEARCH(u.roles, 'one', :role_admin) IS NOT NULL
 				OR JSON_SEARCH(u.roles, 'one', :role_sa) IS NOT NULL)
-				AND u.deleted = 0"
+				AND u.deleted = 0
+				ORDER BY u.username ASC"
 				, $rsm->generateSelectClause());
 
 		$query = $this->getEntityManager()->createNativeQuery($sql, $rsm);

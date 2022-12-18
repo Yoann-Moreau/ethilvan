@@ -65,7 +65,7 @@ body {
 	flex-direction: column;
 	width: calc(100% - @member-header-width);
 	height: 100%;
-	padding: 4rem;
+	padding: 6rem;
 	margin-left: @member-header-width;
 	overflow-y: auto;
 }
@@ -128,6 +128,56 @@ body {
 				font-size: 0.8em;
 				margin-right: 0;
 			}
+		}
+	}
+}
+
+
+// ==============================================
+// Profile
+// ==============================================
+
+.profile {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+
+	header {
+		display: flex;
+	}
+
+	.avatar-container {
+		width: 10rem;
+		height: 10rem;
+		margin-right: 3rem;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+			border-radius: 50%;
+		}
+	}
+
+	h1 {
+		margin-bottom: 0.1em;
+	}
+
+	.role {
+		font-size: 2rem;
+		margin-bottom: 0.1em;
+	}
+
+	.inscription-date {
+		margin-bottom: 1.5em;
+	}
+
+	.favorite-games {
+		padding: 3rem;
+		background-color: @bg-main;
+
+		.favorite-game-list {
+			min-height: 3rem;
 		}
 	}
 }

@@ -1,0 +1,38 @@
+<div class="profile">
+	<header>
+		<div class="avatar-container">
+			{% if user.avatar %}
+				<img class="avatar" src="/uploads/img/avatars/{{ user.avatar }}" alt="Avatar de {{ user.username }}">
+			{% else %}
+				<img class="avatar" src="/assets/img/EV-200_nbg.png" alt="Logo d'Ethil Van">
+			{% endif %}
+		</div>
+		<div class="main-info-container">
+			<h1>{{ user.username }}</h1>
+			<div class="role">
+				{% if 'ROLE_SUPER_ADMIN' in user.roles or 'ROLE_ADMIN' in user.roles %}
+					Admin
+				{% elseif 'ROLE_EV' in user.roles %}
+					Ethil-Vannien
+				{% else %}
+					Nouvel utilisateur
+				{% endif %}
+			</div>
+			<div class="inscription-date">Inscrit depuis le {{ user.inscriptionDate|format_date('long', locale='fr') }}</div>
+
+			{% if app.user.username is same as user.username %}
+				<div class="btns">
+					<a class="btn" href="{{ path('app_member_profile_edit') }}">
+						<i class="fa-solid fa-pen"></i>
+						<span>Editer mon profil</span>
+					</a>
+				</div>
+			{% endif %}
+		</div>
+	</header>
+
+	<section class="favorite-games">
+		<h2>Mes jeux préférés</h2>
+		<p class="favorite-game-list">{{ user.favoriteGames|nl2br }}</p>
+	</section>
+</div>

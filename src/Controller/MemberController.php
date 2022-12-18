@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,15 +16,19 @@ class MemberController extends AbstractController {
 
 	#[Route('/', name: 'app_member')]
 	public function index(): Response {
-		return $this->render('member/index.html.twig', [
-				'controller_name' => 'MemberController',
-		]);
+		return $this->render('member/index.html.twig');
 	}
 
 
 	#[Route('/profile', name: 'app_member_profile')]
 	public function profile(): Response {
 		return $this->render('member/profile.html.twig');
+	}
+
+
+	#[Route('/profile/edit', name: 'app_member_profile_edit')]
+	public function profileEdit(): Response {
+		return $this->render('member/profile_edit.html.twig');
 	}
 
 
@@ -36,4 +41,19 @@ class MemberController extends AbstractController {
 				'users' => $users,
 		]);
 	}
+
+
+	#[Route('/user/{id}', name: 'app_member_user')]
+	public function user(int $id, UserRepository $user_repository): Response {
+		$user = $user_repository->find($id);
+
+		if ($user === null || $user->isDeleted()) {
+			throw $this->createNotFoundException("L'utilisateur n'existe pas");
+		}
+
+		return $this->render('member/user.html.twig', [
+				'user' => $user,
+		]);
+	}
+
 }

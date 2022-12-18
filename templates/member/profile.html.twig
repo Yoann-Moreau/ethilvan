@@ -3,6 +3,6 @@
 {% block title %}{{ app.user.username }}{% endblock %}
 
 {% block body %}
-	<h1>{{ app.user.username }}</h1>
-
+	{% set user = app.user %}
+	{{ include('member/include/profile.html.twig') }}
 {% endblock %}
