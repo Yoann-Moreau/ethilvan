@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Form\ChangeEmailType;
 use App\Form\ProfileEditType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,6 +59,47 @@ class MemberController extends AbstractController {
 		return $this->render('member/profile_edit.html.twig', [
 				'form'   => $form->createView(),
 				'errors' => $form_errors,
+		]);
+	}
+
+
+	#[Route('/change_email', name: 'app_member_change_email')]
+	public function changeEmail(Request $request, UserRepository $user_repository,
+			ValidatorInterface $validator): Response {
+
+		$form_errors = [];
+		$errors = [];
+
+		$user = $user_repository->find($this->getUser()->getId());
+		$form = $this->createForm(ChangeEmailType::class, $user);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$email = $form->get('email')->getData();
+			$password = $form->get('password')->getData();
+
+			if (!password_verify($password, $user->getPassword())) {
+				$errors[] = 'Mauvais mot de passe';
+			}
+
+			if ($user_repository->findOneBy(['email' => $email]) !== null) {
+				$errors[] = 'Adresse email déjà utilisée';
+			}
+
+			if (empty($errors)) {
+				$user_repository->save($user, true);
+				$this->addFlash('success', 'Adresse email changée avec succès');
+				return $this->redirectToRoute('app_member_profile_edit', [], Response::HTTP_SEE_OTHER);
+			}
+		}
+		elseif ($form->isSubmitted() && !$form->isValid()) {
+			$form_errors = $validator->validate($form);
+		}
+
+		return $this->render('member/change_email.html.twig', [
+				'form'        => $form->createView(),
+				'form_errors' => $form_errors,
+				'errors'      => $errors,
 		]);
 	}
 

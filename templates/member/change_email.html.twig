@@ -1,0 +1,40 @@
+{% extends 'base_member.html.twig' %}
+
+{% block title %}Changement d'adresse email{% endblock %}
+
+{% block body %}
+	<h1>Changement d'adresse email</h1>
+
+	<ul class="errors">
+		{% for error in form_errors %}
+			<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error.message }}</li>
+		{% endfor %}
+		{% for error in errors %}
+			<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</li>
+		{% endfor %}
+	</ul>
+
+	<div class="col-50">
+		{{ form_start(form) }}
+
+		<div class="input-container">
+			{{ form_label(form.email) }}
+			{{ form_widget(form.email) }}
+		</div>
+
+		<div class="input-container">
+			{{ form_label(form.password) }}
+			{{ form_widget(form.password) }}
+		</div>
+
+		{{ form_widget(form._token) }}
+
+		<div class="btns right">
+			<button type="submit" class="btn">
+				<i class="fa-solid fa-floppy-disk"></i>
+				<span>Sauvegarder</span>
+			</button>
+		</div>
+		{{ form_end(form) }}
+	</div>
+{% endblock %}

@@ -187,17 +187,29 @@ textarea {
 	background-color: @bg-window;
 }
 
-.errors {
-	margin-bottom: 1em;
+.errors,
+.successes {
 
 	&:empty {
 		display: none;
 	}
 }
 
-.error {
+.error,
+.success {
 	margin-bottom: 0.5em;
+
+	&:last-child {
+		margin-bottom: 1.5em;
+	}
+}
+
+.error {
 	color: @tc-error;
+}
+
+.success {
+	color: @tc-success;
 }
 
 // ==============================================
