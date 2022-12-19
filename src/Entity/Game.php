@@ -5,6 +5,8 @@ namespace App\Entity;
 
 
 use App\Repository\GameRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -37,6 +39,14 @@ class Game {
 
 	#[ORM\Column]
 	private ?bool $played = null;
+
+	#[ORM\OneToMany(mappedBy: 'game', targetEntity: Challenge::class)]
+	private Collection $challenges;
+
+
+	public function __construct() {
+		$this->challenges = new ArrayCollection();
+	}
 
 
 	public function getId(): ?int {
@@ -116,6 +126,34 @@ class Game {
 
 	public function setPlayed(bool $played): self {
 		$this->played = $played;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return Collection<int, Challenge>
+	 */
+	public function getChallenges(): Collection {
+		return $this->challenges;
+	}
+
+	public function addChallenge(Challenge $challenge): self {
+		if (!$this->challenges->contains($challenge)) {
+			$this->challenges->add($challenge);
+			$challenge->setGame($this);
+		}
+
+		return $this;
+	}
+
+	public function removeChallenge(Challenge $challenge): self {
+		if ($this->challenges->removeElement($challenge)) {
+			// set the owning side to null (unless already changed)
+			if ($challenge->getGame() === $this) {
+				$challenge->setGame(null);
+			}
+		}
 
 		return $this;
 	}

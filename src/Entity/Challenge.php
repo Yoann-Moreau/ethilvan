@@ -27,6 +27,10 @@ class Challenge {
 	#[ORM\JoinColumn(nullable: false)]
 	private ?ChallengeDifficulty $difficulty = null;
 
+	#[ORM\ManyToOne(inversedBy: 'challenges')]
+	#[ORM\JoinColumn(nullable: false)]
+	private ?Game $game = null;
+
 
 	public function getId(): ?int {
 		return $this->id;
@@ -72,6 +76,17 @@ class Challenge {
 
 	public function setDifficulty(?ChallengeDifficulty $difficulty): self {
 		$this->difficulty = $difficulty;
+
+		return $this;
+	}
+
+
+	public function getGame(): ?Game {
+		return $this->game;
+	}
+
+	public function setGame(?Game $game): self {
+		$this->game = $game;
 
 		return $this;
 	}
