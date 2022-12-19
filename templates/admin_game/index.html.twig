@@ -31,7 +31,7 @@
 		{% for game in games %}
 			<div class="row">
 				<div class="col col-65">
-					<a class="game-info" href="{{ path('app_game_show', {'id': game.id}) }}">
+					<a class="game-info" href="{{ path('app_game_edit', {'id': game.id}) }}">
 						<div class="game-image">
 							<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
 						</div>

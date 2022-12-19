@@ -23,7 +23,7 @@
 		{% for text in texts %}
 			<div class="row">
 				<div class="col col-65">
-					<a href="{{ path('app_text_show', {'id': text.id}) }}">{{ text.title }}</a>
+					<a href="{{ path('app_text_edit', {'id': text.id}) }}">{{ text.title }}</a>
 				</div>
 				<div class="col col-10">{{ text.page }}</div>
 				<div class="col col-25 btns">

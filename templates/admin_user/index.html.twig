@@ -15,7 +15,8 @@
 
 		{% for user in users %}
 			<div class="row">
-				<div class="col col-35">{{ user.username }}</div>
+				<div class="col col-35">
+					<a href="{{ path('app_admin_user_edit', {'id': user.id}) }}">{{ user.username }}</a></div>
 				<div class="col col-35">
 					{% for role in user.roles %}
 						{% if role == 'ROLE_USER' %}Utilisateur{% endif %}

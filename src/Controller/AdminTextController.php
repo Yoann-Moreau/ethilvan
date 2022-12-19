@@ -43,14 +43,6 @@ class AdminTextController extends AbstractController {
 	}
 
 
-	#[Route('/{id}', name: 'app_text_show', methods: ['GET'])]
-	public function show(Text $text): Response {
-		return $this->render('admin_text/show.html.twig', [
-				'text' => $text,
-		]);
-	}
-
-
 	#[Route('/{id}/edit', name: 'app_text_edit', methods: ['GET', 'POST'])]
 	public function edit(Request $request, Text $text, TextRepository $text_repository): Response {
 		$form = $this->createForm(PageTextType::class, $text);

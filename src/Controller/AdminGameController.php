@@ -137,14 +137,6 @@ class AdminGameController extends AbstractController {
 	}
 
 
-	#[Route('/{id}', name: 'app_game_show', methods: ['GET'])]
-	public function show(Game $game): Response {
-		return $this->render('admin_game/show.html.twig', [
-				'game' => $game,
-		]);
-	}
-
-
 	#[Route('/{id}/edit', name: 'app_game_edit', methods: ['GET', 'POST'])]
 	public function edit(Request $request, Game $game, GameRepository $game_repository,
 			ToolsService $tools_service): Response {
