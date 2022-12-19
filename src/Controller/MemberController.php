@@ -52,7 +52,7 @@ class MemberController extends AbstractController {
 			}
 
 			$user_repository->save($user, true);
-			$this->redirectToRoute('app_member_profile', [], Response::HTTP_SEE_OTHER);
+			return $this->redirectToRoute('app_member_profile', [], Response::HTTP_SEE_OTHER);
 		}
 		elseif ($form->isSubmitted() && !$form->isValid()) {
 			$form_errors = $validator->validate($form);
