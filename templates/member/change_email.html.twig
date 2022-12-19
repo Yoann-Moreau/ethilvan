@@ -5,6 +5,15 @@
 {% block body %}
 	<h1>Changement d'adresse email</h1>
 
+	<div class="btns-container">
+		<div class="btns">
+			<a class="btn" href="{{ path('app_member_profile_edit') }}">
+				<i class="fa-solid fa-arrow-left"></i>
+				<span>Retour à l'édition du profil</span>
+			</a>
+		</div>
+	</div>
+
 	<ul class="errors">
 		{% for error in form_errors %}
 			<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error.message }}</li>
