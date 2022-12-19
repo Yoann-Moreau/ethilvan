@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Game;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 
@@ -37,6 +38,13 @@ class GameRepository extends ServiceEntityRepository {
 		if ($flush) {
 			$this->getEntityManager()->flush();
 		}
+	}
+
+
+	public function createAlphabeticalQueryBuilder(): QueryBuilder {
+		return $this->createQueryBuilder('g')
+				->select('g')
+				->orderBy('g.name', 'ASC');
 	}
 
 }
