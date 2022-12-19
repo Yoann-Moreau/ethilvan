@@ -38,6 +38,20 @@
 			{{ form_widget(form.app_id) }}
 		</div>
 
+		<div class="input-container">
+			<div class="checkbox-container">
+				{{ form_widget(form.multi) }}
+				{{ form_label(form.multi) }}
+			</div>
+		</div>
+
+		<div class="input-container">
+			<div class="checkbox-container">
+				{{ form_widget(form.played) }}
+				{{ form_label(form.played) }}
+			</div>
+		</div>
+
 		<div class="btns right">
 			<button type="submit">
 				<i class="fa-solid fa-floppy-disk"></i>

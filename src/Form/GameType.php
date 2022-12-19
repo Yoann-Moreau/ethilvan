@@ -36,6 +36,14 @@ class GameType extends AbstractType {
 				->add('link', TextType::class, [
 						'label'    => 'Lien',
 						'required' => false,
+				])
+				->add('multi', CheckboxType::class, [
+						'label' => 'Multijoueurs',
+						'required' => false,
+				])
+				->add('played', CheckboxType::class, [
+						'label' => 'Apparait dans la liste des jeux joués',
+						'required' => false,
 				]);
 	}
 

@@ -32,6 +32,12 @@ class Game {
 	#[ORM\Column]
 	private ?bool $current = null;
 
+	#[ORM\Column]
+	private ?bool $multi = null;
+
+	#[ORM\Column]
+	private ?bool $played = null;
+
 
 	public function getId(): ?int {
 		return $this->id;
@@ -88,6 +94,28 @@ class Game {
 
 	public function setCurrent(bool $current): self {
 		$this->current = $current;
+
+		return $this;
+	}
+
+
+	public function isMulti(): ?bool {
+		return $this->multi;
+	}
+
+	public function setMulti(bool $multi): self {
+		$this->multi = $multi;
+
+		return $this;
+	}
+
+
+	public function isPlayed(): ?bool {
+		return $this->played;
+	}
+
+	public function setPlayed(bool $played): self {
+		$this->played = $played;
 
 		return $this;
 	}

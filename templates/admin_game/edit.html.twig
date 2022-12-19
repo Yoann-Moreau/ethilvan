@@ -35,6 +35,20 @@
 			{{ form_widget(form.link) }}
 		</div>
 
+		<div class="input-container">
+			<div class="checkbox-container">
+				{{ form_widget(form.multi) }}
+				{{ form_label(form.multi) }}
+			</div>
+		</div>
+
+		<div class="input-container">
+			<div class="checkbox-container">
+				{{ form_widget(form.played) }}
+				{{ form_label(form.played) }}
+			</div>
+		</div>
+
 		{{ form_widget(form._token) }}
 
 		<div class="btns right">

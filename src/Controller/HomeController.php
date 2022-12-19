@@ -31,7 +31,7 @@ class HomeController extends AbstractController {
 
 		$games_texts = $text_repository->findBy(['page' => 'games'], ['text_order' => 'ASC']);
 		$current_games = $game_repository->findBy(['current' => true], ['name' => 'ASC'], 3);
-		$games = $game_repository->findBy([], ['name' => 'ASC']);
+		$games = $game_repository->findBy(['multi' => true, 'played' => true], ['name' => 'ASC']);
 
 		return $this->render('front/games.html.twig', [
 				'texts'         => $games_texts,
