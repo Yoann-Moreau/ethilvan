@@ -5,11 +5,13 @@ namespace App\Controller;
 
 
 use App\Form\ChangeEmailType;
+use App\Form\ChangePasswordType;
 use App\Form\ProfileEditType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -97,6 +99,50 @@ class MemberController extends AbstractController {
 		}
 
 		return $this->render('member/change_email.html.twig', [
+				'form'        => $form->createView(),
+				'form_errors' => $form_errors,
+				'errors'      => $errors,
+		]);
+	}
+
+
+	#[Route('/change_password', name: 'app_member_change_password')]
+	public function changePassword(Request $request, UserRepository $user_repository,
+			ValidatorInterface $validator, UserPasswordHasherInterface $password_hasher): Response {
+
+		$form_errors = [];
+		$errors = [];
+
+		$user = $user_repository->find($this->getUser()->getId());
+		$form = $this->createForm(ChangePasswordType::class, $user);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$password = $form->get('password')->getData();
+			$new_password = $form->get('newPassword')->getData();
+			$c_new_password = $form->get('confirmNewPassword')->getData();
+
+			if (!password_verify($password, $user->getPassword())) {
+				$errors[] = 'Mauvais mot de passe';
+			}
+
+			if ($new_password !== $c_new_password) {
+				$errors[] = 'Vous devez renseigner deux fois le même mot de passe';
+			}
+
+			if (empty($errors)) {
+				$hashed_password = $password_hasher->hashPassword($user, $new_password);
+				$user->setPassword($hashed_password);
+				$user_repository->save($user, true);
+				$this->addFlash('success', 'Mot de passe changé avec succès');
+				return $this->redirectToRoute('app_member_profile_edit', [], Response::HTTP_SEE_OTHER);
+			}
+		}
+		elseif ($form->isSubmitted() && !$form->isValid()) {
+			$form_errors = $validator->validate($form);
+		}
+
+		return $this->render('member/change_password.html.twig', [
 				'form'        => $form->createView(),
 				'form_errors' => $form_errors,
 				'errors'      => $errors,
