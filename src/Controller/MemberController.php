@@ -4,11 +4,13 @@
 namespace App\Controller;
 
 
-use App\Entity\User;
+use App\Form\ProfileEditType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 #[Route('/member')]
@@ -27,8 +29,36 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/profile/edit', name: 'app_member_profile_edit')]
-	public function profileEdit(): Response {
-		return $this->render('member/profile_edit.html.twig');
+	public function profileEdit(Request $request, UserRepository $user_repository,
+			ValidatorInterface $validator): Response {
+
+		$form_errors = [];
+
+		$user = $user_repository->find($this->getUser()->getId());
+		$form = $this->createForm(ProfileEditType::class, $user);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$avatar = $form->get('avatar')->getData();
+
+			if (!empty($avatar)) {
+				$avatar_name = $user->getId() . '_' . uniqid() . $avatar->guessExtension();
+				$directory = $this->getParameter('avatars_directory');
+				$avatar->move($directory, $avatar_name);
+				$user->setAvatar($avatar_name);
+			}
+
+			$user_repository->save($user, true);
+			$this->redirectToRoute('app_member_profile', [], Response::HTTP_SEE_OTHER);
+		}
+		elseif ($form->isSubmitted() && !$form->isValid()) {
+			$form_errors = $validator->validate($form);
+		}
+
+		return $this->render('member/profile_edit.html.twig', [
+				'form'   => $form->createView(),
+				'errors' => $form_errors,
+		]);
 	}
 
 

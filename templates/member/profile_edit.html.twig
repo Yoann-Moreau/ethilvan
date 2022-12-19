@@ -4,4 +4,34 @@
 
 {% block body %}
 	<h1>Edition de profil</h1>
+
+	<ul class="errors">
+		{% for error in errors %}
+			<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error.message }}</li>
+		{% endfor %}
+	</ul>
+
+	<div class="col-50">
+		{{ form_start(form) }}
+
+		<div class="input-container">
+			{{ form_label(form.avatar) }}
+			{{ form_widget(form.avatar) }}
+		</div>
+
+		<div class="input-container">
+			{{ form_label(form.favoriteGames) }}
+			{{ form_widget(form.favoriteGames) }}
+		</div>
+
+		{{ form_widget(form._token) }}
+
+		<div class="btns right">
+			<button type="submit" class="btn">
+				<i class="fa-solid fa-floppy-disk"></i>
+				<span>Sauvegarder</span>
+			</button>
+		</div>
+		{{ form_end(form) }}
+	</div>
 {% endblock %}

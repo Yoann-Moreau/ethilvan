@@ -21,7 +21,11 @@
 	<nav>
 		<div class="subnav top">
 			<a class="img-container" href="{{ path('app_member') }}">
-				<img src="/assets/img/EV-200_nbg.png" alt="Logo Ethil Van">
+				{% if app.user.avatar %}
+					<img class="avatar" src="/uploads/avatar/{{ app.user.avatar }}" alt="Avatar de {{ app.user.username }}">
+				{% else %}
+					<img class="avatar" src="/assets/img/EV-200_nbg.png" alt="Logo d'Ethil Van">
+				{% endif %}
 			</a>
 			<a href="{{ path('app_member_profile') }}">
 				<i class="fa-solid fa-user"></i>
