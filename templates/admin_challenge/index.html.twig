@@ -1,39 +1,43 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Challenge index{% endblock %}
+{% block title %}Liste des défis{% endblock %}
 
 {% block body %}
-	<h1>Challenge index</h1>
+	<h1>Liste des défis</h1>
 
-	<table class="table">
-		<thead>
-		<tr>
-			<th>Id</th>
-			<th>Name</th>
-			<th>Description</th>
-			<th>Number_of_players</th>
-			<th>actions</th>
-		</tr>
-		</thead>
-		<tbody>
+	<div class="btns">
+		<a class="btn" href="{{ path('app_admin_challenge_new') }}">
+			<i class="fa-solid fa-plus"></i>
+			<span>Ajouter un défi</span>
+		</a>
+	</div>
+
+	<div class="table games">
+
+		<div class="head">
+			<div class="col col-30">Défi</div>
+			<div class="col col-30">Jeu</div>
+			<div class="col col-15">Difficulté</div>
+			<div class="col col-25">Actions</div>
+		</div>
+
 		{% for challenge in challenges %}
-			<tr>
-				<td>{{ challenge.id }}</td>
-				<td>{{ challenge.name }}</td>
-				<td>{{ challenge.description }}</td>
-				<td>{{ challenge.numberOfPlayers }}</td>
-				<td>
-					<a href="{{ path('app_admin_challenge_show', {'id': challenge.id}) }}">show</a>
-					<a href="{{ path('app_admin_challenge_edit', {'id': challenge.id}) }}">edit</a>
-				</td>
-			</tr>
-		{% else %}
-			<tr>
-				<td colspan="5">no records found</td>
-			</tr>
+			<div class="row">
+				<div class="col col-30">
+					<a href="{{ path('app_admin_challenge_edit', {'id': challenge.id}) }}">{{ challenge.name }}</a>
+				</div>
+				<div class="col col-30">{{ challenge.game.name }}</div>
+				<div class="col col-15">{{ challenge.difficulty.name }}</div>
+				<div class="col col-25 btns">
+					<a class="btn" href="{{ path('app_admin_challenge_edit', {'id': challenge.id}) }}">
+						<i class="fa-solid fa-pen"></i>
+						<span>Editer</span>
+					</a>
+					{{ include('admin_challenge/_delete_form.html.twig') }}
+				</div>
+			</div>
 		{% endfor %}
-		</tbody>
-	</table>
 
-	<a href="{{ path('app_admin_challenge_new') }}">Create new</a>
+	</div>
+
 {% endblock %}

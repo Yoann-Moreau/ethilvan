@@ -1,11 +1,18 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}New Challenge{% endblock %}
+{% block title %}Nouveau défi{% endblock %}
 
 {% block body %}
-	<h1>Create new Challenge</h1>
+	<h1>Nouveau défi</h1>
 
-	{{ include('admin_challenge/_form.html.twig') }}
+	<div class="col-50">
+		<div class="btns-container">
+			<a class="btn" href="{{ path('app_admin_challenge_index') }}">
+				<i class="fa-solid fa-arrow-left"></i>
+				<span>Retour à la liste des défis</span>
+			</a>
+		</div>
 
-	<a href="{{ path('app_admin_challenge_index') }}">back to list</a>
+		{{ include('admin_challenge/_form.html.twig') }}
+	</div>
 {% endblock %}

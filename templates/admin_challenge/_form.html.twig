@@ -1,4 +1,36 @@
 {{ form_start(form) }}
-{{ form_widget(form) }}
-<button class="btn">{{ button_label|default('Save') }}</button>
+
+<div class="input-container">
+	{{ form_label(form.game) }}
+	{{ form_widget(form.game) }}
+</div>
+
+<div class="input-container">
+	{{ form_label(form.name) }}
+	{{ form_widget(form.name) }}
+</div>
+
+<div class="input-container">
+	{{ form_label(form.number_of_players) }}
+	{{ form_widget(form.number_of_players) }}
+</div>
+
+<div class="input-container">
+	{{ form_label(form.difficulty) }}
+	{{ form_widget(form.difficulty) }}
+</div>
+
+<div class="input-container">
+	{{ form_label(form.description) }}
+	{{ form_widget(form.description) }}
+</div>
+
+{{ form_widget(form._token) }}
+
+<div class="btns right">
+	<button class="btn">
+		<i class="fa-solid fa-floppy-disk"></i>
+		<span>{{ button_label|default('Sauvegarder') }}</span>
+	</button>
+</div>
 {{ form_end(form) }}

@@ -40,14 +40,6 @@ class AdminChallengeController extends AbstractController {
 	}
 
 
-	#[Route('/{id}', name: 'app_admin_challenge_show', methods: ['GET'])]
-	public function show(Challenge $challenge): Response {
-		return $this->render('admin_challenge/show.html.twig', [
-				'challenge' => $challenge,
-		]);
-	}
-
-
 	#[Route('/{id}/edit', name: 'app_admin_challenge_edit', methods: ['GET', 'POST'])]
 	public function edit(Request $request, Challenge $challenge, ChallengeRepository $challengeRepository): Response {
 		$form = $this->createForm(ChallengeType::class, $challenge, [
