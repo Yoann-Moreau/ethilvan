@@ -6,6 +6,7 @@ namespace App\Service;
 
 use Mailjet\Client;
 use Mailjet\Resources;
+use Mailjet\Response;
 
 class MailjetService {
 
@@ -14,8 +15,8 @@ class MailjetService {
 	 * @param $username
 	 * @param $subject
 	 * @param $template_id
-	 * @param array $variables tableau associatif des variables à afficher dans le template défini par template_id
-	 * @return \Mailjet\Response
+	 * @param array $variables associative array of variables used in template defined by template_id
+	 * @return Response
 	 */
 	public function send($mail_to, $username, $subject, $template_id, array $variables = []) {
 
