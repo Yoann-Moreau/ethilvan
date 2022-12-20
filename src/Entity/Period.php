@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PeriodRepository;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,6 +31,14 @@ class Period {
 
 	#[ORM\Column(type: Types::DATE_MUTABLE)]
 	private ?DateTimeInterface $end_date = null;
+
+	#[ORM\ManyToMany(targetEntity: Challenge::class, mappedBy: 'periods')]
+	private Collection $challenges;
+
+
+	public function __construct() {
+		$this->challenges = new ArrayCollection();
+	}
 
 
 	public function getId(): ?int {
@@ -86,6 +96,31 @@ class Period {
 
 	public function setEndDate(DateTimeInterface $end_date): self {
 		$this->end_date = $end_date;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return Collection<int, Challenge>
+	 */
+	public function getChallenges(): Collection {
+		return $this->challenges;
+	}
+
+	public function addChallenge(Challenge $challenge): self {
+		if (!$this->challenges->contains($challenge)) {
+			$this->challenges->add($challenge);
+			$challenge->addPeriod($this);
+		}
+
+		return $this;
+	}
+
+	public function removeChallenge(Challenge $challenge): self {
+		if ($this->challenges->removeElement($challenge)) {
+			$challenge->removePeriod($this);
+		}
 
 		return $this;
 	}

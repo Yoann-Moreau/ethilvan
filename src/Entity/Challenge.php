@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ChallengeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,6 +32,14 @@ class Challenge {
 	#[ORM\ManyToOne(inversedBy: 'challenges')]
 	#[ORM\JoinColumn(nullable: false)]
 	private ?Game $game = null;
+
+	#[ORM\ManyToMany(targetEntity: Period::class, inversedBy: 'challenges')]
+	private Collection $periods;
+
+
+	public function __construct() {
+		$this->periods = new ArrayCollection();
+	}
 
 
 	public function getId(): ?int {
@@ -87,6 +97,28 @@ class Challenge {
 
 	public function setGame(?Game $game): self {
 		$this->game = $game;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return Collection<int, Period>
+	 */
+	public function getPeriods(): Collection {
+		return $this->periods;
+	}
+
+	public function addPeriod(Period $period): self {
+		if (!$this->periods->contains($period)) {
+			$this->periods->add($period);
+		}
+
+		return $this;
+	}
+
+	public function removePeriod(Period $period): self {
+		$this->periods->removeElement($period);
 
 		return $this;
 	}
