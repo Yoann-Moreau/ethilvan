@@ -1,0 +1,84 @@
+@import "var.less";
+
+select[multiple] {
+	display: none;
+}
+
+.selecteds-container {
+	position: relative;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	min-height: 3em;
+	padding: 0.5em 3.5em 0.5em 0.5em;
+	background-color: @bg-main;
+	pointer-events: none;
+
+	&:after {
+		content: '\f107';
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 3em;
+		background-color: @bg-button;
+		color: white;
+		font-family: "Font Awesome 6 Free";
+		font-weight: bold;
+		cursor: pointer;
+		pointer-events: all;
+	}
+
+	&.active {
+
+		&:after {
+			content: '\f106';
+		}
+	}
+
+	.selected {
+		position: relative;
+		display: flex;
+		align-items: center;
+		background-color: @bg-button;
+		color: @tc-main;
+		padding: 0.2em 1.8em 0.2em 0.5em;
+		margin: 0.3em 0;
+		border-radius: 0.2em;
+		cursor: pointer;
+		pointer-events: all;
+
+		&:not(:last-of-type) {
+			margin-right: 0.5em;
+		}
+
+		&:after {
+			content: '\f00d';
+			position: absolute;
+			right: 0.5em;
+			font-family: "Font Awesome 6 Free";
+			font-weight: bold;
+		}
+	}
+}
+
+.options-container {
+	background-color: @bg-main;
+	border-top: 1px solid darken(@bg-button, 10%);
+	min-height: 2em;
+	max-height: 10em;
+	overflow-y: auto;
+
+	.option {
+		padding: 0.5em 1em;
+		cursor: pointer;
+
+		&:hover {
+			background-color: @bg-button;
+			color: @tc-main;
+		}
+	}
+}

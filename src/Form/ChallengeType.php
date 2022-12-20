@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Challenge;
 use App\Entity\ChallengeDifficulty;
 use App\Entity\Game;
+use App\Entity\Period;
 use App\Repository\GameRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -44,6 +45,12 @@ class ChallengeType extends AbstractType {
 				])
 				->add('description', TextareaType::class, [
 						'label' => 'Description',
+				])
+				->add('periods', EntityType::class, [
+						'label'        => 'Périodes',
+						'class'        => Period::class,
+						'choice_label' => 'name',
+						'multiple'     => true,
 				]);
 	}
 

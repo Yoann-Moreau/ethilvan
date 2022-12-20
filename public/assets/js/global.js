@@ -1,10 +1,12 @@
 import Autocomplete from './classes/Autocomplete.js';
+import BetterMultiSelect from './classes/BetterMultiSelect.js';
 
 // ============================================================================
 // Variables
 // ============================================================================
 
 const autocompleteInputs = document.getElementsByClassName('autocomplete');
+const multiSelects = document.querySelectorAll('select[multiple]');
 
 
 // ============================================================================
@@ -18,6 +20,9 @@ const autocompleteInputs = document.getElementsByClassName('autocomplete');
 
 for (const autocompleteInput of autocompleteInputs) {
 	new Autocomplete(autocompleteInput);
+}
+for (const multiSelect of multiSelects) {
+	new BetterMultiSelect(multiSelect);
 }
 
 
