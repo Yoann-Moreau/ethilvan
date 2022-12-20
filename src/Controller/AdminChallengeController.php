@@ -23,7 +23,7 @@ class AdminChallengeController extends AbstractController {
 		$sort_by = $request->query->get('sort_by');
 		$page = (int)$request->query->get('page');
 
-		if ($sort_by !== 'game' && $sort_by !== 'difficulty') {
+		if ($sort_by !== 'game' && $sort_by !== 'difficulty' && $sort_by !== 'period') {
 			$sort_by = null;
 		}
 		if ($page < 1) {
@@ -36,6 +36,9 @@ class AdminChallengeController extends AbstractController {
 		}
 		elseif ($sort_by === 'difficulty') {
 			$challenges = $challenge_repository->findBy([], ['difficulty' => 'ASC'], $elements_per_page, $offset);
+		}
+		elseif ($sort_by === 'period') {
+			$challenges = $challenge_repository->findOrderedByPeriod($elements_per_page, $offset);
 		}
 		else {
 			$challenges = $challenge_repository->findBy([], ['id' => 'ASC'], $elements_per_page, $offset);
