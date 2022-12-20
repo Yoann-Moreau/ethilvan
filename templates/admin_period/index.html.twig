@@ -1,0 +1,42 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Period index{% endblock %}
+
+{% block body %}
+	<h1>Period index</h1>
+
+	<table class="table">
+		<thead>
+		<tr>
+			<th>Id</th>
+			<th>Type</th>
+			<th>Name</th>
+			<th>Year</th>
+			<th>Start_date</th>
+			<th>End_date</th>
+			<th>actions</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for period in periods %}
+			<tr>
+				<td>{{ period.id }}</td>
+				<td>{{ period.type }}</td>
+				<td>{{ period.name }}</td>
+				<td>{{ period.year }}</td>
+				<td>{{ period.startDate ? period.startDate|date('Y-m-d') : '' }}</td>
+				<td>{{ period.endDate ? period.endDate|date('Y-m-d') : '' }}</td>
+				<td>
+					<a href="{{ path('app_admin_period_edit', {'id': period.id}) }}">edit</a>
+				</td>
+			</tr>
+		{% else %}
+			<tr>
+				<td colspan="7">no records found</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_admin_period_new') }}">Create new</a>
+{% endblock %}
