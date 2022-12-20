@@ -1,13 +1,18 @@
 <div class="pagination">
 
 	{% for p in pages %}
+
 		{% if p > page + 2 %}
 			<div class="separator">...</div>
 		{% endif %}
-		<a class="page" href="{{ path(path, {'sort_by': sort_by, 'page': p}) }}">{{ p }}</a>
+
+		<a class="page {% if p is same as page %}current{% endif %}"
+		   href="{{ path(path, {'sort_by': sort_by, 'page': p}) }}">{{ p }}</a>
+
 		{% if p < page - 2 %}
 			<div class="separator">...</div>
 		{% endif %}
+
 	{% endfor %}
 
 </div>

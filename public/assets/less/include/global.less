@@ -261,9 +261,19 @@ textarea {
 		width: 3.5rem;
 		height: 4rem;
 		background-color: @bg-main;
+		border-bottom: 2px solid @bg-main;
+		color: @tc-main;
+
+		&:hover {
+			background-color: @bg-button;
+		}
 
 		&:not(:last-child) {
 			margin-right: 0.5em;
+		}
+
+		&.current {
+			border-bottom: 2px solid @tc-link;
 		}
 	}
 
