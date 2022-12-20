@@ -32,7 +32,8 @@ class AjaxController extends AbstractController {
 
 		$max_current_games = 3;
 
-		if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+		if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles()) &&
+				!in_array('ROLE_SUPER_ADMIN', $this->getUser()->getRoles())) {
 			return new JsonResponse('Unauthorized');
 		}
 
