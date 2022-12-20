@@ -19,11 +19,12 @@ class GameType extends AbstractType {
 						'label' => 'Nom du jeu',
 				])
 				->add('image', FileType::class, [
-						'label'       => 'Image',
+						'label'       => 'Image (460x215)',
 						'required'    => false,
 						'constraints' => [
 								new File([
-										'maxSize'          => '1024k',
+										'maxSize'          => '256k',
+										'maxSizeMessage'   => "L'image doit peser moins de 256ko",
 										'mimeTypes'        => [
 												'image/png',
 												'image/jpeg',
@@ -38,11 +39,11 @@ class GameType extends AbstractType {
 						'required' => false,
 				])
 				->add('multi', CheckboxType::class, [
-						'label' => 'Multijoueurs',
+						'label'    => 'Multijoueurs',
 						'required' => false,
 				])
 				->add('played', CheckboxType::class, [
-						'label' => 'Apparait dans la liste des jeux joués',
+						'label'    => 'Apparait dans la liste des jeux joués',
 						'required' => false,
 				]);
 	}
