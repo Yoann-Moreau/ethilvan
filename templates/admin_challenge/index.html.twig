@@ -16,9 +16,22 @@
 
 		<div class="head">
 			<div class="col col-30">Défi</div>
-			<div class="col col-30">Jeu</div>
-			<div class="col col-15">Difficulté</div>
+			<div class="col col-30 sort {% if sort_by is same as 'game' %}active{% endif %}">
+				<a href="{{ path('app_admin_challenge_index', {'sort_by': 'game', 'page': 1}) }}">
+					Jeu<i class="fa-solid fa-arrow-up-a-z"></i>
+				</a>
+			</div>
+			<div class="col col-15 sort {% if sort_by is same as 'difficulty' %}active{% endif %}">
+				<a href="{{ path('app_admin_challenge_index', {'sort_by': 'difficulty', 'page': 1}) }}">
+					Difficulté<i class="fa-solid fa-arrow-up-1-9"></i>
+				</a>
+			</div>
 			<div class="col col-25">Actions</div>
+			<div class="reset-sort">
+				<a href="{{ path('app_admin_challenge_index', {'page': 1}) }}" title="Réinitialiser le tri">
+					<i class="fa-solid fa-xmark"></i>
+				</a>
+			</div>
 		</div>
 
 		{% for challenge in challenges %}
@@ -39,5 +52,8 @@
 		{% endfor %}
 
 	</div>
+
+	{% set path = 'app_admin_challenge_index' %}
+	{{ include('include/pagination.html.twig') }}
 
 {% endblock %}

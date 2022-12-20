@@ -36,4 +36,16 @@ class ChallengeRepository extends ServiceEntityRepository {
 		}
 	}
 
+
+	public function findOrderedByGameName(int $limit = 10, int $offset = 0): array {
+		return $this->createQueryBuilder('c')
+				->select('c')
+				->innerJoin('c.game', 'g')
+				->orderBy('g.name')
+				->setMaxResults($limit)
+				->setFirstResult($offset)
+				->getQuery()
+				->getResult();
+	}
+
 }

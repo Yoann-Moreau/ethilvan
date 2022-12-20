@@ -25,7 +25,9 @@
 
 		{% for period in periods %}
 			<div class="row">
-				<div class="col col-25">{{ period.name }}</div>
+				<div class="col col-25">
+					<a href="{{ path('app_admin_period_edit', {'id': period.id}) }}">{{ period.name }}</a>
+				</div>
 				<div class="col col-10">
 					{% if period.type is same as 'year' %}
 						Année

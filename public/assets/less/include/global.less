@@ -242,3 +242,33 @@ textarea {
 		border-radius: 50%;
 	}
 }
+
+// ==============================================
+// Pagination
+// ==============================================
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: baseline;
+	width: 100%;
+	margin-top: auto;
+
+	.page {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 3.5rem;
+		height: 4rem;
+		background-color: @bg-main;
+
+		&:not(:last-child) {
+			margin-right: 0.5em;
+		}
+	}
+
+	.separator {
+		height: 4rem;
+		margin: 0 1em 0 0.5em;
+	}
+}
