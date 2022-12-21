@@ -175,21 +175,41 @@ body {
 	background-color: @bg-main-lighter;
 
 	.game {
+		position: relative;
 		display: flex;
 		align-items: center;
-		width: 25%;
-		margin: 1em 0;
+		width: 25rem;
+		height: 25rem * 215 / 460; // Aspect ratio of steam images
+		margin: 1em;
 	}
 
 	.game-image {
-		width: 15rem;
-		height: 15rem * 215 / 460; // Aspect ratio of steam images
-		margin-right: 1em;
+		width: 100%;
+		height: 100%;
 
 		img {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
+		}
+	}
+
+	.game-name {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background-color: rgba(0, 0, 0, 0.9);
+		opacity: 0;
+		transition: 0.3s opacity ease-in-out;
+
+		&:hover {
+			opacity: 1;
 		}
 	}
 }
