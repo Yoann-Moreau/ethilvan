@@ -5,11 +5,13 @@
 {% block body %}
 	<h1>Liste des défis</h1>
 
-	<div class="btns">
-		<a class="btn" href="{{ path('app_admin_challenge_new') }}">
-			<i class="fa-solid fa-plus"></i>
-			<span>Ajouter un défi</span>
-		</a>
+	<div class="btns-container">
+		<div class="btns">
+			<a class="btn" href="{{ path('app_admin_challenge_new') }}">
+				<i class="fa-solid fa-plus"></i>
+				<span>Ajouter un défi</span>
+			</a>
+		</div>
 	</div>
 
 	<div class="table games">

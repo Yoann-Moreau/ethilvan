@@ -9,16 +9,24 @@
 {% block body %}
 	<h1>Liste des jeux</h1>
 
-	<div class="btns">
-		<a class="btn" href="{{ path('app_game_new') }}">
-			<i class="fa-solid fa-plus"></i>
-			<span>Ajouter un jeu</span>
-		</a>
-		<a class="btn" href="{{ path('app_game_steam_new') }}">
-			<i class="fa-brands fa-steam"></i>
-			<span>Ajouter un jeu Steam</span>
-		</a>
+	<div class="btns-container">
+		<div class="btns">
+			<a class="btn" href="{{ path('app_game_new') }}">
+				<i class="fa-solid fa-plus"></i>
+				<span>Ajouter un jeu</span>
+			</a>
+			<a class="btn" href="{{ path('app_game_steam_new') }}">
+				<i class="fa-brands fa-steam"></i>
+				<span>Ajouter un jeu Steam</span>
+			</a>
+		</div>
 	</div>
+
+	<ul class="errors">
+		{% for message in app.flashes('error') %}
+			<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ message }}</li>
+		{% endfor %}
+	</ul>
 
 	<div class="table games">
 
