@@ -23,7 +23,7 @@ class MemberChallengeController extends AbstractController {
 		$search = $request->query->get('search');
 
 		if ($sort_by !== 'game' && $sort_by !== 'difficulty' && $sort_by !== 'period') {
-			$sort_by = null;
+			$sort_by = '';
 		}
 		if ($page < 1) {
 			$page = 1;
@@ -34,7 +34,7 @@ class MemberChallengeController extends AbstractController {
 
 		$offset = $elements_per_page * ($page - 1);
 
-		$challenges = $challenge_repository->search($search, $elements_per_page, $offset);
+		$challenges = $challenge_repository->search($search, $elements_per_page, $offset, $sort_by);
 
 		// Pagination
 		$number_of_elements = $challenge_repository->countWithSearch($search);

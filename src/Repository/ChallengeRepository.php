@@ -62,7 +62,7 @@ class ChallengeRepository extends ServiceEntityRepository {
 	}
 
 
-	public function search(string $search = '', int $limit = 10, int $offset = 0): array {
+	public function search(string $search = '', int $limit = 10, int $offset = 0, string $sort_by = ''): array {
 		$query_builder = $this->createQueryBuilder('c')
 				->select('c')
 				->innerJoin('c.game', 'g')
@@ -78,7 +78,19 @@ class ChallengeRepository extends ServiceEntityRepository {
 					->setParameter('search', '%' . $search . '%');
 		}
 
-		$query_builder->orderBy('c.id', 'DESC');
+		if ($sort_by === 'game') {
+			$query_builder->orderBy('g.name', 'ASC');
+		}
+		elseif ($sort_by === 'difficulty') {
+			$query_builder->orderBy('c.difficulty', 'ASC');
+		}
+		elseif ($sort_by === 'period') {
+			$query_builder->orderBy('p.year', 'ASC');
+			$query_builder->orderBy('p.id', 'ASC');
+		}
+		else {
+			$query_builder->orderBy('c.id', 'DESC');
+		}
 
 		if ($limit !== 0) {
 			$query_builder
