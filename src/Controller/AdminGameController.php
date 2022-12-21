@@ -37,6 +37,11 @@ class AdminGameController extends AbstractController {
 		$errors = [];
 
 		if ($form->isSubmitted() && $form->isValid()) {
+
+			if (!empty($game_repository->findBy(['name' => $game->getName()]))) {
+				$errors[] = 'Un jeu avec ce nom existe déjà';
+			}
+
 			$file = $form->get('image')->getData();
 
 			if (!empty($file)) {
@@ -82,6 +87,11 @@ class AdminGameController extends AbstractController {
 		$errors = [];
 
 		if ($form->isSubmitted() && $form->isValid()) {
+
+			if (!empty($game_repository->findBy(['name' => $game->getName()]))) {
+				$errors[] = 'Un jeu avec ce nom existe déjà';
+			}
+
 			$app_id = $form->get('app_id')->getData();
 
 			if (empty($app_id) || $app_id <= 0) {

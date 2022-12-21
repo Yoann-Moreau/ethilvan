@@ -16,11 +16,11 @@
 			</div>
 		</div>
 
-		{% for message in app.flashes('error') %}
-			<div class="error">
-				{{ message }}
-			</div>
-		{% endfor %}
+		<ul class="errors">
+			{% for message in app.flashes('error') %}
+				<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ message }}</li>
+			{% endfor %}
+		</ul>
 
 		{{ form_start(form) }}
 
