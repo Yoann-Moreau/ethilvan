@@ -53,6 +53,7 @@ class AdminChallengeController extends AbstractController {
 				'page'       => $page,
 				'sort_by'    => $sort_by,
 				'pages'      => $pages,
+				'search'     => '',
 		]);
 	}
 

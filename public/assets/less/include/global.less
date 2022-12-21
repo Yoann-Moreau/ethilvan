@@ -98,6 +98,7 @@ img {
 }
 
 input[type="text"],
+input[type="search"],
 input[type="email"],
 input[type="password"],
 input[type="number"],
@@ -109,6 +110,10 @@ textarea {
 	color: @tc-main;
 	font-size: 1em;
 	padding: 0.5em;
+
+	&:focus {
+		outline: 1px solid @light-green;
+	}
 }
 
 textarea {
@@ -158,6 +163,14 @@ textarea {
 		font-size: 1.5rem;
 		margin-left: 0.1em;
 		margin-bottom: 0.2em;
+	}
+
+	&.search {
+		flex-direction: row;
+
+		input[type="search"] {
+			width: 50rem;
+		}
 	}
 }
 

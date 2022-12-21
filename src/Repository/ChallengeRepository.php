@@ -61,4 +61,54 @@ class ChallengeRepository extends ServiceEntityRepository {
 				->getResult();
 	}
 
+
+	public function search(string $search = '', int $limit = 10, int $offset = 0): array {
+		$query_builder = $this->createQueryBuilder('c')
+				->select('c')
+				->innerJoin('c.game', 'g')
+				->innerJoin('c.difficulty', 'd')
+				->innerJoin('c.periods', 'p');
+
+		if (!empty($search)) {
+			$query_builder
+					->where('c.name LIKE :search')
+					->orWhere('g.name LIKE :search')
+					->orWhere('p.name LIKE :search')
+					->orWhere('d.name LIKE :search')
+					->setParameter('search', '%' . $search . '%');
+		}
+
+		$query_builder->orderBy('c.id', 'DESC');
+
+		if ($limit !== 0) {
+			$query_builder
+					->setMaxResults($limit)
+					->setFirstResult($offset);
+		}
+
+		return $query_builder
+				->getQuery()
+				->getResult();
+	}
+
+
+	public function countWithSearch(string $search = ''): int {
+		$query_builder = $this->createQueryBuilder('c')
+				->select('count(c.id)')
+				->innerJoin('c.game', 'g')
+				->innerJoin('c.difficulty', 'd')
+				->innerJoin('c.periods', 'p');
+
+		if (!empty($search)) {
+			$query_builder
+					->where('c.name LIKE :search')
+					->orWhere('g.name LIKE :search')
+					->orWhere('p.name LIKE :search')
+					->orWhere('d.name LIKE :search')
+					->setParameter('search', '%' . $search . '%');
+		}
+
+		return $query_builder->getQuery()->getSingleScalarResult();
+	}
+
 }

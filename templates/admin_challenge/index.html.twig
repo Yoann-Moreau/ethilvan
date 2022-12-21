@@ -49,7 +49,7 @@
 				</div>
 				<div class="col col-20">{{ challenge.game.name }}</div>
 				<div class="col col-15">{{ challenge.difficulty.name }}</div>
-				<div class="col-15">{{ challenge.periods|join(', ') }}</div>
+				<div class="col col-15">{{ challenge.periods|join(', ') }}</div>
 				<div class="col col-25 btns">
 					<a class="btn" href="{{ path('app_admin_challenge_edit', {'id': challenge.id}) }}">
 						<i class="fa-solid fa-pen"></i>

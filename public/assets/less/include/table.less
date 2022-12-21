@@ -16,6 +16,15 @@
 	.row {
 		display: flex;
 		padding: 0.5em 0;
+		min-height: 4.2rem;
+
+		&:nth-child(even) {
+			background-color: @bg-main;
+		}
+
+		.col:first-child {
+			padding-left: 1em;
+		}
 	}
 
 	.col {
