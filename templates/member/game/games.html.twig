@@ -8,6 +8,15 @@
 	<section class="game-list">
 
 		{% for game in games %}
+			{% set event = false %}
+			{% for challenge in game.challenges %}
+				{% for period in challenge.periods %}
+					{% if period.startDate < date('now') and period.endDate > date('now') and period.type is same as 'event' %}
+						{% set event = period.name %}
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+
 			<a class="game-card" href="{{ path('app_member_single_game', {'id': game.id}) }}">
 				<div class="img-container">
 					<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
@@ -33,6 +42,9 @@
 					</div>
 					<div><i class="fa-solid fa-arrow-right"></i></div>
 				</div>
+				{% if event %}
+					<div class="event">{{ event }}</div>
+				{% endif %}
 			</a>
 		{% endfor %}
 
