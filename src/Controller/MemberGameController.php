@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Repository\GameRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +21,14 @@ class MemberGameController extends AbstractController {
 
 		return $this->render('member/game/games.html.twig', [
 				'games' => $games,
+		]);
+	}
+
+
+	#[Route('/game/{id}', name: 'app_member_single_game', methods: ['GET'])]
+	public function single_game(Game $game): Response {
+		return $this->render('member/game/game.html.twig', [
+				'game' => $game
 		]);
 	}
 

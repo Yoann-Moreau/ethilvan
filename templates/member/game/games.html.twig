@@ -5,9 +5,10 @@
 {% block body %}
 	<h1>Liste des jeux</h1>
 
-	<div class="game-list">
+	<section class="game-list">
+
 		{% for game in games %}
-			<a class="game-card" href="">
+			<a class="game-card" href="{{ path('app_member_single_game', {'id': game.id}) }}">
 				<div class="img-container">
 					<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
 				</div>
@@ -34,6 +35,7 @@
 				</div>
 			</a>
 		{% endfor %}
-	</div>
+
+	</section>
 
 {% endblock %}
