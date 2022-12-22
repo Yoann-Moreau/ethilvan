@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\Challenge;
 use App\Entity\Submission;
 use App\Entity\SubmissionMessage;
+use App\Entity\SubmissionMessageImage;
 use App\Form\SubmissionMessageType;
 use App\Repository\ChallengeRepository;
 use App\Repository\PeriodRepository;
+use App\Repository\SubmissionMessageImageRepository;
 use App\Repository\SubmissionMessageRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\UserRepository;
@@ -17,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/member')]
 class MemberChallengeController extends AbstractController {
@@ -62,13 +65,15 @@ class MemberChallengeController extends AbstractController {
 	#[Route('/challenge/{id}', name: 'app_member_single_challenge', methods: ['GET', 'POST'])]
 	public function singleChallenge(Challenge $challenge, Request $request, SubmissionRepository $submission_repository,
 			SubmissionMessageRepository $message_repository, UserRepository $user_repository,
-			PeriodRepository $period_repository): Response {
+			PeriodRepository $period_repository, SubmissionMessageImageRepository $image_repository,
+			ValidatorInterface $validator): Response {
 
 		$new_message = new SubmissionMessage();
 		$form = $this->createForm(SubmissionMessageType::class, $new_message);
 		$form->handleRequest($request);
 
 		$current_user = $user_repository->find($this->getUser()->getId());
+		$form_errors = [];
 
 		// Check if one the periods is current (to display form)
 		$is_current = false;
@@ -97,7 +102,6 @@ class MemberChallengeController extends AbstractController {
 			$messages = $current_submission->getSubmissionMessages();
 		}
 
-
 		if ($form->isSubmitted() && $form->isValid() && $is_current && isset($period)) {
 
 			if (!$already_submitted) {
@@ -119,13 +123,33 @@ class MemberChallengeController extends AbstractController {
 			$new_message->setMessageDate(new DateTime());
 
 			$message_repository->save($new_message, true);
+
+			// Manage images attachments
+			$images = $form->get('images')->getData();
+			if (!empty($images)) {
+				$directory = $this->getParameter('submission_images_directory');
+
+				foreach ($images as $image) {
+					$new_image = new SubmissionMessageImage();
+					$image_name = uniqid() . '.' . $image->guessExtension();
+					$image->move($directory, $image_name);
+					$new_image->setImage($image_name);
+					$new_image->setSubmissionMessage($new_message);
+
+					$image_repository->save($new_image, true);
+				}
+			}
+		}
+		elseif ($form->isSubmitted() && !$form->isValid()) {
+			$form_errors = $validator->validate($form);
 		}
 
 		return $this->render('member/challenge/challenge.html.twig', [
-				'challenge'  => $challenge,
-				'form'       => $form->createView(),
-				'is_current' => $is_current,
-				'messages'   => $messages,
+				'challenge'   => $challenge,
+				'form'        => $form->createView(),
+				'is_current'  => $is_current,
+				'messages'    => $messages,
+				'form_errors' => $form_errors,
 		]);
 	}
 
