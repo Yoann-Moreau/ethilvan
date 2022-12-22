@@ -32,8 +32,16 @@
 		</div>
 		<div class="right">
 			<div class="challenge-periods">
-				<i class="fa-solid fa-calendar-days"></i>
-				<span>{{ challenge.periods|join(', ') }}</span>
+				{% for period in challenge.periods %}
+					<div class="period"
+					     title="du {{ period.startDate|format_date('long', locale='fr') }} au {{ period.endDate|format_date('long', locale='fr') }}">
+						<i class="fa-solid fa-calendar-days"></i>
+						<span>{{ period }}</span>
+						{% if period.type is same as 'event' %}
+							<span class="dates">du {{ period.startDate|format_date('long', locale='fr') }} au {{ period.endDate|format_date('long', locale='fr') }}</span>
+						{% endif %}
+					</div>
+				{% endfor %}
 			</div>
 		</div>
 	</div>
