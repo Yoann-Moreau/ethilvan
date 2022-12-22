@@ -36,9 +36,13 @@ class Challenge {
 	#[ORM\ManyToMany(targetEntity: Period::class, inversedBy: 'challenges')]
 	private Collection $periods;
 
+	#[ORM\OneToMany(mappedBy: 'challenge', targetEntity: Submission::class)]
+	private Collection $submissions;
+
 
 	public function __construct() {
 		$this->periods = new ArrayCollection();
+		$this->submissions = new ArrayCollection();
 	}
 
 
@@ -119,6 +123,34 @@ class Challenge {
 
 	public function removePeriod(Period $period): self {
 		$this->periods->removeElement($period);
+
+		return $this;
+	}
+
+
+	/**
+	 * @return Collection<int, Submission>
+	 */
+	public function getSubmissions(): Collection {
+		return $this->submissions;
+	}
+
+	public function addSubmission(Submission $submission): self {
+		if (!$this->submissions->contains($submission)) {
+			$this->submissions->add($submission);
+			$submission->setChallenge($this);
+		}
+
+		return $this;
+	}
+
+	public function removeSubmission(Submission $submission): self {
+		if ($this->submissions->removeElement($submission)) {
+			// set the owning side to null (unless already changed)
+			if ($submission->getChallenge() === $this) {
+				$submission->setChallenge(null);
+			}
+		}
 
 		return $this;
 	}
