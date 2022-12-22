@@ -185,15 +185,10 @@ class Game {
 	// ==========================================================================
 
 	public function countChallenges(): void {
-		$counts = [];
+		$counts = ['Bronze' => 0, 'Argent' => 0, 'Or' => 0, 'Platine' => 0];
 
 		foreach ($this->getChallenges() as $challenge) {
-			if (!array_key_exists($challenge->getDifficulty()->getName(), $counts)) {
-				$counts[$challenge->getDifficulty()->getName()] = 1;
-			}
-			else {
-				$counts[$challenge->getDifficulty()->getName()] = $counts[$challenge->getDifficulty()->getName()] + 1;
-			}
+			$counts[$challenge->getDifficulty()->getName()] = $counts[$challenge->getDifficulty()->getName()] + 1;
 		}
 
 		$this->setChallengesCounts($counts);

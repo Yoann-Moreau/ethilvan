@@ -15,43 +15,19 @@
 					<div class="medals-container">
 						<div class="medal-container">
 							<div class="medal"></div>
-							<div class="medal-number">
-								{% if game.challengesCounts['Bronze'] is defined %}
-									{{ game.challengesCounts['Bronze'] }}
-								{% else %}
-									0
-								{% endif %}
-							</div>
+							<div class="medal-number">{{ game.challengesCounts['Bronze'] }}</div>
 						</div>
 						<div class="medal-container">
 							<div class="medal"></div>
-							<div class="medal-number">
-								{% if game.challengesCounts['Argent'] is defined %}
-									{{ game.challengesCounts['Argent'] }}
-								{% else %}
-									0
-								{% endif %}
-							</div>
+							<div class="medal-number">{{ game.challengesCounts['Argent'] }}</div>
 						</div>
 						<div class="medal-container">
 							<div class="medal"></div>
-							<div class="medal-number">
-								{% if game.challengesCounts['Or'] is defined %}
-									{{ game.challengesCounts['Or'] }}
-								{% else %}
-									0
-								{% endif %}
-							</div>
+							<div class="medal-number">{{ game.challengesCounts['Or'] }}</div>
 						</div>
 						<div class="medal-container">
 							<div class="medal"></div>
-							<div class="medal-number">
-								{% if game.challengesCounts['Platine'] is defined %}
-									{{ game.challengesCounts['Platine'] }}
-								{% else %}
-									0
-								{% endif %}
-							</div>
+							<div class="medal-number">{{ game.challengesCounts['Platine'] }}</div>
 						</div>
 					</div>
 					<div><i class="fa-solid fa-arrow-right"></i></div>
