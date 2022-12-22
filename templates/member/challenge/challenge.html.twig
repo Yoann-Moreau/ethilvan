@@ -1,0 +1,52 @@
+{% extends 'base_member.html.twig' %}
+
+{% block title %}{{ challenge.name }}{% endblock %}
+
+{% block body %}
+	<div class="challenge-title-container">
+		<div class="subcontainer left">
+			{# <img class="medal" src="" alt="Médaille de {{ challenge.difficulty.name }}"
+					     title="Défi {{ challenge.difficulty.name }}">  #}
+			<div class="medal" title="Défi {{ challenge.difficulty.name }}"><i class="fa-solid fa-medal"></i></div>
+			<h1>{{ challenge.name }}</h1>
+		</div>
+		<div class="subcontainer right">
+			{% if challenge.numberOfPlayers is same as 1 %}
+				<i class="fa-solid fa-user"></i> 1 joueur
+			{% else %}
+				<i class="fa-solid fa-users"></i> {{ challenge.numberOfPlayers }} joueurs
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="btns-container">
+		<div class="btns left">
+			<a class="btn" href="{{ path('app_member_single_game', {'id': challenge.game.id}) }}">
+				<i class="fa-solid fa-arrow-left"></i>
+				<span>Retour au jeu</span>
+			</a>
+			<a class="btn" href="{{ path('app_member_challenges') }}">
+				<i class="fa-solid fa-arrow-left"></i>
+				<span>Retour à la liste des défis</span>
+			</a>
+		</div>
+		<div class="right">
+			<div class="challenge-periods">
+				<i class="fa-solid fa-calendar-days"></i>
+				<span>{{ challenge.periods|join(', ') }}</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-50">
+		<p class="challenge-description">{{ challenge.description|nl2br }}</p>
+
+		<div class="btns right">
+			<a class="btn" href="">
+				<i class="fa-solid fa-play"></i>
+				<span>Valider ce défi</span>
+			</a>
+		</div>
+	</div>
+
+{% endblock %}

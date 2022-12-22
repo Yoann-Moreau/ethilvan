@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Challenge;
 use App\Repository\ChallengeRepository;
 use App\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -46,6 +47,14 @@ class MemberChallengeController extends AbstractController {
 				'page'       => $page,
 				'pages'      => $pages,
 				'search'     => $search,
+		]);
+	}
+
+
+	#[Route('/challenge/{id}', name: 'app_member_single_challenge', methods: ['GET'])]
+	public function singleChallenge(Challenge $challenge): Response {
+		return $this->render('member/challenge/challenge.html.twig', [
+				'challenge' => $challenge,
 		]);
 	}
 
