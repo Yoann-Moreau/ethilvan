@@ -1,0 +1,63 @@
+{% extends 'base_member.html.twig' %}
+
+{% block title %}Liste des jeux{% endblock %}
+
+{% block body %}
+	<h1>Liste des jeux</h1>
+
+	<div class="game-list">
+		{% for game in games %}
+			<a class="game-card" href="">
+				<div class="img-container">
+					<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
+				</div>
+				<div class="info-container">
+					<div class="medals-container">
+						<div class="medal-container">
+							<div class="medal"></div>
+							<div class="medal-number">
+								{% if game.challengesCounts['Bronze'] is defined %}
+									{{ game.challengesCounts['Bronze'] }}
+								{% else %}
+									0
+								{% endif %}
+							</div>
+						</div>
+						<div class="medal-container">
+							<div class="medal"></div>
+							<div class="medal-number">
+								{% if game.challengesCounts['Argent'] is defined %}
+									{{ game.challengesCounts['Argent'] }}
+								{% else %}
+									0
+								{% endif %}
+							</div>
+						</div>
+						<div class="medal-container">
+							<div class="medal"></div>
+							<div class="medal-number">
+								{% if game.challengesCounts['Or'] is defined %}
+									{{ game.challengesCounts['Or'] }}
+								{% else %}
+									0
+								{% endif %}
+							</div>
+						</div>
+						<div class="medal-container">
+							<div class="medal"></div>
+							<div class="medal-number">
+								{% if game.challengesCounts['Platine'] is defined %}
+									{{ game.challengesCounts['Platine'] }}
+								{% else %}
+									0
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<div><i class="fa-solid fa-arrow-right"></i></div>
+				</div>
+			</a>
+		{% endfor %}
+	</div>
+
+{% endblock %}

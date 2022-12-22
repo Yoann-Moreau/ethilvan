@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/member/challenge')]
+#[Route('/member')]
 class MemberChallengeController extends AbstractController {
 
 	#[Route('/challenges', name: 'app_member_challenges', methods: ['GET'])]

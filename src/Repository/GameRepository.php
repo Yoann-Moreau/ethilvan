@@ -47,4 +47,16 @@ class GameRepository extends ServiceEntityRepository {
 				->orderBy('g.name', 'ASC');
 	}
 
+
+	/**
+	 * @return Game[]
+	 */
+	public function getGamesWithChallenges(): array {
+		return $this->createQueryBuilder('g')
+				->innerJoin('g.challenges', 'c')
+				->orderBy('g.name')
+				->getQuery()
+				->getResult();
+	}
+
 }

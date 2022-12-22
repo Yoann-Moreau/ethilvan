@@ -43,11 +43,17 @@ class Game {
 	#[ORM\OneToMany(mappedBy: 'game', targetEntity: Challenge::class)]
 	private Collection $challenges;
 
+	private array $challenges_counts = [];
+
 
 	public function __construct() {
 		$this->challenges = new ArrayCollection();
 	}
 
+
+	// ==========================================================================
+	// Getters and setters
+	// ==========================================================================
 
 	public function getId(): ?int {
 		return $this->id;
@@ -156,6 +162,41 @@ class Game {
 		}
 
 		return $this;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getChallengesCounts(): array {
+		return $this->challenges_counts;
+	}
+
+	/**
+	 * @param array $challenges_counts
+	 */
+	public function setChallengesCounts(array $challenges_counts): void {
+		$this->challenges_counts = $challenges_counts;
+	}
+
+
+	// ==========================================================================
+	// Other methods
+	// ==========================================================================
+
+	public function countChallenges(): void {
+		$counts = [];
+
+		foreach ($this->getChallenges() as $challenge) {
+			if (!array_key_exists($challenge->getDifficulty()->getName(), $counts)) {
+				$counts[$challenge->getDifficulty()->getName()] = 1;
+			}
+			else {
+				$counts[$challenge->getDifficulty()->getName()] = $counts[$challenge->getDifficulty()->getName()] + 1;
+			}
+		}
+
+		$this->setChallengesCounts($counts);
 	}
 
 }
