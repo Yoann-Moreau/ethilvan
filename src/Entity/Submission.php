@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SubmissionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,14 @@ class Submission {
 
 	#[ORM\Column]
 	private ?bool $valid = null;
+
+	#[ORM\OneToMany(mappedBy: 'submission', targetEntity: SubmissionMessage::class)]
+	private Collection $submission_messages;
+
+
+	public function __construct() {
+		$this->submission_messages = new ArrayCollection();
+	}
 
 
 	public function getId(): ?int {
@@ -102,6 +112,34 @@ class Submission {
 
 	public function setValid(bool $valid): self {
 		$this->valid = $valid;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return Collection<int, SubmissionMessage>
+	 */
+	public function getSubmissionMessages(): Collection {
+		return $this->submission_messages;
+	}
+
+	public function addSubmissionMessage(SubmissionMessage $submissionMessage): self {
+		if (!$this->submission_messages->contains($submissionMessage)) {
+			$this->submission_messages->add($submissionMessage);
+			$submissionMessage->setSubmission($this);
+		}
+
+		return $this;
+	}
+
+	public function removeSubmissionMessage(SubmissionMessage $submissionMessage): self {
+		if ($this->submission_messages->removeElement($submissionMessage)) {
+			// set the owning side to null (unless already changed)
+			if ($submissionMessage->getSubmission() === $this) {
+				$submissionMessage->setSubmission(null);
+			}
+		}
 
 		return $this;
 	}
