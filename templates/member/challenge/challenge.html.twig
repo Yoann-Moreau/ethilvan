@@ -38,7 +38,8 @@
 						<i class="fa-solid fa-calendar-days"></i>
 						<span>{{ period }}</span>
 						{% if period.type is same as 'event' %}
-							<span class="dates">du {{ period.startDate|format_date('long', locale='fr') }} au {{ period.endDate|format_date('long', locale='fr') }}</span>
+							<span
+									class="dates">du {{ period.startDate|format_date('long', locale='fr') }} au {{ period.endDate|format_date('long', locale='fr') }}</span>
 						{% endif %}
 					</div>
 				{% endfor %}
@@ -49,12 +50,41 @@
 	<div class="col-50">
 		<p class="challenge-description">{{ challenge.description|nl2br }}</p>
 
-		<div class="btns right">
-			<a class="btn" href="">
-				<i class="fa-solid fa-play"></i>
-				<span>Valider ce défi</span>
-			</a>
-		</div>
+		<h2>Valider ce défi</h2>
+
+		<section class="messages">
+			{% for message in messages %}
+				<article class="message">
+					<h3>{{ message.user.username }}</h3>
+					<p>{{ message.message }}</p>
+				</article>
+			{% endfor %}
+		</section>
+
+		{% if is_current %}
+
+			{{ form_start(form) }}
+
+			<div class="input-container">
+				{{ form_label(form.message) }}
+				{{ form_widget(form.message) }}
+			</div>
+
+			<div class="input-container">
+				{{ form_label(form.images) }}
+				{{ form_widget(form.images) }}
+			</div>
+
+			<div class="btns right">
+				<button class="btn" type="submit">
+					<i class="fa-solid fa-play"></i>
+					<span>Demander la validation de ce défi</span>
+				</button>
+			</div>
+
+			{{ form_end(form) }}
+
+		{% endif %}
 	</div>
 
 {% endblock %}

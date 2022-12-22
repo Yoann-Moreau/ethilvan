@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SubmissionRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -29,13 +30,13 @@ class Submission {
 	private ?Period $period = null;
 
 	#[ORM\Column(type: Types::DATETIME_MUTABLE)]
-	private ?\DateTimeInterface $submission_date = null;
+	private ?DateTimeInterface $submission_date = null;
 
-	#[ORM\Column(type: Types::DATETIME_MUTABLE)]
-	private ?\DateTimeInterface $validation_date = null;
+	#[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+	private ?DateTimeInterface $validation_date = null;
 
 	#[ORM\Column]
-	private ?bool $valid = null;
+	private ?bool $valid = false;
 
 	#[ORM\OneToMany(mappedBy: 'submission', targetEntity: SubmissionMessage::class)]
 	private Collection $submission_messages;
@@ -84,22 +85,22 @@ class Submission {
 	}
 
 
-	public function getSubmissionDate(): ?\DateTimeInterface {
+	public function getSubmissionDate(): ?DateTimeInterface {
 		return $this->submission_date;
 	}
 
-	public function setSubmissionDate(\DateTimeInterface $submission_date): self {
+	public function setSubmissionDate(DateTimeInterface $submission_date): self {
 		$this->submission_date = $submission_date;
 
 		return $this;
 	}
 
 
-	public function getValidationDate(): ?\DateTimeInterface {
+	public function getValidationDate(): ?DateTimeInterface {
 		return $this->validation_date;
 	}
 
-	public function setValidationDate(\DateTimeInterface $validation_date): self {
+	public function setValidationDate(?DateTimeInterface $validation_date): self {
 		$this->validation_date = $validation_date;
 
 		return $this;
