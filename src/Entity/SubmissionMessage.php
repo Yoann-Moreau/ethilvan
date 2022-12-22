@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SubmissionMessageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,6 +29,14 @@ class SubmissionMessage {
 
 	#[ORM\Column(type: Types::TEXT)]
 	private ?string $message = null;
+
+	#[ORM\OneToMany(mappedBy: 'submission_message', targetEntity: SubmissionMessageImage::class)]
+	private Collection $images;
+
+
+	public function __construct() {
+		$this->images = new ArrayCollection();
+	}
 
 
 	public function getId(): ?int {
@@ -73,6 +83,34 @@ class SubmissionMessage {
 
 	public function setMessage(string $message): self {
 		$this->message = $message;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return Collection<int, SubmissionMessageImage>
+	 */
+	public function getImages(): Collection {
+		return $this->images;
+	}
+
+	public function addImage(SubmissionMessageImage $image): self {
+		if (!$this->images->contains($image)) {
+			$this->images->add($image);
+			$image->setSubmissionMessage($this);
+		}
+
+		return $this;
+	}
+
+	public function removeImage(SubmissionMessageImage $image): self {
+		if ($this->images->removeElement($image)) {
+			// set the owning side to null (unless already changed)
+			if ($image->getSubmissionMessage() === $this) {
+				$image->setSubmissionMessage(null);
+			}
+		}
 
 		return $this;
 	}
