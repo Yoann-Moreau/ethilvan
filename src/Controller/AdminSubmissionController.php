@@ -66,4 +66,17 @@ class AdminSubmissionController extends AbstractController {
 		]);
 	}
 
+
+	#[Route('/{id}/validate', name: 'app_admin_submission_validate', methods: ['POST'])]
+	public function validate(Submission $submission, Request $request,
+			SubmissionRepository $submission_repository): Response {
+
+		if ($this->isCsrfTokenValid('validate' . $submission->getId(), $request->request->get('_token'))) {
+			$submission->setValid(true);
+			$submission_repository->save($submission, true);
+		}
+
+		return $this->redirectToRoute('app_admin_submission_index', [], Response::HTTP_SEE_OTHER);
+	}
+
 }

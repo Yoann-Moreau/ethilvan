@@ -45,6 +45,17 @@
 		</div>
 
 		{{ form_end(form) }}
+
+		<div class="btns right validate">
+			<form method="post" action="{{ path('app_admin_submission_validate', {'id': submission.id}) }}"
+			      onsubmit="return confirm('Êtes-vous sûr(e) de vouloir valider ce défi ?');">
+				<input type="hidden" name="_token" value="{{ csrf_token('validate' ~ submission.id) }}">
+				<button class="btn dark-green" type="submit">
+					<i class="fa-solid fa-check"></i>
+					<span>Valider le défi</span>
+				</button>
+			</form>
+		</div>
 	</div>
 
 {% endblock %}
