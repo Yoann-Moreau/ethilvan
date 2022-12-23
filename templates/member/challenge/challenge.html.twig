@@ -5,6 +5,10 @@
 {% block body %}
 	<div class="challenge-title-container">
 		<div class="subcontainer left">
+			<div class="img-container">
+				<img class="game-image" src="/uploads/game/{{ challenge.game.image }}" alt="Image de {{ challenge.game.name }}"
+				     title="{{ challenge.game.name }}">
+			</div>
 			{# <img class="medal" src="" alt="Médaille de {{ challenge.difficulty.name }}"
 					     title="Défi {{ challenge.difficulty.name }}">  #}
 			<div class="medal" title="Défi {{ challenge.difficulty.name }}"><i class="fa-solid fa-medal"></i></div>
