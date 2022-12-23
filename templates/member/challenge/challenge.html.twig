@@ -50,7 +50,14 @@
 	<div class="col-50">
 		<p class="challenge-description">{{ challenge.description|nl2br }}</p>
 
-		<h2>Valider ce défi</h2>
+		<div class="validation">
+			<h2>Validation</h2>
+			{% if is_valid %}
+				<div class="validation-state valid"><i class="fa-solid fa-check"></i>Validé</div>
+			{% elseif messages is not empty %}
+				<div class="validation-state">En cours</div>
+			{% endif %}
+		</div>
 
 		<section class="messages">
 			{% for message in messages %}
@@ -84,7 +91,7 @@
 			{% endfor %}
 		</section>
 
-		{% if is_current %}
+		{% if is_current and not is_valid %}
 
 			<ul class="errors">
 				{% for error in form_errors %}
