@@ -127,6 +127,11 @@ class MemberChallengeController extends AbstractController {
 
 			$message_repository->save($new_message, true);
 
+			if (!$already_submitted) {
+				$submission->addSubmissionMessage($new_message);
+				$messages = $submission->getSubmissionMessages();
+			}
+
 			// Manage images attachments
 			$images = $form->get('images')->getData();
 			$image_service->uploadSubmissionMessageImages($images, $new_message, $image_repository);

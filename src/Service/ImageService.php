@@ -9,7 +9,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ImageService {
 
-	private $params;
+	private ParameterBagInterface $params;
+
 
 	public function __construct(ParameterBagInterface $params) {
 		$this->params = $params;
@@ -28,6 +29,8 @@ class ImageService {
 				$image->move($directory, $image_name);
 				$new_image->setImage($image_name);
 				$new_image->setSubmissionMessage($new_message);
+
+				$new_message->addImage($new_image);
 
 				$image_repository->save($new_image, true);
 			}

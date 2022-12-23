@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SubmissionMessageRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -25,7 +26,7 @@ class SubmissionMessage {
 	private ?Submission $submission = null;
 
 	#[ORM\Column(type: Types::DATETIME_MUTABLE)]
-	private ?\DateTimeInterface $message_date = null;
+	private ?DateTimeInterface $message_date = null;
 
 	#[ORM\Column(type: Types::TEXT)]
 	private ?string $message = null;
@@ -66,11 +67,11 @@ class SubmissionMessage {
 	}
 
 
-	public function getMessageDate(): ?\DateTimeInterface {
+	public function getMessageDate(): ?DateTimeInterface {
 		return $this->message_date;
 	}
 
-	public function setMessageDate(\DateTimeInterface $message_date): self {
+	public function setMessageDate(DateTimeInterface $message_date): self {
 		$this->message_date = $message_date;
 
 		return $this;
