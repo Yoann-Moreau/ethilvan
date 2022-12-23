@@ -104,7 +104,7 @@ class MemberChallengeController extends AbstractController {
 			$messages = $current_submission->getSubmissionMessages();
 		}
 
-		if ($form->isSubmitted() && $form->isValid() && $is_current && isset($period)) {
+		if ($form->isSubmitted() && $form->isValid() && $is_current && isset($period) && !$is_valid) {
 
 			if (!$already_submitted) {
 				$submission = new Submission();

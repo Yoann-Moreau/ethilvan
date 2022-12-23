@@ -338,6 +338,14 @@ body {
 	justify-content: space-between;
 	align-items: center;
 
+	&:not(:last-child) {
+		margin-bottom: 1.5em;
+	}
+
+	h2 {
+		margin-bottom: 0;
+	}
+
 	.validation-state {
 		padding: 0.3em 0.6em;
 		background-color: @bg-main-darker;
@@ -356,7 +364,10 @@ body {
 .messages {
 	display: flex;
 	flex-direction: column;
-	margin-bottom: 2em;
+
+	&:not(:last-child) {
+		margin-bottom: 2em;
+	}
 
 	.message {
 		width: 90%;

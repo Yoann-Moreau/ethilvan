@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Period;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -41,7 +42,7 @@ class PeriodRepository extends ServiceEntityRepository {
 	 * @return Period[]
 	 */
 	public function findCurrentPeriods(): array {
-		$now = new \DateTime('2023-01-14');
+		$now = new DateTime('now');
 
 		return $this->createQueryBuilder('p')
 			->select('p')
