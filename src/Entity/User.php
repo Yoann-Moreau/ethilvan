@@ -19,80 +19,86 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
 	#[ORM\Id]
-               	#[ORM\GeneratedValue]
-               	#[ORM\Column]
-               	private ?int $id = null;
+	#[ORM\GeneratedValue]
+	#[ORM\Column]
+	private ?int $id = null;
 
 	#[ORM\Column(length: 180, unique: true),
-               			Assert\Length(
-               					min: 2,
-               					max: 20,
-               					minMessage: "Le nom d'utilisateur doit contenir au moins {{ limit }} caractères.",
-               					maxMessage: "Le nom d'utilisateur doit contenir moins de {{ limit }} caractères."
-               			),
-               			Assert\Regex(
-               					pattern: '/^[\p{L}\p{Mn}\-_\d]+$/u',
-               					message: "Le nom d'utilisateur ne doit contenir que des caractères alphanumériques, tirets et underscores."
-               			)
-               	]
-               	private ?string $username = null;
+			Assert\Length(
+					min: 2,
+					max: 20,
+					minMessage: "Le nom d'utilisateur doit contenir au moins {{ limit }} caractères.",
+					maxMessage: "Le nom d'utilisateur doit contenir moins de {{ limit }} caractères."
+			),
+			Assert\Regex(
+					pattern: '/^[\p{L}\p{Mn}\-_\d]+$/u',
+					message: "Le nom d'utilisateur ne doit contenir que des caractères alphanumériques, tirets et underscores."
+			)
+	]
+	private ?string $username = null;
 
 	#[ORM\Column]
-               	private array $roles = [];
+	private array $roles = [];
 
 	/**
 	 * @var string|null The hashed password
 	 */
 	#[ORM\Column, Assert\Length(
-               			min: 8,
-               			max: 60,
-               			minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.",
-               			maxMessage: "Le mot de passe doit contenir au plus {{ limit }} caractères"
-               	)]
-               	private ?string $password = null;
+			min: 8,
+			max: 60,
+			minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.",
+			maxMessage: "Le mot de passe doit contenir au plus {{ limit }} caractères"
+	)]
+	private ?string $password = null;
 
 	#[ORM\Column(length: 255), Assert\Email(message: "L'adresse email doit être valide."), Assert\NotBlank]
-               	private ?string $email = null;
+	private ?string $email = null;
 
 	#[ORM\Column]
-               	private ?bool $deleted = null;
+	private ?bool $deleted = null;
 
 	#[ORM\Column(length: 255, nullable: true)]
-               	private ?string $avatar = null;
+	private ?string $avatar = null;
 
 	#[ORM\Column(type: Types::TEXT, nullable: true)]
-               	private ?string $favorite_games = null;
+	private ?string $favorite_games = null;
 
 	#[ORM\Column(type: Types::DATE_MUTABLE)]
-               	private ?DateTimeInterface $inscription_date = null;
+	private ?DateTimeInterface $inscription_date = null;
 
 	#[ORM\OneToMany(mappedBy: 'user', targetEntity: Submission::class)]
-               	private Collection $submissions;
+	private Collection $submissions;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: SubmissionMessage::class)]
-    private Collection $submission_messages;
+	#[ORM\OneToMany(mappedBy: 'user', targetEntity: SubmissionMessage::class)]
+	private Collection $submission_messages;
+
+	private array $challenges_counts;
 
 
 	public function __construct() {
-               		$this->submissions = new ArrayCollection();
-                 $this->submission_messages = new ArrayCollection();
-               	}
+		$this->submissions = new ArrayCollection();
+		$this->submission_messages = new ArrayCollection();
+	}
 
+
+	// ==========================================================================
+	// Getters and setters
+	// ==========================================================================
 
 	public function getId(): ?int {
-               		return $this->id;
-               	}
+		return $this->id;
+	}
 
 
 	public function getUsername(): ?string {
-               		return $this->username;
-               	}
+		return $this->username;
+	}
 
 	public function setUsername(string $username): self {
-               		$this->username = $username;
-               
-               		return $this;
-               	}
+		$this->username = $username;
+
+		return $this;
+	}
 
 
 	/**
@@ -101,158 +107,188 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 	 * @see UserInterface
 	 */
 	public function getUserIdentifier(): string {
-               		return (string)$this->username;
-               	}
+		return (string)$this->username;
+	}
 
 
 	/**
 	 * @see UserInterface
 	 */
 	public function getRoles(): array {
-               		$roles = $this->roles;
-               		// guarantee every user at least has ROLE_USER
-               		$roles[] = 'ROLE_USER';
-               
-               		return array_unique($roles);
-               	}
+		$roles = $this->roles;
+		// guarantee every user at least has ROLE_USER
+		$roles[] = 'ROLE_USER';
+
+		return array_unique($roles);
+	}
 
 	public function setRoles(array $roles): self {
-               		$this->roles = $roles;
-               
-               		return $this;
-               	}
+		$this->roles = $roles;
+
+		return $this;
+	}
 
 
 	/**
 	 * @see PasswordAuthenticatedUserInterface
 	 */
 	public function getPassword(): string {
-               		return $this->password;
-               	}
+		return $this->password;
+	}
 
 	public function setPassword(string $password): self {
-               		$this->password = $password;
-               
-               		return $this;
-               	}
+		$this->password = $password;
+
+		return $this;
+	}
 
 
 	/**
 	 * @see UserInterface
 	 */
 	public function eraseCredentials() {
-               		// If you store any temporary, sensitive data on the user, clear it here
-               		// $this->plainPassword = null;
-               	}
+		// If you store any temporary, sensitive data on the user, clear it here
+		// $this->plainPassword = null;
+	}
 
 
 	public function getEmail(): ?string {
-               		return $this->email;
-               	}
+		return $this->email;
+	}
 
 	public function setEmail(string $email): self {
-               		$this->email = $email;
-               
-               		return $this;
-               	}
+		$this->email = $email;
+
+		return $this;
+	}
 
 
 	public function isDeleted(): ?bool {
-               		return $this->deleted;
-               	}
+		return $this->deleted;
+	}
 
 	public function setDeleted(bool $deleted): self {
-               		$this->deleted = $deleted;
-               
-               		return $this;
-               	}
+		$this->deleted = $deleted;
+
+		return $this;
+	}
 
 	public function getAvatar(): ?string {
-               		return $this->avatar;
-               	}
+		return $this->avatar;
+	}
 
 	public function setAvatar(?string $avatar): self {
-               		$this->avatar = $avatar;
-               
-               		return $this;
-               	}
+		$this->avatar = $avatar;
+
+		return $this;
+	}
 
 	public function getFavoriteGames(): ?string {
-               		return $this->favorite_games;
-               	}
+		return $this->favorite_games;
+	}
 
 	public function setFavoriteGames(?string $favorite_games): self {
-               		$this->favorite_games = $favorite_games;
-               
-               		return $this;
-               	}
+		$this->favorite_games = $favorite_games;
+
+		return $this;
+	}
 
 	public function getInscriptionDate(): ?DateTimeInterface {
-               		return $this->inscription_date;
-               	}
+		return $this->inscription_date;
+	}
 
 	public function setInscriptionDate(DateTimeInterface $inscription_date): self {
-               		$this->inscription_date = $inscription_date;
-               
-               		return $this;
-               	}
+		$this->inscription_date = $inscription_date;
+
+		return $this;
+	}
 
 
 	/**
 	 * @return Collection<int, Submission>
 	 */
 	public function getSubmissions(): Collection {
-               		return $this->submissions;
-               	}
+		return $this->submissions;
+	}
 
 	public function addSubmission(Submission $submission): self {
-               		if (!$this->submissions->contains($submission)) {
-               			$this->submissions->add($submission);
-               			$submission->setUser($this);
-               		}
-               
-               		return $this;
-               	}
+		if (!$this->submissions->contains($submission)) {
+			$this->submissions->add($submission);
+			$submission->setUser($this);
+		}
+
+		return $this;
+	}
 
 	public function removeSubmission(Submission $submission): self {
-               		if ($this->submissions->removeElement($submission)) {
-               			// set the owning side to null (unless already changed)
-               			if ($submission->getUser() === $this) {
-               				$submission->setUser(null);
-               			}
-               		}
-               
-               		return $this;
-               	}
+		if ($this->submissions->removeElement($submission)) {
+			// set the owning side to null (unless already changed)
+			if ($submission->getUser() === $this) {
+				$submission->setUser(null);
+			}
+		}
 
-    /**
-     * @return Collection<int, SubmissionMessage>
-     */
-    public function getSubmissionMessages(): Collection
-    {
-        return $this->submission_messages;
-    }
+		return $this;
+	}
 
-    public function addSubmissionMessage(SubmissionMessage $submissionMessage): self
-    {
-        if (!$this->submission_messages->contains($submissionMessage)) {
-            $this->submission_messages->add($submissionMessage);
-            $submissionMessage->setUser($this);
-        }
+	/**
+	 * @return Collection<int, SubmissionMessage>
+	 */
+	public function getSubmissionMessages(): Collection {
+		return $this->submission_messages;
+	}
 
-        return $this;
-    }
+	public function addSubmissionMessage(SubmissionMessage $submissionMessage): self {
+		if (!$this->submission_messages->contains($submissionMessage)) {
+			$this->submission_messages->add($submissionMessage);
+			$submissionMessage->setUser($this);
+		}
 
-    public function removeSubmissionMessage(SubmissionMessage $submissionMessage): self
-    {
-        if ($this->submission_messages->removeElement($submissionMessage)) {
-            // set the owning side to null (unless already changed)
-            if ($submissionMessage->getUser() === $this) {
-                $submissionMessage->setUser(null);
-            }
-        }
+		return $this;
+	}
 
-        return $this;
-    }
+	public function removeSubmissionMessage(SubmissionMessage $submissionMessage): self {
+		if ($this->submission_messages->removeElement($submissionMessage)) {
+			// set the owning side to null (unless already changed)
+			if ($submissionMessage->getUser() === $this) {
+				$submissionMessage->setUser(null);
+			}
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getChallengesCounts(): array {
+		return $this->challenges_counts;
+	}
+
+	/**
+	 * @param array $challenges_counts
+	 */
+	public function setChallengesCounts(array $challenges_counts): void {
+		$this->challenges_counts = $challenges_counts;
+	}
+
+
+	// ==========================================================================
+	// Other methods
+	// ==========================================================================
+
+	public function countChallengesByDifficulty(): void {
+		$counts = ['Bronze' => 0, 'Argent' => 0, 'Or' => 0, 'Platine' => 0];
+
+		foreach ($this->getSubmissions() as $submission) {
+			if ($submission->isValid()) {
+				$difficulty = $submission->getChallenge()->getDifficulty()->getName();
+				$counts[$difficulty] = $counts[$difficulty] + 1;
+			}
+		}
+
+		$this->setChallengesCounts($counts);
+	}
 
 }

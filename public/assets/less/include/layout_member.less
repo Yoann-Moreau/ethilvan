@@ -125,6 +125,52 @@ body {
 	}
 }
 
+.medals-and-trophies {
+	width: 80%;
+	padding: 3rem;
+	margin-top: 2em;
+	background-color: @bg-main;
+
+	.medals-container {
+		display: flex;
+		width: 100%;
+
+		.medal-container {
+			display: flex;
+			align-items: center;
+			font-size: 4rem;
+		}
+
+		.medal {
+			width: 5rem;
+			height: 5rem;
+			border-radius: 50%;
+			margin-right: 0.5em;
+			background-color: @bg-button;
+		}
+
+		.medal-number {
+			margin-right: 1.3em;
+			color: @tc-main;
+		}
+	}
+
+	.last-medals {
+		margin: 1.5em 0;
+		font-size: 2rem;
+
+		ul {
+
+			li {
+
+				&:not(:last-child) {
+					margin-bottom: 0.6em;
+				}
+			}
+		}
+	}
+}
+
 
 // ==============================================
 // Games

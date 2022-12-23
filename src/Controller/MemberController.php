@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Form\ChangeEmailType;
 use App\Form\ChangePasswordType;
 use App\Form\ProfileEditType;
+use App\Repository\SubmissionRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,8 +27,17 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/profile', name: 'app_member_profile')]
-	public function profile(): Response {
-		return $this->render('member/profile.html.twig');
+	public function profile(UserRepository $user_repository, SubmissionRepository $submission_repository): Response {
+
+		$user = $user_repository->find($this->getUser()->getId());
+		$user->countChallengesByDifficulty();
+
+		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user], ['validation_date' => 'DESC'], 3);
+
+		return $this->render('member/profile.html.twig', [
+				'user'            => $user,
+				'last_submissions' => $last_submissions,
+		]);
 	}
 
 
@@ -162,15 +172,22 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/user/{id}', name: 'app_member_user')]
-	public function user(int $id, UserRepository $user_repository): Response {
+	public function user(int $id, UserRepository $user_repository,
+			SubmissionRepository $submission_repository): Response {
+
 		$user = $user_repository->find($id);
 
 		if ($user === null || $user->isDeleted()) {
 			throw $this->createNotFoundException("L'utilisateur n'existe pas");
 		}
 
+		$user->countChallengesByDifficulty();
+
+		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user], ['validation_date' => 'DESC'], 3);
+
 		return $this->render('member/user.html.twig', [
-				'user' => $user,
+				'user'            => $user,
+				'last_submissions' => $last_submissions,
 		]);
 	}
 

@@ -35,4 +35,41 @@
 		<h2>Mes jeux préférés</h2>
 		<p class="favorite-game-list">{{ user.favoriteGames|nl2br }}</p>
 	</section>
+
+	<section class="medals-and-trophies">
+		<article class="medals-container">
+			<div class="medal-container">
+				<div class="medal"></div>
+				<div class="medal-number">{{ user.challengesCounts['Bronze'] }}</div>
+			</div>
+			<div class="medal-container">
+				<div class="medal"></div>
+				<div class="medal-number">{{ user.challengesCounts['Argent'] }}</div>
+			</div>
+			<div class="medal-container">
+				<div class="medal"></div>
+				<div class="medal-number">{{ user.challengesCounts['Or'] }}</div>
+			</div>
+			<div class="medal-container">
+				<div class="medal"></div>
+				<div class="medal-number">{{ user.challengesCounts['Platine'] }}</div>
+			</div>
+		</article>
+		<article class="last-medals">
+			<ul>
+				{% for submission in last_submissions %}
+					<li>
+						<a href="{{ path('app_member_single_challenge', {'id': submission.challenge.id}) }}">
+							{{ submission.challenge.name }}
+						</a>
+						<span> - {{ submission.challenge.game.name }}</span>
+					</li>
+				{% endfor %}
+			</ul>
+		</article>
+		<article class="cups-container"></article>
+		<article class="last-cups"></article>
+		<article class="trophies-container"></article>
+		<article class="last-trophies"></article>
+	</section>
 </div>
