@@ -73,6 +73,7 @@ class AdminSubmissionController extends AbstractController {
 
 		if ($this->isCsrfTokenValid('validate' . $submission->getId(), $request->request->get('_token'))) {
 			$submission->setValid(true);
+			$submission->setValidationDate(new DateTime());
 			$submission_repository->save($submission, true);
 		}
 
