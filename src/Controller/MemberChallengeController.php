@@ -13,6 +13,7 @@ use App\Repository\SubmissionMessageImageRepository;
 use App\Repository\SubmissionMessageRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\UserRepository;
+use App\Service\ImageService;
 use App\Service\PaginationService;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -66,7 +67,7 @@ class MemberChallengeController extends AbstractController {
 	public function singleChallenge(Challenge $challenge, Request $request, SubmissionRepository $submission_repository,
 			SubmissionMessageRepository $message_repository, UserRepository $user_repository,
 			PeriodRepository $period_repository, SubmissionMessageImageRepository $image_repository,
-			ValidatorInterface $validator): Response {
+			ValidatorInterface $validator, ImageService $image_service): Response {
 
 		$new_message = new SubmissionMessage();
 		$form = $this->createForm(SubmissionMessageType::class, $new_message);
@@ -128,19 +129,7 @@ class MemberChallengeController extends AbstractController {
 
 			// Manage images attachments
 			$images = $form->get('images')->getData();
-			if (!empty($images)) {
-				$directory = $this->getParameter('submission_images_directory');
-
-				foreach ($images as $image) {
-					$new_image = new SubmissionMessageImage();
-					$image_name = uniqid() . '.' . $image->guessExtension();
-					$image->move($directory, $image_name);
-					$new_image->setImage($image_name);
-					$new_image->setSubmissionMessage($new_message);
-
-					$image_repository->save($new_image, true);
-				}
-			}
+			$image_service->uploadSubmissionMessageImages($images, $new_message, $image_repository);
 		}
 		elseif ($form->isSubmitted() && !$form->isValid()) {
 			$form_errors = $validator->validate($form);

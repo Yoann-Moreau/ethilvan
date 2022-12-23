@@ -1,0 +1,27 @@
+{% set self = '' %}
+{% if app.user is same as message.user %}
+	{% set self = 'self' %}
+{% endif %}
+<article class="message {{ self }}">
+	<div class="message-info">
+		<div class="flex center">
+			<div class="avatar-container">
+				<img src="/uploads/avatar/{{ message.user.avatar }}" alt="Avatar de {{ message.user.username }}">
+			</div>
+			<h3>{{ message.user.username }}</h3>
+		</div>
+		<div class="date">
+			{{ message.messageDate|format_datetime(pattern="dd/MM/yyyy à HH:mm", timezone='Europe/Paris') }}
+		</div>
+	</div>
+	<p>{{ message.message|nl2br }}</p>
+	{% if message.images is not empty %}
+		<div class="images">
+			{% for image in message.images %}
+				<a href="/uploads/submission_image/{{ image.image }}" target="_blank">
+					<img src="/uploads/submission_image/{{ image.image }}" alt="Pièce jointe">
+				</a>
+			{% endfor %}
+		</div>
+	{% endif %}
+</article>

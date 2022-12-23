@@ -1,0 +1,50 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Défi soumis à validation{% endblock %}
+
+{% block body %}
+	<h1>Défi soumis à validation</h1>
+
+	<p>Défi : {{ submission.challenge.name }}</p>
+	<p>Jeu : {{ submission.challenge.game.name }}</p>
+	<p>Joueur : {{ submission.user.username }}</p>
+	<p>Période : {{ submission.period.name }}</p>
+	<p>Date : {{ submission.submissionDate|format_datetime(pattern="dd/MM/yyyy à HH:mm", timezone='Europe/Paris') }}</p>
+
+	<div class="col-50">
+		<h2>Messages</h2>
+		<section class="messages">
+			{% for message in submission.submissionMessages %}
+				{{ include('include/message.html.twig') }}
+			{% endfor %}
+		</section>
+
+		<ul class="errors">
+			{% for error in form_errors %}
+				<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error.message }}</li>
+			{% endfor %}
+		</ul>
+
+		{{ form_start(form) }}
+
+		<div class="input-container">
+			{{ form_label(form.message) }}
+			{{ form_widget(form.message) }}
+		</div>
+
+		<div class="input-container">
+			{{ form_label(form.images) }}
+			{{ form_widget(form.images) }}
+		</div>
+
+		<div class="btns right">
+			<button class="btn" type="submit">
+				<i class="fa-solid fa-reply"></i>
+				<span>Répondre</span>
+			</button>
+		</div>
+
+		{{ form_end(form) }}
+	</div>
+
+{% endblock %}
