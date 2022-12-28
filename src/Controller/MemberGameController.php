@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Repository\ChallengeDifficultyRepository;
 use App\Repository\GameRepository;
 use App\Repository\PeriodRepository;
 use App\Repository\UserRepository;
@@ -15,7 +16,7 @@ class MemberGameController extends AbstractController {
 
 	#[Route('/games', name: 'app_member_games', methods: ['GET'])]
 	public function games(GameRepository $game_repository, UserRepository $user_repository,
-			PeriodRepository $period_repository): Response {
+			PeriodRepository $period_repository, ChallengeDifficultyRepository $difficulty_repository): Response {
 
 		$current_user = $user_repository->find($this->getUser()->getId());
 		$current_periods = $period_repository->findCurrentPeriods();
@@ -26,8 +27,11 @@ class MemberGameController extends AbstractController {
 			$game->countValidSubmissions($current_user, $current_periods);
 		}
 
+		$difficulties = $difficulty_repository->findAll();
+
 		return $this->render('member/game/games.html.twig', [
-				'games' => $games,
+				'games'        => $games,
+				'difficulties' => $difficulties,
 		]);
 	}
 
@@ -35,7 +39,7 @@ class MemberGameController extends AbstractController {
 	#[Route('/game/{id}', name: 'app_member_single_game', methods: ['GET'])]
 	public function single_game(Game $game): Response {
 		return $this->render('member/game/game.html.twig', [
-				'game' => $game
+				'game' => $game,
 		]);
 	}
 

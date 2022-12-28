@@ -23,30 +23,14 @@
 				</div>
 				<div class="info-container">
 					<div class="medals-container">
-						<div class="medal-container">
-							<div class="medal">
-								<img src="/assets/img/bronze-medal.png" alt="Médaille de bronze">
+						{% for difficulty in difficulties %}
+							<div class="medal-container">
+								<div class="medal">
+									<img src="/assets/img/{{ difficulty.icon }}" alt="Médaille de {{ difficulty.name }}">
+								</div>
+								<div class="medal-number">{{ game.challengesCounts[difficulty.name] }}</div>
 							</div>
-							<div class="medal-number">{{ game.challengesCounts['Bronze'] }}</div>
-						</div>
-						<div class="medal-container">
-							<div class="medal">
-								<img src="/assets/img/silver-medal.png" alt="Médaille d'argent">
-							</div>
-							<div class="medal-number">{{ game.challengesCounts['Argent'] }}</div>
-						</div>
-						<div class="medal-container">
-							<div class="medal">
-								<img src="/assets/img/gold-medal.png" alt="Médaille d'or">
-							</div>
-							<div class="medal-number">{{ game.challengesCounts['Or'] }}</div>
-						</div>
-						<div class="medal-container">
-							<div class="medal">
-								<img src="/assets/img/platinum-medal.png" alt="Médaille de platine">
-							</div>
-							<div class="medal-number">{{ game.challengesCounts['Platine'] }}</div>
-						</div>
+						{% endfor %}
 					</div>
 					<div><i class="fa-solid fa-arrow-right"></i></div>
 				</div>

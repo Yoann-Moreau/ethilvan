@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Form\ChangeEmailType;
 use App\Form\ChangePasswordType;
 use App\Form\ProfileEditType;
+use App\Repository\ChallengeDifficultyRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,10 +28,13 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/profile', name: 'app_member_profile', methods: ['GET'])]
-	public function profile(UserRepository $user_repository, SubmissionRepository $submission_repository): Response {
+	public function profile(UserRepository $user_repository, SubmissionRepository $submission_repository,
+			ChallengeDifficultyRepository $difficulty_repository): Response {
 
 		$user = $user_repository->find($this->getUser()->getId());
 		$user->countChallengesByDifficulty();
+
+		$difficulties = $difficulty_repository->findAll();
 
 		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user],
 				['validation_date' => 'DESC'], 3);
@@ -38,6 +42,7 @@ class MemberController extends AbstractController {
 		return $this->render('member/profile.html.twig', [
 				'user'             => $user,
 				'last_submissions' => $last_submissions,
+				'difficulties'     => $difficulties,
 		]);
 	}
 
@@ -174,7 +179,7 @@ class MemberController extends AbstractController {
 
 	#[Route('/user/{id}', name: 'app_member_user', methods: ['GET'])]
 	public function user(int $id, UserRepository $user_repository,
-			SubmissionRepository $submission_repository): Response {
+			SubmissionRepository $submission_repository, ChallengeDifficultyRepository $difficulty_repository): Response {
 
 		$user = $user_repository->find($id);
 
@@ -184,12 +189,15 @@ class MemberController extends AbstractController {
 
 		$user->countChallengesByDifficulty();
 
+		$difficulties = $difficulty_repository->findAll();
+
 		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user],
 				['validation_date' => 'DESC'], 3);
 
 		return $this->render('member/user.html.twig', [
 				'user'             => $user,
 				'last_submissions' => $last_submissions,
+				'difficulties'     => $difficulties,
 		]);
 	}
 
