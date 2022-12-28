@@ -20,13 +20,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/member')]
 class MemberController extends AbstractController {
 
-	#[Route('/', name: 'app_member')]
+	#[Route('/', name: 'app_member', methods: ['GET'])]
 	public function index(): Response {
 		return $this->render('member/index.html.twig');
 	}
 
 
-	#[Route('/profile', name: 'app_member_profile')]
+	#[Route('/profile', name: 'app_member_profile', methods: ['GET'])]
 	public function profile(UserRepository $user_repository, SubmissionRepository $submission_repository): Response {
 
 		$user = $user_repository->find($this->getUser()->getId());
@@ -42,7 +42,7 @@ class MemberController extends AbstractController {
 	}
 
 
-	#[Route('/profile/edit', name: 'app_member_profile_edit')]
+	#[Route('/profile/edit', name: 'app_member_profile_edit', methods: ['GET', 'POST'])]
 	public function profileEdit(Request $request, UserRepository $user_repository,
 			ValidatorInterface $validator): Response {
 
@@ -76,7 +76,7 @@ class MemberController extends AbstractController {
 	}
 
 
-	#[Route('/change_email', name: 'app_member_change_email')]
+	#[Route('/change_email', name: 'app_member_change_email', methods: ['GET', 'POST'])]
 	public function changeEmail(Request $request, UserRepository $user_repository,
 			ValidatorInterface $validator): Response {
 
@@ -117,7 +117,7 @@ class MemberController extends AbstractController {
 	}
 
 
-	#[Route('/change_password', name: 'app_member_change_password')]
+	#[Route('/change_password', name: 'app_member_change_password', methods: ['GET', 'POST'])]
 	public function changePassword(Request $request, UserRepository $user_repository,
 			ValidatorInterface $validator, UserPasswordHasherInterface $password_hasher): Response {
 
@@ -161,7 +161,7 @@ class MemberController extends AbstractController {
 	}
 
 
-	#[Route('/users', name: 'app_member_users')]
+	#[Route('/users', name: 'app_member_users', methods: ['GET'])]
 	public function users(UserRepository $user_repository): Response {
 
 		$users = $user_repository->findEv();
@@ -172,7 +172,7 @@ class MemberController extends AbstractController {
 	}
 
 
-	#[Route('/user/{id}', name: 'app_member_user')]
+	#[Route('/user/{id}', name: 'app_member_user', methods: ['GET'])]
 	public function user(int $id, UserRepository $user_repository,
 			SubmissionRepository $submission_repository): Response {
 
@@ -191,6 +191,12 @@ class MemberController extends AbstractController {
 				'user'             => $user,
 				'last_submissions' => $last_submissions,
 		]);
+	}
+
+
+	#[Route('/notifications', name: 'app_member_notifications', methods: ['GET'])]
+	public function notifications(): Response {
+		return $this->render('member/notifications.html.twig');
 	}
 
 }

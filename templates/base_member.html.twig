@@ -1,3 +1,10 @@
+{% set new_notification = '' %}
+{% for notification in app.user.notifications %}
+	{% if not notification.seen %}
+		{% set new_notification = 'new' %}
+	{% endif %}
+{% endfor %}
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -42,6 +49,10 @@
 			<a href="{{ path('app_member_challenges') }}">
 				<i class="fa-solid fa-medal"></i>
 				<span>Défis</span>
+			</a>
+			<a class="notifications {{ new_notification }}" href="{{ path('app_member_notifications') }}">
+				<i class="fa-solid fa-bell"></i>
+				<span>Notifications</span>
 			</a>
 		</div>
 		<div class="subnav bottom">

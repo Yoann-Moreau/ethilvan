@@ -22,7 +22,7 @@ class Notification {
 	private ?string $message = null;
 
 	#[ORM\Column]
-	private ?bool $seen = null;
+	private ?bool $seen = false;
 
 	public function getId(): ?int {
 		return $this->id;

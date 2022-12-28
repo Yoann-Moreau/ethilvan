@@ -1,0 +1,14 @@
+{% extends 'base_member.html.twig' %}
+
+{% block title %}Vos notifications{% endblock %}
+
+{% block body %}
+	<h1>Vos notifications</h1>
+
+	<ul class="notifications">
+		{% for notification in app.user.notifications|sort((a, b) => a.seen <=> b.seen) %}
+			<li>{{ notification.message|raw }}</li>
+		{% endfor %}
+	</ul>
+
+{% endblock %}

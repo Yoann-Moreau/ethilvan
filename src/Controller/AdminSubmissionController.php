@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Notification;
 use App\Entity\Submission;
 use App\Entity\SubmissionMessage;
 use App\Form\SubmissionMessageType;
+use App\Repository\NotificationRepository;
 use App\Repository\SubmissionMessageImageRepository;
 use App\Repository\SubmissionMessageRepository;
 use App\Repository\SubmissionRepository;
@@ -69,12 +71,26 @@ class AdminSubmissionController extends AbstractController {
 
 	#[Route('/{id}/validate', name: 'app_admin_submission_validate', methods: ['POST'])]
 	public function validate(Submission $submission, Request $request,
-			SubmissionRepository $submission_repository): Response {
+			SubmissionRepository $submission_repository, NotificationRepository $notification_repository): Response {
 
 		if ($this->isCsrfTokenValid('validate' . $submission->getId(), $request->request->get('_token'))) {
 			$submission->setValid(true);
 			$submission->setValidationDate(new DateTime());
 			$submission_repository->save($submission, true);
+
+			$challenge_url = $this->generateUrl('app_member_single_challenge',
+					['id' => $submission->getChallenge()->getId()]);
+			$game_url = $this->generateUrl('app_member_single_game',
+					['id' => $submission->getChallenge()->getGame()->getId()]);
+
+			$message = "Le défi <a href='$challenge_url'>" . $submission->getChallenge()->getName() .
+					"</a> pour le jeu <a href='$game_url'>" .	$submission->getChallenge()->getGame()->getName() .
+					'</a> a été validé.';
+
+			$notification = new Notification();
+			$notification->setUser($submission->getUser());
+			$notification->setMessage($message);
+			$notification_repository->save($notification, true);
 		}
 
 		return $this->redirectToRoute('app_admin_submission_index', [], Response::HTTP_SEE_OTHER);
