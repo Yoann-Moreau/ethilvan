@@ -32,10 +32,11 @@ class MemberController extends AbstractController {
 		$user = $user_repository->find($this->getUser()->getId());
 		$user->countChallengesByDifficulty();
 
-		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user], ['validation_date' => 'DESC'], 3);
+		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user],
+				['validation_date' => 'DESC'], 3);
 
 		return $this->render('member/profile.html.twig', [
-				'user'            => $user,
+				'user'             => $user,
 				'last_submissions' => $last_submissions,
 		]);
 	}
@@ -183,10 +184,11 @@ class MemberController extends AbstractController {
 
 		$user->countChallengesByDifficulty();
 
-		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user], ['validation_date' => 'DESC'], 3);
+		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user],
+				['validation_date' => 'DESC'], 3);
 
 		return $this->render('member/user.html.twig', [
-				'user'            => $user,
+				'user'             => $user,
 				'last_submissions' => $last_submissions,
 		]);
 	}
