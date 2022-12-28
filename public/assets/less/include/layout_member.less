@@ -384,3 +384,32 @@ body {
 		}
 	}
 }
+
+
+// ==============================================
+// Notifications
+// ==============================================
+
+.notifications {
+
+	.notification {
+		display: flex;
+
+		i {
+			width: 2em;
+			margin-right: 0.5em;
+		}
+
+		p {
+			width: calc(100% - 2em);
+		}
+
+		&:not(:last-child) {
+			margin-bottom: 1em;
+		}
+
+		&.seen {
+			color: @tc-light-grey;
+		}
+	}
+}

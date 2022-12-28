@@ -85,7 +85,7 @@ class AdminSubmissionController extends AbstractController {
 
 			$message = "Le défi <a href='$challenge_url'>" . $submission->getChallenge()->getName() .
 					"</a> pour le jeu <a href='$game_url'>" .	$submission->getChallenge()->getGame()->getName() .
-					'</a> a été validé.';
+					'</a> a été validé pour la période ' . $submission->getPeriod()->getName();
 
 			$notification = new Notification();
 			$notification->setUser($submission->getUser());

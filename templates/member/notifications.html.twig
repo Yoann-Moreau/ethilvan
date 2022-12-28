@@ -5,9 +5,24 @@
 {% block body %}
 	<h1>Vos notifications</h1>
 
-	<ul class="notifications">
-		{% for notification in app.user.notifications|sort((a, b) => a.seen <=> b.seen) %}
-			<li>{{ notification.message|raw }}</li>
+	<div class="btns-container">
+		<div class="btns">
+			<form action="" method="post">
+				<button class="btn" type="submit">Marquer toutes les notifications comme lues</button>
+			</form>
+		</div>
+	</div>
+
+	<ul class="notifications col-50">
+		{% for notification in notifications %}
+			<li class="notification {% if notification.seen %}seen{% endif %}">
+				{% if not notification.seen %}
+					<i class="fa-solid fa-bell"></i>
+				{% else %}
+					<i class="fa-solid fa-bell-slash"></i>
+				{% endif %}
+				<p>{{ notification.message|raw }}</p>
+			</li>
 		{% endfor %}
 	</ul>
 

@@ -8,8 +8,10 @@ use App\Form\ChangeEmailType;
 use App\Form\ChangePasswordType;
 use App\Form\ProfileEditType;
 use App\Repository\ChallengeDifficultyRepository;
+use App\Repository\NotificationRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -202,9 +204,26 @@ class MemberController extends AbstractController {
 	}
 
 
-	#[Route('/notifications', name: 'app_member_notifications', methods: ['GET'])]
-	public function notifications(): Response {
-		return $this->render('member/notifications.html.twig');
+	#[Route('/notifications', name: 'app_member_notifications', methods: ['GET', 'POST'])]
+	public function notifications(Request $request, UserRepository $user_repository,
+			EntityManagerInterface $entity_manager, NotificationRepository $notification_repository): Response {
+
+		$current_user = $user_repository->find($this->getUser()->getId());
+		$notifications = $notification_repository->findBy(['user' => $current_user], ['seen' => 'ASC', 'id' => 'DESC']);
+
+		if ($request->isMethod('POST')) {
+			foreach ($notifications as $notification) {
+				if (!$notification->isSeen()) {
+					$notification->setSeen(true);
+					$notification_repository->save($notification);
+				}
+			}
+			$entity_manager->flush();
+		}
+
+		return $this->render('member/notifications.html.twig', [
+				'notifications' => $notifications,
+		]);
 	}
 
 }
