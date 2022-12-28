@@ -1,5 +1,9 @@
 {% extends 'base_member.html.twig' %}
 
+{% block javascripts %}
+	<script type="module" src="/assets/js/notifications.js"></script>
+{% endblock %}
+
 {% block title %}Vos notifications{% endblock %}
 
 {% block body %}
@@ -15,7 +19,7 @@
 
 	<ul class="notifications col-50">
 		{% for notification in notifications %}
-			<li class="notification {% if notification.seen %}seen{% endif %}">
+			<li class="notification {% if notification.seen %}seen{% endif %}" data-id="{{ notification.id }}">
 				{% if not notification.seen %}
 					<i class="fa-solid fa-bell"></i>
 				{% else %}

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Repository\GameRepository;
+use App\Repository\NotificationRepository;
 use App\Repository\SteamGameRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -60,6 +61,42 @@ class AjaxController extends AbstractController {
 		}
 
 		$game_repository->save($game, true);
+
+		return new JsonResponse('ok');
+	}
+
+
+	#[Route('/toggle_notification', name: 'ajax_toggle_notification', methods: ['POST'])]
+	public function ajaxToggleNotification(Request $request, NotificationRepository $notification_repository): Response {
+
+		if (!$this->isGranted('ROLE_EV')) {
+			return new JsonResponse('Unauthorized');
+		}
+
+		$notification_id = $request->request->get('id');
+		$toggle_mode = $request->request->get('toggle');
+
+		$notification = $notification_repository->find($notification_id);
+
+		if (empty($notification)) {
+			return new JsonResponse('Error - This notification does not exist');
+		}
+
+		if ($notification->getUser()->getId() !== $this->getUser()->getId()) {
+			return new JsonResponse('Error - This notification does not belong to you');
+		}
+
+		if ($toggle_mode === 'on') {
+			$notification->setSeen(false);
+		}
+		elseif ($toggle_mode === 'off') {
+			$notification->setSeen(true);
+		}
+		else {
+			return new JsonResponse('Error - Unknown toggle mode');
+		}
+
+		$notification_repository->save($notification, true);
 
 		return new JsonResponse('ok');
 	}
