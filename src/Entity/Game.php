@@ -45,6 +45,8 @@ class Game {
 
 	private array $challenges_counts = [];
 
+	private int $valid_submissions_count = 0;
+
 
 	public function __construct() {
 		$this->challenges = new ArrayCollection();
@@ -180,18 +182,65 @@ class Game {
 	}
 
 
+	/**
+	 * @return int
+	 */
+	public function getValidSubmissionsCount(): int {
+		return $this->valid_submissions_count;
+	}
+
+	/**
+	 * @param int $valid_submissions_count
+	 */
+	public function setValidSubmissionsCount(int $valid_submissions_count): void {
+		$this->valid_submissions_count = $valid_submissions_count;
+	}
+
+
 	// ==========================================================================
 	// Other methods
 	// ==========================================================================
 
-	public function countChallenges(): void {
+	/**
+	 * @param Period[] $periods
+	 * @return void
+	 */
+	public function countChallenges(array $periods): void {
 		$counts = ['Bronze' => 0, 'Argent' => 0, 'Or' => 0, 'Platine' => 0];
 
 		foreach ($this->getChallenges() as $challenge) {
-			$counts[$challenge->getDifficulty()->getName()] = $counts[$challenge->getDifficulty()->getName()] + 1;
+			foreach ($periods as $period) {
+				if ($challenge->getPeriods()->contains($period)) {
+					$counts[$challenge->getDifficulty()->getName()] = $counts[$challenge->getDifficulty()->getName()] + 1;
+				}
+			}
 		}
 
 		$this->setChallengesCounts($counts);
+	}
+
+
+	/**
+	 * @param User $user
+	 * @param Period[] $periods
+	 * @return void
+	 */
+	public function countValidSubmissions(User $user, array $periods): void {
+		$count = 0;
+
+		foreach ($this->getChallenges() as $challenge) {
+			foreach ($periods as $period) {
+				if ($challenge->getPeriods()->contains($period)) {
+					foreach ($challenge->getSubmissions() as $submission) {
+						if ($submission->getUser() === $user && $submission->isValid()) {
+							$count++;
+						}
+					}
+				}
+			}
+		}
+
+		$this->setValidSubmissionsCount($count);
 	}
 
 }

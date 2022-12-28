@@ -45,6 +45,9 @@
 				{% if event %}
 					<div class="event">{{ event }}</div>
 				{% endif %}
+				<div class="valid-submissions-count">
+					{{ game.validSubmissionsCount }} / {{ game.challengesCounts|reduce((carry, v) => carry + v) }}
+				</div>
 			</a>
 		{% endfor %}
 
