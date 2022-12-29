@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -79,6 +80,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 		$query->setParameter('role_sa', 'ROLE_SUPER_ADMIN');
 
 		return $query->getResult();
+	}
+
+
+	public function otherEvQueryBuilder($user_id): QueryBuilder {
+		return $this->createQueryBuilder('u')
+				->select('u')
+				->where('u.id != :user_id')
+				->andWhere('u.deleted = 0')
+				->andWhere("(JSON_SEARCH(u.roles, 'one', 'ROLE_EV') IS NOT NULL) 
+						OR (JSON_SEARCH(u.roles, 'one', 'ROLE_ADMIN') IS NOT NULL)
+						OR (JSON_SEARCH(u.roles, 'one', 'ROLE_SUPER_ADMIN') IS NOT NULL)")
+				->setParameter('user_id', $user_id);
 	}
 
 }

@@ -65,8 +65,10 @@
 			<h2>Validation</h2>
 			{% if is_valid %}
 				<div class="validation-state valid"><i class="fa-solid fa-check"></i>Validé</div>
-			{% elseif messages is not empty %}
+			{% elseif already_submitted %}
 				<div class="validation-state">En cours</div>
+			{% elseif is_current %}
+				<div class="validation-state">Disponible</div>
 			{% else %}
 				<div class="validation-state">Non disponible</div>
 			{% endif %}
@@ -89,6 +91,13 @@
 			</ul>
 
 			{{ form_start(form) }}
+
+			{% if form.players is defined %}
+				<div class="input-container">
+					{{ form_label(form.players) }}
+					{{ form_widget(form.players) }}
+				</div>
+			{% endif %}
 
 			<div class="input-container">
 				{{ form_label(form.message) }}

@@ -6,6 +6,7 @@ use App\Entity\Challenge;
 use App\Entity\Submission;
 use App\Entity\SubmissionMessage;
 use App\Entity\SubmissionMessageImage;
+use App\Entity\User;
 use App\Form\SubmissionMessageType;
 use App\Repository\ChallengeRepository;
 use App\Repository\PeriodRepository;
@@ -16,6 +17,7 @@ use App\Repository\UserRepository;
 use App\Service\ImageService;
 use App\Service\PaginationService;
 use DateTime;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,7 +73,6 @@ class MemberChallengeController extends AbstractController {
 
 		$new_message = new SubmissionMessage();
 		$form = $this->createForm(SubmissionMessageType::class, $new_message);
-		$form->handleRequest($request);
 
 		$current_user = $user_repository->find($this->getUser()->getId());
 		$form_errors = [];
@@ -105,48 +106,100 @@ class MemberChallengeController extends AbstractController {
 			$messages = $current_submission->getSubmissionMessages();
 		}
 
+		// Add input for players
+		if (!$already_submitted && $challenge->getNumberOfPlayers() > 1) {
+			$form->add('players', EntityType::class, [
+					'label'         => 'Autres joueurs ayant participé',
+					'mapped'        => false,
+					'class'         => User::class,
+					'choice_label'  => 'username',
+					'multiple'      => true,
+					'required'      => false,
+					'query_builder' => function (UserRepository $user_repository) use ($current_user) {
+						return $user_repository->otherEvQueryBuilder($current_user->getId());
+					},
+			]);
+		}
+
+		$form->handleRequest($request);
+
 		if ($form->isSubmitted() && $form->isValid() && $is_current && isset($period) && !$is_valid) {
 
-			if (!$already_submitted) {
-				$submission = new Submission();
-				$submission->setUser($current_user);
-				$submission->setChallenge($challenge);
-				$submission->setPeriod($period);
-				$submission->setSubmissionDate(new DateTime());
+			$player_ids = $form->get('players')->getData();
+			if (empty($player_ids)) {
+				$player_ids = [];
+			}
+			$player_ids[] = $current_user->getId();
 
-				$submission_repository->save($submission, true);
+			$submissions = [];
+
+			if (!$already_submitted) {
+
+				foreach ($player_ids as $player_id) {
+					$user = $user_repository->find($player_id);
+
+					$new_submission = new Submission();
+					$new_submission->setUser($user);
+					$new_submission->setChallenge($challenge);
+					$new_submission->setPeriod($period);
+					$new_submission->setSubmissionDate(new DateTime());
+
+					$submission_repository->save($new_submission, true);
+					$submissions[] = $new_submission;
+				}
 			}
 			else {
-				$submission = $submission_repository->findOneBy(['user'   => $current_user, 'challenge' => $challenge,
+				$submissions[] = $submission_repository->findOneBy(['user'   => $current_user, 'challenge' => $challenge,
 				                                                 'period' => $period]);
 			}
 
-			$new_message->setUser($current_user);
-			$new_message->setSubmission($submission);
-			$new_message->setMessageDate(new DateTime());
+			$image_names = [];
+			foreach ($submissions as $key => $submission) {
+				if ($key !== 0) {
+					$new_message = new SubmissionMessage();
+					$new_message->setMessage($form->get('message')->getData());
+				}
 
-			$message_repository->save($new_message, true);
+				$new_message->setUser($current_user);
+				$new_message->setSubmission($submission);
+				$new_message->setMessageDate(new DateTime());
 
-			if (!$already_submitted) {
-				$submission->addSubmissionMessage($new_message);
-				$messages = $submission->getSubmissionMessages();
+				$message_repository->save($new_message, true);
+
+				if (!$already_submitted) {
+					$submission->addSubmissionMessage($new_message);
+					$messages = $submission->getSubmissionMessages();
+				}
+
+				// Manage images attachments
+				if ($key === 0) {
+					$images = $form->get('images')->getData();
+					$image_names = $image_service->uploadSubmissionMessageImages($images, $new_message, $image_repository);
+				}
+				else {
+					foreach ($image_names as $image_name) {
+						$new_image = new SubmissionMessageImage();
+						$new_image->setImage($image_name);
+						$new_image->setSubmissionMessage($new_message);
+						$new_message->addImage($new_image);
+
+						$image_repository->save($new_image, true);
+					}
+				}
 			}
-
-			// Manage images attachments
-			$images = $form->get('images')->getData();
-			$image_service->uploadSubmissionMessageImages($images, $new_message, $image_repository);
 		}
 		elseif ($form->isSubmitted() && !$form->isValid()) {
 			$form_errors = $validator->validate($form);
 		}
 
 		return $this->render('member/challenge/challenge.html.twig', [
-				'challenge'   => $challenge,
-				'form'        => $form->createView(),
-				'is_current'  => $is_current,
-				'is_valid'    => $is_valid,
-				'messages'    => $messages,
-				'form_errors' => $form_errors,
+				'challenge'         => $challenge,
+				'form'              => $form->createView(),
+				'already_submitted' => $already_submitted,
+				'is_current'        => $is_current,
+				'is_valid'          => $is_valid,
+				'messages'          => $messages,
+				'form_errors'       => $form_errors,
 		]);
 	}
 

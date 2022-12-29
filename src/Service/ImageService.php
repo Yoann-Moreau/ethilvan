@@ -18,7 +18,9 @@ class ImageService {
 
 
 	public function uploadSubmissionMessageImages(array $images, SubmissionMessage $new_message,
-			SubmissionMessageImageRepository $image_repository): void {
+			SubmissionMessageImageRepository $image_repository): array {
+
+		$image_names = [];
 
 		if (!empty($images)) {
 			$directory = $this->params->get('submission_images_directory');
@@ -30,11 +32,15 @@ class ImageService {
 				$new_image->setImage($image_name);
 				$new_image->setSubmissionMessage($new_message);
 
+				$image_names[] = $image_name;
+
 				$new_message->addImage($new_image);
 
 				$image_repository->save($new_image, true);
 			}
 		}
+
+		return $image_names;
 	}
 
 }
