@@ -309,7 +309,13 @@ body {
 		margin-bottom: 0.3em;
 
 		.medal {
+			width: 2.5rem;
+			height: 2.5rem;
 			margin-right: 0.8em;
+
+			img {
+				.contain();
+			}
 		}
 
 		h3 {
@@ -356,6 +362,30 @@ body {
 // ==============================================
 // Single challenge
 // ==============================================
+
+.challenge-title-container {
+
+	.medal {
+		width: 4rem;
+		height: 4rem;
+		margin-left: 0.3em;
+
+		img {
+			.contain();
+		}
+	}
+}
+
+
+.challenge-periods {
+
+	.period {
+
+		&:not(:last-child) {
+			margin-bottom: 0.5em;
+		}
+	}
+}
 
 .validation {
 	display: flex;

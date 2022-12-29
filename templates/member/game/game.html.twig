@@ -24,9 +24,10 @@
 		{% for challenge in game.challenges|sort((a, b) => a.difficulty <=> b.difficulty) %}
 			<article class="challenge-card">
 				<div class="title-container">
-					{# <img class="medal" src="" alt="Médaille de {{ challenge.difficulty.name }}"
-					     title="Défi {{ challenge.difficulty.name }}">  #}
-					<div class="medal" title="Défi {{ challenge.difficulty.name }}"><i class="fa-solid fa-medal"></i></div>
+					<div class="medal">
+						<img src="/assets/img/{{ challenge.difficulty.icon }}"
+						     alt="Médaille de {{ challenge.difficulty.name }}" title="Défi {{ challenge.difficulty.name }}">
+					</div>
 					<a href="{{ path('app_member_single_challenge', {'id': challenge.id}) }}"><h3>{{ challenge.name }}</h3></a>
 				</div>
 				<div class="players">
@@ -46,7 +47,7 @@
 				<div class="periods {{ current }}">
 					<span>
 						<i class="fa-solid fa-calendar-days"></i>
-						{{ challenge.periods|join(', ') }}
+						{{ challenge.periods|sort((a, b) => a.year <=> b.year)|join(', ') }}
 					</span>
 					<a href="{{ path('app_member_single_challenge', {'id': challenge.id}) }}">
 						<i class="fa-solid fa-arrow-right"></i>
