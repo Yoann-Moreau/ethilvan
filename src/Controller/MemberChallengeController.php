@@ -82,6 +82,7 @@ class MemberChallengeController extends AbstractController {
 
 		$current_user = $user_repository->find($this->getUser()->getId());
 		$form_errors = [];
+		$errors = [];
 
 		// Check if one the periods is current (to display form)
 		$is_current = false;
@@ -137,14 +138,31 @@ class MemberChallengeController extends AbstractController {
 			}
 			$player_ids[] = $current_user->getId();
 
-			$submissions = $this->postSubmissions($already_submitted, $player_ids, $challenge, $period, $current_user,
-					$user_repository, $submission_repository, $notification_repository);
+			if (count($player_ids) > $challenge->getNumberOfPlayers()) {
+				$errors[] = 'Ce défi ne peut accepter que ' . $challenge->getNumberOfPlayers() . ' joueurs (vous y compris)';
+			}
 
-			$this->postSubmissionMessages($new_message, $submissions, $current_user, $form, $message_repository,
-					$image_service, $image_repository);
+			foreach ($player_ids as $player_id) {
+				$checked_user = $user_repository->find($player_id);
 
-			// Redirect to notifications on success
-			return $this->redirectToRoute('app_member_notifications');
+				foreach ($checked_user->getSubmissions() as $submission) {
+					if ($submission->getChallenge() === $challenge && $submission->getPeriod() === $period) {
+						$errors[] = 'Le joueur ' . $checked_user->getUsername() .
+								' a déjà soumis ce défi à validation pour cette période';
+					}
+				}
+			}
+
+			if (empty($errors)) {
+				$submissions = $this->postSubmissions($already_submitted, $player_ids, $challenge, $period, $current_user,
+						$user_repository, $submission_repository, $notification_repository);
+
+				$this->postSubmissionMessages($new_message, $submissions, $current_user, $form, $message_repository,
+						$image_service, $image_repository);
+
+				// Redirect to notifications on success
+				return $this->redirectToRoute('app_member_notifications');
+			}
 		}
 		elseif ($form->isSubmitted() && !$form->isValid()) {
 			$form_errors = $validator->validate($form);
@@ -158,6 +176,7 @@ class MemberChallengeController extends AbstractController {
 				'is_valid'          => $is_valid,
 				'messages'          => $messages,
 				'form_errors'       => $form_errors,
+				'errors'            => $errors,
 		]);
 	}
 

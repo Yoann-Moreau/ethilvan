@@ -88,6 +88,9 @@
 				{% for error in form_errors %}
 					<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error.message }}</li>
 				{% endfor %}
+				{% for error in errors %}
+					<li class="error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</li>
+				{% endfor %}
 			</ul>
 
 			{{ form_start(form) }}
