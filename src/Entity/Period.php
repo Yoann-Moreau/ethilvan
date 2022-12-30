@@ -38,6 +38,9 @@ class Period {
 	#[ORM\OneToMany(mappedBy: 'period', targetEntity: Submission::class)]
 	private Collection $submissions;
 
+	#[ORM\OneToOne(mappedBy: 'period', cascade: ['persist', 'remove'])]
+	private ?Ranking $ranking = null;
+
 
 	public function __construct() {
 		$this->challenges = new ArrayCollection();
@@ -158,6 +161,22 @@ class Period {
 				$submission->setPeriod(null);
 			}
 		}
+
+		return $this;
+	}
+
+
+	public function getRanking(): ?Ranking {
+		return $this->ranking;
+	}
+
+	public function setRanking(Ranking $ranking): self {
+		// set the owning side of the relation if necessary
+		if ($ranking->getPeriod() !== $this) {
+			$ranking->setPeriod($this);
+		}
+
+		$this->ranking = $ranking;
 
 		return $this;
 	}
