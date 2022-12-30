@@ -36,7 +36,8 @@ class AdminSubmissionController extends AbstractController {
 	#[Route('/{id}', name: 'app_admin_submission', methods: ['GET', 'POST'])]
 	public function submission(Request $request, Submission $submission, ValidatorInterface $validator,
 			UserRepository $user_repository, SubmissionMessageRepository $message_repository,
-			SubmissionMessageImageRepository $image_repository, ImageService $image_service): Response {
+			SubmissionMessageImageRepository $image_repository, ImageService $image_service,
+			NotificationRepository $notification_repository): Response {
 
 		$new_message = new SubmissionMessage();
 		$form = $this->createForm(SubmissionMessageType::class, $new_message);
@@ -52,6 +53,17 @@ class AdminSubmissionController extends AbstractController {
 			$new_message->setMessageDate(new DateTime());
 
 			$message_repository->save($new_message, true);
+
+			// Notify user
+			$current_user_link = $this->generateUrl('app_member_user', ['id' => $current_user->getId()]);
+			$challenge_link = $this->generateUrl('app_member_single_challenge',
+					['id' => $submission->getChallenge()->getId()]);
+			$message = "<a href='$current_user_link'>" . $current_user->getUsername() . '</a> a répondu à votre demande de ' .
+					"validation du défi <a href='$challenge_link'>" . $submission->getChallenge()->getName() . '</a>';
+			$notification = new Notification();
+			$notification->setUser($submission->getUser());
+			$notification->setMessage($message);
+			$notification_repository->save($notification, true);
 
 			// Manage images attachments
 			$images = $form->get('images')->getData();
