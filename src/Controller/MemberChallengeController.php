@@ -181,6 +181,17 @@ class MemberChallengeController extends AbstractController {
 	}
 
 
+	/**
+	 * @param bool $already_submitted
+	 * @param ArrayCollection $player_ids
+	 * @param Challenge $challenge
+	 * @param Period $period
+	 * @param User $current_user
+	 * @param UserRepository $user_repository
+	 * @param SubmissionRepository $submission_repository
+	 * @param NotificationRepository $notification_repository
+	 * @return Submission[]
+	 */
 	private function postSubmissions(bool $already_submitted, ArrayCollection $player_ids, Challenge $challenge,
 			Period $period, User $current_user, UserRepository $user_repository, SubmissionRepository $submission_repository,
 			NotificationRepository $notification_repository): array {
@@ -220,6 +231,16 @@ class MemberChallengeController extends AbstractController {
 	}
 
 
+	/**
+	 * @param SubmissionMessage $new_message
+	 * @param Submission[] $submissions
+	 * @param User $current_user
+	 * @param FormInterface $form
+	 * @param SubmissionMessageRepository $message_repository
+	 * @param ImageService $image_service
+	 * @param SubmissionMessageImageRepository $image_repository
+	 * @return void
+	 */
 	private function postSubmissionMessages(SubmissionMessage $new_message, array $submissions, User $current_user,
 			FormInterface $form, SubmissionMessageRepository $message_repository, ImageService $image_service,
 			SubmissionMessageImageRepository $image_repository): void {
