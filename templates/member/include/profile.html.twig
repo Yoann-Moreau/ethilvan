@@ -59,8 +59,31 @@
 				{% endfor %}
 			</ul>
 		</article>
-		<article class="cups-container"></article>
-		<article class="last-cups"></article>
+		<article class="cups-container">
+			{% for cup in cups %}
+				<div class="cup-container">
+					<div class="cup">
+						<img src="/assets/img/{{ cup.icon }}" alt="Coupe de {{ cup.name }}">
+					</div>
+					<div class="cup-number">{{ user.rankingPositionCounts[cup.position] }}</div>
+				</div>
+			{% endfor %}
+		</article>
+		<article class="last-cups">
+			<ul>
+				{% for position in last_ranking_positions %}
+					{% set suffix = 'ème' %}
+					{% if position.position is same as 1 %}
+						{% set suffix = 'ère' %}
+					{% endif %}
+					<li>
+						{{ position.position }}{{ suffix }} place
+						avec {{ position.points }} points
+						pour la période {{ position.ranking.period.name }}
+					</li>
+				{% endfor %}
+			</ul>
+		</article>
 		<article class="trophies-container"></article>
 		<article class="last-trophies"></article>
 	</section>

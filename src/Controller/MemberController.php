@@ -8,7 +8,9 @@ use App\Form\ChangeEmailType;
 use App\Form\ChangePasswordType;
 use App\Form\ProfileEditType;
 use App\Repository\ChallengeDifficultyRepository;
+use App\Repository\CupRepository;
 use App\Repository\NotificationRepository;
+use App\Repository\RankingPositionRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,20 +33,26 @@ class MemberController extends AbstractController {
 
 	#[Route('/profile', name: 'app_member_profile', methods: ['GET'])]
 	public function profile(UserRepository $user_repository, SubmissionRepository $submission_repository,
-			ChallengeDifficultyRepository $difficulty_repository): Response {
+			ChallengeDifficultyRepository $difficulty_repository, CupRepository $cup_repository,
+			RankingPositionRepository $position_repository): Response {
 
 		$user = $user_repository->find($this->getUser()->getId());
 		$user->countChallengesByDifficulty();
+		$user->countRankingPositions();
 
 		$difficulties = $difficulty_repository->findAll();
+		$cups = $cup_repository->findBy([], ['position' => 'DESC']);
 
 		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user],
 				['validation_date' => 'DESC'], 3);
+		$last_ranking_positions = $position_repository->findBy(['user' => $user], ['id' => 'DESC'], 3);
 
 		return $this->render('member/profile.html.twig', [
-				'user'             => $user,
-				'last_submissions' => $last_submissions,
-				'difficulties'     => $difficulties,
+				'user'                   => $user,
+				'last_submissions'       => $last_submissions,
+				'last_ranking_positions' => $last_ranking_positions,
+				'difficulties'           => $difficulties,
+				'cups'                   => $cups,
 		]);
 	}
 
@@ -181,7 +189,8 @@ class MemberController extends AbstractController {
 
 	#[Route('/user/{id}', name: 'app_member_user', methods: ['GET'])]
 	public function user(int $id, UserRepository $user_repository,
-			SubmissionRepository $submission_repository, ChallengeDifficultyRepository $difficulty_repository): Response {
+			SubmissionRepository $submission_repository, ChallengeDifficultyRepository $difficulty_repository,
+			CupRepository $cup_repository, RankingPositionRepository $position_repository): Response {
 
 		$user = $user_repository->find($id);
 
@@ -190,16 +199,21 @@ class MemberController extends AbstractController {
 		}
 
 		$user->countChallengesByDifficulty();
+		$user->countRankingPositions();
 
 		$difficulties = $difficulty_repository->findAll();
+		$cups = $cup_repository->findBy([], ['position' => 'DESC']);
 
 		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user],
 				['validation_date' => 'DESC'], 3);
+		$last_ranking_positions = $position_repository->findBy(['user' => $user], ['id' => 'DESC'], 3);
 
 		return $this->render('member/user.html.twig', [
-				'user'             => $user,
-				'last_submissions' => $last_submissions,
-				'difficulties'     => $difficulties,
+				'user'                   => $user,
+				'last_submissions'       => $last_submissions,
+				'last_ranking_positions' => $last_ranking_positions,
+				'difficulties'           => $difficulties,
+				'cups'                   => $cups,
 		]);
 	}
 

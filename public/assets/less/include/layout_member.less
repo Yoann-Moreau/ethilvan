@@ -148,17 +148,20 @@ body {
 	margin-top: 2em;
 	background-color: @bg-main;
 
-	.medals-container {
+	.medals-container,
+	.cups-container {
 		display: flex;
 		width: 100%;
 
-		.medal-container {
+		.medal-container,
+		.cup-container {
 			display: flex;
 			align-items: center;
 			font-size: 4rem;
 		}
 
-		.medal {
+		.medal,
+		.cup {
 			width: 5rem;
 			height: 5rem;
 			margin-right: 0.5em;
@@ -168,13 +171,15 @@ body {
 			}
 		}
 
-		.medal-number {
+		.medal-number,
+		.cup-number {
 			margin-right: 1.3em;
 			color: @tc-main;
 		}
 	}
 
-	.last-medals {
+	.last-medals,
+	.last-cups {
 		margin: 1.5em 0;
 		font-size: 2rem;
 

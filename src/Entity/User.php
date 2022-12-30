@@ -80,6 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
 	private array $challenges_counts;
 
+	private array $ranking_position_counts;
 
 	public function __construct() {
 		$this->submissions = new ArrayCollection();
@@ -338,6 +339,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 	}
 
 
+	/**
+	 * @return array
+	 */
+	public function getRankingPositionCounts(): array {
+		return $this->ranking_position_counts;
+	}
+
+	/**
+	 * @param array $ranking_position_counts
+	 */
+	public function setRankingPositionCounts(array $ranking_position_counts): void {
+		$this->ranking_position_counts = $ranking_position_counts;
+	}
+
+
 	// ==========================================================================
 	// Other methods
 	// ==========================================================================
@@ -353,6 +369,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 		}
 
 		$this->setChallengesCounts($counts);
+	}
+
+
+	public function countRankingPositions(): void {
+		$counts = [1 => 0, 2 => 0, 3 => 0];
+
+		foreach ($this->getRankingPositions() as $ranking_position) {
+			foreach ($counts as $key => &$count) {
+				if ($ranking_position->getPosition() === $key) {
+					$count++;
+				}
+			}
+		}
+
+		$this->setRankingPositionCounts($counts);
 	}
 
 }
