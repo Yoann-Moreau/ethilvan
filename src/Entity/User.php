@@ -75,6 +75,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 	#[ORM\OneToMany(mappedBy: 'user', targetEntity: Notification::class)]
 	private Collection $notifications;
 
+	#[ORM\OneToMany(mappedBy: 'user', targetEntity: RankingPosition::class)]
+	private Collection $ranking_positions;
+
 	private array $challenges_counts;
 
 
@@ -82,6 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 		$this->submissions = new ArrayCollection();
 		$this->submission_messages = new ArrayCollection();
 		$this->notifications = new ArrayCollection();
+		$this->ranking_positions = new ArrayCollection();
 	}
 
 
@@ -284,6 +288,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 			// set the owning side to null (unless already changed)
 			if ($notification->getUser() === $this) {
 				$notification->setUser(null);
+			}
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * @return Collection<int, RankingPosition>
+	 */
+	public function getRankingPositions(): Collection {
+		return $this->ranking_positions;
+	}
+
+	public function addRankingPosition(RankingPosition $rankingPosition): self {
+		if (!$this->ranking_positions->contains($rankingPosition)) {
+			$this->ranking_positions->add($rankingPosition);
+			$rankingPosition->setUser($this);
+		}
+
+		return $this;
+	}
+
+	public function removeRankingPosition(RankingPosition $rankingPosition): self {
+		if ($this->ranking_positions->removeElement($rankingPosition)) {
+			// set the owning side to null (unless already changed)
+			if ($rankingPosition->getUser() === $this) {
+				$rankingPosition->setUser(null);
 			}
 		}
 
