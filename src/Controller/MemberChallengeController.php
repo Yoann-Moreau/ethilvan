@@ -132,9 +132,10 @@ class MemberChallengeController extends AbstractController {
 
 		if ($form->isSubmitted() && $form->isValid() && $is_current && isset($period) && !$is_valid) {
 
-			$player_ids = $form->get('players')->getData();
-			if (empty($player_ids)) {
-				$player_ids = [];
+			$player_ids = [];
+			if (array_key_exists('players', $form->all())) {
+				$player_ids = $form->get('players')->getData(); // ArrayCollection
+				$player_ids = $player_ids->toArray();
 			}
 			$player_ids[] = $current_user->getId();
 
@@ -192,7 +193,7 @@ class MemberChallengeController extends AbstractController {
 	 * @param NotificationRepository $notification_repository
 	 * @return Submission[]
 	 */
-	private function postSubmissions(bool $already_submitted, ArrayCollection $player_ids, Challenge $challenge,
+	private function postSubmissions(bool $already_submitted, array $player_ids, Challenge $challenge,
 			Period $period, User $current_user, UserRepository $user_repository, SubmissionRepository $submission_repository,
 			NotificationRepository $notification_repository): array {
 
