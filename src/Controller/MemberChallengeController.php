@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Challenge;
+use App\Entity\Notification;
 use App\Entity\Submission;
 use App\Entity\SubmissionMessage;
 use App\Entity\SubmissionMessageImage;
 use App\Entity\User;
 use App\Form\SubmissionMessageType;
 use App\Repository\ChallengeRepository;
+use App\Repository\NotificationRepository;
 use App\Repository\PeriodRepository;
 use App\Repository\SubmissionMessageImageRepository;
 use App\Repository\SubmissionMessageRepository;
@@ -69,7 +71,8 @@ class MemberChallengeController extends AbstractController {
 	public function singleChallenge(Challenge $challenge, Request $request, SubmissionRepository $submission_repository,
 			SubmissionMessageRepository $message_repository, UserRepository $user_repository,
 			PeriodRepository $period_repository, SubmissionMessageImageRepository $image_repository,
-			ValidatorInterface $validator, ImageService $image_service): Response {
+			ValidatorInterface $validator, ImageService $image_service,
+			NotificationRepository $notification_repository): Response {
 
 		$new_message = new SubmissionMessage();
 		$form = $this->createForm(SubmissionMessageType::class, $new_message);
@@ -146,11 +149,20 @@ class MemberChallengeController extends AbstractController {
 
 					$submission_repository->save($new_submission, true);
 					$submissions[] = $new_submission;
+
+					// Add notification for each user
+					$challenge_url = $this->generateUrl('app_member_single_challenge', ['id' => $challenge->getId()]);
+					$message = "Votre demande de validation du défi <a href='$challenge_url'>" . $challenge->getName() .
+							"</a> a été postée avec succès";
+					$notification = new Notification();
+					$notification->setUser($user);
+					$notification->setMessage($message);
+					$notification_repository->save($notification, true);
 				}
 			}
-			else {
+			else { // if already submitted
 				$submissions[] = $submission_repository->findOneBy(['user'   => $current_user, 'challenge' => $challenge,
-				                                                 'period' => $period]);
+				                                                    'period' => $period]);
 			}
 
 			$image_names = [];
@@ -165,11 +177,6 @@ class MemberChallengeController extends AbstractController {
 				$new_message->setMessageDate(new DateTime());
 
 				$message_repository->save($new_message, true);
-
-				if (!$already_submitted) {
-					$submission->addSubmissionMessage($new_message);
-					$messages = $submission->getSubmissionMessages();
-				}
 
 				// Manage images attachments
 				if ($key === 0) {
@@ -187,6 +194,9 @@ class MemberChallengeController extends AbstractController {
 					}
 				}
 			}
+
+			// Redirect to notifications on success
+			return $this->redirectToRoute('app_member_notifications');
 		}
 		elseif ($form->isSubmitted() && !$form->isValid()) {
 			$form_errors = $validator->validate($form);
