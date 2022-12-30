@@ -6,7 +6,11 @@
 	<div class="message-info">
 		<div class="flex center">
 			<div class="avatar-container">
-				<img src="/uploads/avatar/{{ message.user.avatar }}" alt="Avatar de {{ message.user.username }}">
+				{% if message.user.avatar %}
+					<img src="/uploads/avatar/{{ message.user.avatar }}" alt="Avatar de {{ message.user.username }}">
+				{% else %}
+					<img src="/assets/img/EV-200_nbg.png" alt="Logo d'Ethil Van">
+				{% endif %}
 			</div>
 			<h3>{{ message.user.username }}</h3>
 		</div>
