@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Challenge;
 use App\Entity\Notification;
+use App\Entity\Period;
 use App\Entity\Submission;
 use App\Entity\SubmissionMessage;
 use App\Entity\SubmissionMessageImage;
@@ -19,8 +20,10 @@ use App\Repository\UserRepository;
 use App\Service\ImageService;
 use App\Service\PaginationService;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -134,66 +137,11 @@ class MemberChallengeController extends AbstractController {
 			}
 			$player_ids[] = $current_user->getId();
 
-			$submissions = [];
+			$submissions = $this->postSubmissions($already_submitted, $player_ids, $challenge, $period, $current_user,
+					$user_repository, $submission_repository, $notification_repository);
 
-			if (!$already_submitted) {
-
-				foreach ($player_ids as $player_id) {
-					$user = $user_repository->find($player_id);
-
-					$new_submission = new Submission();
-					$new_submission->setUser($user);
-					$new_submission->setChallenge($challenge);
-					$new_submission->setPeriod($period);
-					$new_submission->setSubmissionDate(new DateTime());
-
-					$submission_repository->save($new_submission, true);
-					$submissions[] = $new_submission;
-
-					// Add notification for each user
-					$challenge_url = $this->generateUrl('app_member_single_challenge', ['id' => $challenge->getId()]);
-					$message = "Votre demande de validation du défi <a href='$challenge_url'>" . $challenge->getName() .
-							"</a> a été postée avec succès";
-					$notification = new Notification();
-					$notification->setUser($user);
-					$notification->setMessage($message);
-					$notification_repository->save($notification, true);
-				}
-			}
-			else { // if already submitted
-				$submissions[] = $submission_repository->findOneBy(['user'   => $current_user, 'challenge' => $challenge,
-				                                                    'period' => $period]);
-			}
-
-			$image_names = [];
-			foreach ($submissions as $key => $submission) {
-				if ($key !== 0) {
-					$new_message = new SubmissionMessage();
-					$new_message->setMessage($form->get('message')->getData());
-				}
-
-				$new_message->setUser($current_user);
-				$new_message->setSubmission($submission);
-				$new_message->setMessageDate(new DateTime());
-
-				$message_repository->save($new_message, true);
-
-				// Manage images attachments
-				if ($key === 0) {
-					$images = $form->get('images')->getData();
-					$image_names = $image_service->uploadSubmissionMessageImages($images, $new_message, $image_repository);
-				}
-				else {
-					foreach ($image_names as $image_name) {
-						$new_image = new SubmissionMessageImage();
-						$new_image->setImage($image_name);
-						$new_image->setSubmissionMessage($new_message);
-						$new_message->addImage($new_image);
-
-						$image_repository->save($new_image, true);
-					}
-				}
-			}
+			$this->postSubmissionMessages($new_message, $submissions, $current_user, $form, $message_repository,
+					$image_service, $image_repository);
 
 			// Redirect to notifications on success
 			return $this->redirectToRoute('app_member_notifications');
@@ -211,6 +159,81 @@ class MemberChallengeController extends AbstractController {
 				'messages'          => $messages,
 				'form_errors'       => $form_errors,
 		]);
+	}
+
+
+	private function postSubmissions(bool $already_submitted, ArrayCollection $player_ids, Challenge $challenge,
+			Period $period, User $current_user, UserRepository $user_repository, SubmissionRepository $submission_repository,
+			NotificationRepository $notification_repository): array {
+
+		$submissions = [];
+
+		if (!$already_submitted) {
+
+			foreach ($player_ids as $player_id) {
+				$user = $user_repository->find($player_id);
+
+				$new_submission = new Submission();
+				$new_submission->setUser($user);
+				$new_submission->setChallenge($challenge);
+				$new_submission->setPeriod($period);
+				$new_submission->setSubmissionDate(new DateTime());
+
+				$submission_repository->save($new_submission, true);
+				$submissions[] = $new_submission;
+
+				// Add notification for each user
+				$challenge_url = $this->generateUrl('app_member_single_challenge', ['id' => $challenge->getId()]);
+				$message = "Votre demande de validation du défi <a href='$challenge_url'>" . $challenge->getName() .
+						"</a> a été postée avec succès";
+				$notification = new Notification();
+				$notification->setUser($user);
+				$notification->setMessage($message);
+				$notification_repository->save($notification, true);
+			}
+		}
+		else { // if already submitted
+			$submissions[] = $submission_repository->findOneBy(['user'   => $current_user, 'challenge' => $challenge,
+			                                                    'period' => $period]);
+		}
+
+		return $submissions;
+	}
+
+
+	private function postSubmissionMessages(SubmissionMessage $new_message, array $submissions, User $current_user,
+			FormInterface $form, SubmissionMessageRepository $message_repository, ImageService $image_service,
+			SubmissionMessageImageRepository $image_repository): void {
+
+		$image_names = [];
+		foreach ($submissions as $key => $submission) {
+			if ($key !== 0) {
+				$new_message = new SubmissionMessage();
+				$new_message->setMessage($form->get('message')->getData());
+			}
+
+			$new_message->setUser($current_user);
+			$new_message->setSubmission($submission);
+			$new_message->setMessageDate(new DateTime());
+
+			$message_repository->save($new_message, true);
+
+			// Manage images attachments
+			if ($key === 0) {
+				$images = $form->get('images')->getData();
+				$image_names = $image_service->uploadSubmissionMessageImages($images, $new_message, $image_repository);
+			}
+			else {
+				foreach ($image_names as $image_name) {
+					$new_image = new SubmissionMessageImage();
+					$new_image->setImage($image_name);
+					$new_image->setSubmissionMessage($new_message);
+					$new_message->addImage($new_image);
+
+					$image_repository->save($new_image, true);
+				}
+			}
+		}
 	}
 
 }
