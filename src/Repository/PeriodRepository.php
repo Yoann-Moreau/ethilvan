@@ -42,12 +42,12 @@ class PeriodRepository extends ServiceEntityRepository {
 	 * @return Period[]
 	 */
 	public function findCurrentPeriods(): array {
-		$now = new DateTime('now');
+		$now = date('Y-m-d');
 
 		return $this->createQueryBuilder('p')
 			->select('p')
-			->where('p.start_date < :now')
-			->andWhere('p.end_date > :now')
+			->where('p.start_date <= :now')
+			->andWhere('p.end_date >= :now')
 			->setParameter('now', $now)
 			->getQuery()
 			->getResult();

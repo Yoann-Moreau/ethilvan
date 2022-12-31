@@ -40,7 +40,7 @@
 				<p class="description">{{ challenge.description|nl2br }}</p>
 				{% set current = '' %}
 				{% for period in challenge.periods %}
-					{% if period.startDate < date('now') and period.endDate > date('now') and period.type is same as 'event' %}
+					{% if period.startDate <= date('now') and period.endDate >= date('now') and period.type is same as 'event' %}
 						{% set current = 'current' %}
 					{% endif %}
 				{% endfor %}
