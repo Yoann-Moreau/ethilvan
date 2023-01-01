@@ -10,6 +10,7 @@ use App\Form\ProfileEditType;
 use App\Repository\ChallengeDifficultyRepository;
 use App\Repository\CupRepository;
 use App\Repository\NotificationRepository;
+use App\Repository\PeriodRepository;
 use App\Repository\RankingPositionRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\UserRepository;
@@ -26,8 +27,40 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class MemberController extends AbstractController {
 
 	#[Route('/', name: 'app_member', methods: ['GET'])]
-	public function index(): Response {
-		return $this->render('member/index.html.twig');
+	public function index(UserRepository $user_repository, SubmissionRepository $submission_repository,
+			PeriodRepository $period_repository): Response {
+
+		$current_user = $user_repository->find($this->getUser()->getId());
+
+		$current_periods = $period_repository->findCurrentPeriods();
+		$current_year = null;
+		$current_event = null;
+		foreach ($current_periods as $period) {
+			if ($period->getType() === 'year') {
+				$current_year = $period;
+			}
+			elseif ($period->getType() === 'event') {
+				$current_event = $period;
+			}
+		}
+
+		$last_own_submissions = $submission_repository->findBy(
+				['user' => $current_user, 'valid' => true, 'period' => $current_year],
+				['validation_date' => 'DESC'],
+				3
+		);
+		$last_submissions = $submission_repository->findBy(
+				['valid' => true, 'period' => $current_year],
+				['validation_date' => 'DESC'],
+				5
+		);
+
+		return $this->render('member/index.html.twig', [
+				'last_own_submissions' => $last_own_submissions,
+				'last_submissions'     => $last_submissions,
+				'current_year'         => $current_year,
+				'current_event'        => $current_event,
+		]);
 	}
 
 

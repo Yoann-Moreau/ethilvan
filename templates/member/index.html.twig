@@ -3,6 +3,62 @@
 {% block title %}Espace membre{% endblock %}
 
 {% block body %}
-	<h1>Espace membre</h1>
+	<div class="year">
+		{% if current_year is not null %}
+			<img class="year banner" src="/uploads/period_banner/{{ current_year.banner }}"
+			     alt="Bannière de l'année {{ current_year.year }}">
+		{% endif %}
+
+		<div class="flex sb">
+			<div class="container left">
+
+				<div class="last-own-challenges">
+					<h3>Vos 3 derniers défis de l'année</h3>
+					<ul>
+						{% for submission in last_own_submissions %}
+							<li>
+								<a href="{{ path('app_member_single_challenge', {'id': submission.challenge.id}) }}">
+									{{ submission.challenge.name }}
+								</a>
+								sur
+								<a href="{{ path('app_member_single_game', {'id': submission.challenge.game.id}) }}">
+									{{ submission.challenge.game.name }}
+								</a>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+
+				<div class="last-challenges">
+					<h3>Les 5 derniers défis validés de l'année</h3>
+					<ul>
+						{% for submission in last_submissions %}
+							<li>
+								<a href="{{ path('app_member_single_challenge', {'id': submission.challenge.id}) }}">
+									{{ submission.challenge.name }}
+								</a>
+								sur
+								<a href="{{ path('app_member_single_game', {'id': submission.challenge.game.id}) }}">
+									{{ submission.challenge.game.name }}
+								</a>
+								par
+								<a href="{{ path('app_member_user', {'id': submission.user.id}) }}">
+									{{ submission.user.username }}
+								</a>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+
+			</div>
+
+			<div class="container right">
+				<div class="current-year-ranking">
+
+				</div>
+			</div>
+		</div>
+
+	</div>
 
 {% endblock %}
