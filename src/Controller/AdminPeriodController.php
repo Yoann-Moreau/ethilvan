@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Period;
 use App\Form\PeriodType;
 use App\Repository\PeriodRepository;
+use App\Service\ToolsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,12 +23,23 @@ class AdminPeriodController extends AbstractController {
 
 
 	#[Route('/new', name: 'app_admin_period_new', methods: ['GET', 'POST'])]
-	public function new(Request $request, PeriodRepository $period_repository): Response {
+	public function new(Request $request, PeriodRepository $period_repository, ToolsService $tools_service): Response {
 		$period = new Period();
 		$form = $this->createForm(PeriodType::class, $period);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
+
+			$banner = $form->get('banner')->getData();
+
+			if (!empty($banner)) {
+				$file_name = $tools_service->slugify($period->getName()) . uniqid('_') . '.' . $banner->guessExtension();
+				$directory = $this->getParameter('period_banners_directory');
+
+				$banner->move($directory, $file_name);
+
+				$period->setBanner($file_name);
+			}
 			$period_repository->save($period, true);
 
 			return $this->redirectToRoute('app_admin_period_index', [], Response::HTTP_SEE_OTHER);
@@ -41,11 +53,31 @@ class AdminPeriodController extends AbstractController {
 
 
 	#[Route('/{id}/edit', name: 'app_admin_period_edit', methods: ['GET', 'POST'])]
-	public function edit(Request $request, Period $period, PeriodRepository $period_repository): Response {
+	public function edit(Request $request, Period $period, PeriodRepository $period_repository,
+			ToolsService $tools_service): Response {
+
+		$old_banner = $period->getBanner();
+
 		$form = $this->createForm(PeriodType::class, $period);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
+			$file = $form->get('banner')->getData();
+
+			if (!empty($file)) {
+				$file_name = $tools_service->slugify($period->getName()) . uniqid('_') . '.' . $file->guessExtension();
+				$directory = $this->getParameter('period_banners_directory');
+
+				// Delete old banner
+				if ($old_banner !== $file_name && $old_banner !== null) {
+					if (file_exists($directory . '/' . $old_banner)) {
+						unlink($directory . '/' . $old_banner);
+					}
+				}
+
+				$file->move($directory, $file_name);
+				$period->setBanner($file_name);
+			}
 			$period_repository->save($period, true);
 
 			return $this->redirectToRoute('app_admin_period_index', [], Response::HTTP_SEE_OTHER);

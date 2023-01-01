@@ -6,10 +6,12 @@ use App\Entity\Period;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class PeriodType extends AbstractType {
 
@@ -44,6 +46,22 @@ class PeriodType extends AbstractType {
 						'widget' => 'single_text',
 						'attr'   => [
 								'min' => '2023-01-01',
+						],
+				])
+				->add('banner', FileType::class, [
+						'label'    => 'Bannière',
+						'mapped'   => false,
+						'required' => false,
+						'constraints' => [
+								new File([
+										'maxSize'          => '512k',
+										'maxSizeMessage'   => "L'image doit peser moins de 512ko",
+										'mimeTypes'        => [
+												'image/png',
+												'image/jpeg',
+										],
+										'mimeTypesMessage' => 'Seuls les formats PNG et JPEG sont supportés',
+								]),
 						],
 				]);
 	}

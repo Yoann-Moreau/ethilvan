@@ -41,6 +41,9 @@ class Period {
 	#[ORM\OneToOne(mappedBy: 'period', cascade: ['persist', 'remove'])]
 	private ?Ranking $ranking = null;
 
+	#[ORM\Column(length: 255, nullable: true)]
+	private ?string $banner = null;
+
 
 	public function __construct() {
 		$this->challenges = new ArrayCollection();
@@ -177,6 +180,17 @@ class Period {
 		}
 
 		$this->ranking = $ranking;
+
+		return $this;
+	}
+
+
+	public function getBanner(): ?string {
+		return $this->banner;
+	}
+
+	public function setBanner(?string $banner): self {
+		$this->banner = $banner;
 
 		return $this;
 	}
