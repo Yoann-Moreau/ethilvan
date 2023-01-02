@@ -5,15 +5,17 @@
 {% block body %}
 	<div class="year">
 		{% if current_year is not null %}
-			<img class="year banner" src="/uploads/period_banner/{{ current_year.banner }}"
-			     alt="Bannière de l'année {{ current_year.year }}">
+			<div class="banner-container">
+				<img class="year banner" src="/uploads/period_banner/{{ current_year.banner }}"
+				     alt="Bannière de l'année {{ current_year.year }}">
+			</div>
 		{% endif %}
 
 		<div class="flex sb">
 			<div class="container left">
 
-				<div class="last-own-challenges">
-					<h3>Vos 3 derniers défis de l'année</h3>
+				<div class="last-own-challenges window">
+					<h3>Vos 3 derniers défis</h3>
 					<ul>
 						{% for submission in last_own_submissions %}
 							<li>
@@ -29,8 +31,8 @@
 					</ul>
 				</div>
 
-				<div class="last-challenges">
-					<h3>Les 5 derniers défis validés de l'année</h3>
+				<div class="last-challenges window">
+					<h3>Les 5 derniers défis validés</h3>
 					<ul>
 						{% for submission in last_submissions %}
 							<li>
@@ -53,10 +55,22 @@
 			</div>
 
 			<div class="container right">
-				<div class="current-year-ranking">
-
+				<div class="current-year-ranking window">
+					<h3>Classement actuel</h3>
+					<ul>
+						{% set position = 1 %}
+						{% for player,points in current_year.rankings|sort((a, b) => b <=> a) %}
+							<li>
+								<div class="position">{{ position }}</div>
+								<div class="player">{{ player }}</div>
+								<div class="points">{{ points }} pts</div>
+							</li>
+							{% set position = position + 1 %}
+						{% endfor %}
+					</ul>
 				</div>
 			</div>
+
 		</div>
 
 	</div>

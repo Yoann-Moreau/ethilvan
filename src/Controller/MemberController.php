@@ -38,6 +38,7 @@ class MemberController extends AbstractController {
 		foreach ($current_periods as $period) {
 			if ($period->getType() === 'year') {
 				$current_year = $period;
+				$current_year->calculateRealTimeRankings();
 			}
 			elseif ($period->getType() === 'event') {
 				$current_event = $period;

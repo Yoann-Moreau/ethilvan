@@ -44,6 +44,8 @@ class Period {
 	#[ORM\Column(length: 255, nullable: true)]
 	private ?string $banner = null;
 
+	private array $rankings = [];
+
 
 	public function __construct() {
 		$this->challenges = new ArrayCollection();
@@ -55,6 +57,10 @@ class Period {
 		return $this->getName();
 	}
 
+
+	// ==========================================================================
+	// Getters and setters
+	// ==========================================================================
 
 	public function getId(): ?int {
 		return $this->id;
@@ -193,6 +199,46 @@ class Period {
 		$this->banner = $banner;
 
 		return $this;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getRankings(): array {
+		return $this->rankings;
+	}
+
+	/**
+	 * @param array $rankings
+	 */
+	public function setRankings(array $rankings): void {
+		$this->rankings = $rankings;
+	}
+
+
+	// ==========================================================================
+	// Ohter methods
+	// ==========================================================================
+
+	public function calculateRealTimeRankings():void {
+		$rankings = [];
+
+		foreach ($this->getSubmissions() as $submission) {
+			if ($submission->isValid()) {
+				$player = $submission->getUser();
+				$points = $submission->getChallenge()->getDifficulty()->getPoints();
+
+				if (array_key_exists($player->getUsername(), $rankings)) {
+					$rankings[$player->getUsername()] = $rankings[$player->getUsername()] + $points;
+				}
+				else {
+					$rankings[$player->getUsername()] = $points;
+				}
+			}
+		}
+
+		$this->setRankings($rankings);
 	}
 
 }

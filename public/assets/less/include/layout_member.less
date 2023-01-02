@@ -30,6 +30,65 @@ body {
 	}
 }
 
+
+// ==============================================
+// Home
+// ==============================================
+
+.year {
+	width: 70%;
+
+	.banner-container {
+		margin-top: -@padding-main;
+		margin-left: -@padding-main;
+		margin-bottom: @padding-main;
+
+		img {
+			width: calc(100% + @padding-main);
+			height: 30rem;
+			object-fit: cover;
+		}
+	}
+
+	.container.left {
+		margin-right: @padding-main;
+		width: calc(50% - @padding-main / 2);
+	}
+
+	.container.right {
+		width: calc(50% - @padding-main / 2);
+	}
+
+	.window:not(:last-child) {
+		margin-bottom: @padding-window;
+	}
+
+	.current-year-ranking {
+
+		li {
+			display: flex;
+			width: 100%;
+
+			&:not(:last-child) {
+				margin-bottom: 0.7em;
+			}
+
+			.position {
+				width: 10%;
+			}
+
+			.player {
+				width: 70%
+			}
+
+			.points {
+				width: 20%;
+			}
+		}
+	}
+
+}
+
 // ==============================================
 // User list
 // ==============================================
