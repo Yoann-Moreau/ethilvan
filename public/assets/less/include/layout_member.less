@@ -89,6 +89,52 @@ body {
 
 }
 
+
+// ==============================================
+// Valid submissions list
+// ==============================================
+
+.valid-submissions {
+
+	.valid-submission {
+		display: flex;
+
+		&:not(:last-child) {
+			margin-bottom: 0.7em;
+		}
+	}
+
+	.medal-container {
+		width: 1.1em;
+		height: 1.1em;
+		margin-right: 0.3em;
+
+		img {
+			.contain();
+		}
+	}
+
+	.challenge,
+	.game,
+	.player {
+		display: flex;
+		margin: 0 0.3em;
+	}
+
+	.avatar-container {
+		display: block;
+		width: 1.1em;
+		height: 1.1em;
+		margin-right: 0.2em;
+
+		img {
+			border-radius: 50%;
+			.cover();
+		}
+	}
+}
+
+
 // ==============================================
 // User list
 // ==============================================

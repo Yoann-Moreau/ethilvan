@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Period;
 use App\Form\ChangeEmailType;
 use App\Form\ChangePasswordType;
 use App\Form\ProfileEditType;
@@ -271,6 +272,19 @@ class MemberController extends AbstractController {
 
 		return $this->render('member/notifications.html.twig', [
 				'notifications' => $notifications,
+		]);
+	}
+
+
+	#[Route('/valid_submissions/{id}', name: 'app_member_valid_submissions', methods: ['GET'])]
+	public function validSubmissions(Period $period, SubmissionRepository $submission_repository): Response {
+
+		$submissions = $submission_repository->findBy(['valid' => true, 'period' => $period],
+				['validation_date' => 'DESC']);
+
+		return $this->render('member/valid_submissions.html.twig', [
+				'period'      => $period,
+				'submissions' => $submissions,
 		]);
 	}
 
