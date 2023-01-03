@@ -20,7 +20,6 @@ use App\Repository\UserRepository;
 use App\Service\ImageService;
 use App\Service\PaginationService;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -85,6 +84,7 @@ class MemberChallengeController extends AbstractController {
 		$errors = [];
 
 		// Check if one the periods is current (to display form)
+		$period = null;
 		$is_current = false;
 		$current_periods = $period_repository->findCurrentPeriods();
 		foreach ($current_periods as $current_period) {
@@ -95,12 +95,12 @@ class MemberChallengeController extends AbstractController {
 			}
 		}
 
-		// Check if user has already submitted this challenge
+		// Check if user has already submitted this challenge for this period
 		$already_submitted = false;
 		$current_submission = null;
 		$is_valid = false;
 		foreach ($current_user->getSubmissions() as $submission) {
-			if ($submission->getChallenge()->getId() === $challenge->getId()) {
+			if ($submission->getChallenge()->getId() === $challenge->getId() && $submission->getPeriod() === $period) {
 				$already_submitted = true;
 				$current_submission = $submission;
 				$is_valid = $submission->isValid();
@@ -130,7 +130,7 @@ class MemberChallengeController extends AbstractController {
 
 		$form->handleRequest($request);
 
-		if ($form->isSubmitted() && $form->isValid() && $is_current && isset($period) && !$is_valid) {
+		if ($form->isSubmitted() && $form->isValid() && $is_current && !empty($period) && !$is_valid) {
 
 			$player_ids = [];
 			if (array_key_exists('players', $form->all())) {
@@ -184,7 +184,7 @@ class MemberChallengeController extends AbstractController {
 
 	/**
 	 * @param bool $already_submitted
-	 * @param ArrayCollection $player_ids
+	 * @param array $player_ids
 	 * @param Challenge $challenge
 	 * @param Period $period
 	 * @param User $current_user
