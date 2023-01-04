@@ -41,7 +41,8 @@
 			{% for difficulty in difficulties %}
 				<div class="medal-container">
 					<div class="medal">
-						<img src="/assets/img/{{ difficulty.icon }}" alt="Médaille de {{ difficulty.name }}">
+						<img src="/assets/img/{{ difficulty.icon }}" alt="Médaille de {{ difficulty.name }}"
+						     title="Défi {{ difficulty.name }}">
 					</div>
 					<div class="medal-number">{{ user.challengesCounts[difficulty.name] }}</div>
 				</div>
@@ -61,9 +62,14 @@
 		</article>
 		<article class="cups-container">
 			{% for cup in cups %}
+				{% set suffix = 'ème' %}
+				{% if cup.position is same as 1 %}
+					{% set suffix = 'ère' %}
+				{% endif %}
 				<div class="cup-container">
 					<div class="cup">
-						<img src="/assets/img/{{ cup.icon }}" alt="Coupe de {{ cup.name }}">
+						<img src="/assets/img/{{ cup.icon }}" alt="Coupe de {{ cup.name }}"
+						     title="{{ cup.position }}{{ suffix }} position">
 					</div>
 					<div class="cup-number">{{ user.rankingPositionCounts[cup.position] }}</div>
 				</div>
