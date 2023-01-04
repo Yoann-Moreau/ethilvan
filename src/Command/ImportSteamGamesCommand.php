@@ -68,8 +68,11 @@ class ImportSteamGamesCommand extends Command {
 		$content = $response->toArray();
 		$apps = $content['applist']['apps'];
 
+		$max_id = 0;
 		$max_id_app = $this->steam_game_repository->findOneBy([], ['id' => 'DESC']);
-		$max_id = $max_id_app->getId();
+		if ($max_id_app !== null) {
+			$max_id = $max_id_app->getId();
+		}
 
 		if ($input->getOption('dry-run')) {
 			$io->note('Dry mode enabled');
