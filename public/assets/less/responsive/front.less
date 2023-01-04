@@ -112,6 +112,54 @@
 }
 
 @media screen and (max-width: 1000px) {
+	.main-header {
+		& > nav {
+			display: none;
+			position: absolute;
+			flex-direction: column;
+			justify-content: center;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background-color: @bg-main-lighter;
+
+			&.active {
+				display: flex;
+			}
+
+			.container {
+				flex-direction: column;
+				height: auto;
+
+				&.left {
+
+					.img-container {
+						width: 8rem;
+						height: 8rem;
+						margin-bottom: 1em;
+					}
+
+					& > a {
+						display: block;
+						margin: 0.5em 0;
+
+						&:first-child {
+							margin-top: 1em;
+						}
+
+						&:last-child {
+							margin-bottom: 1em;
+						}
+					}
+				}
+			}
+		}
+
+		.burger {
+			display: block;
+		}
+	}
 
 	.home-introduction {
 
