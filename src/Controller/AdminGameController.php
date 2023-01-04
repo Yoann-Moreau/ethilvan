@@ -193,7 +193,7 @@ class AdminGameController extends AbstractController {
 	public function delete(Request $request, Game $game, GameRepository $game_repository): Response {
 		if ($this->isCsrfTokenValid('delete' . $game->getId(), $request->request->get('_token'))) {
 
-			if (!empty($game->getChallenges())) {
+			if (!$game->getChallenges()->isEmpty()) {
 				$this->addFlash('error', 'Ce jeu est lié à des défis, il ne peut pas être supprimé');
 				return $this->redirectToRoute('app_game_index');
 			}
