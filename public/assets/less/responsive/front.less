@@ -133,6 +133,15 @@
 			padding: 5rem 10rem;
 		}
 	}
+
+	main.login,
+	main.registration {
+
+		.window {
+			padding: 5rem 10rem;
+			background-color: fade(@bg-main-lighter, 90%);
+		}
+	}
 }
 
 @media screen and (max-width: 800px) {
@@ -176,6 +185,14 @@
 
 	.games-game-list {
 		padding: 8rem 5rem;
+	}
+
+	main.login,
+	main.registration {
+
+		.window {
+			padding: 2rem 5rem;
+		}
 	}
 }
 
@@ -229,6 +246,22 @@
 			padding: 5rem;
 		}
 	}
+
+	main.login,
+	main.registration {
+
+		h1 {
+			font-size: 3.5rem;
+		}
+
+		.input-container {
+			width: 100%;
+		}
+
+		input {
+			width: 100%;
+		}
+	}
 }
 
 
@@ -244,5 +277,13 @@
 
 	.main-footer {
 		font-size: 0.8em;
+	}
+
+	main.login,
+	main.registration {
+
+		h1 {
+			font-size: 2.5rem;
+		}
 	}
 }
