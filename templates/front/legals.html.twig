@@ -6,10 +6,10 @@
 
 	<section class="legals">
 
-		{% for text in texts %}
+		{% for key,text in texts %}
 
 			{% if text.title is not empty %}
-				{% if loop.index|first %}
+				{% if key is same as 0 %}
 					<h1>{{ text.title }}</h1>
 				{% else %}
 					<h2>{{ text.title }}</h2>
