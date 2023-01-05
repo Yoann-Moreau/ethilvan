@@ -146,6 +146,10 @@ class MemberChallengeController extends AbstractController {
 			foreach ($player_ids as $player_id) {
 				$checked_user = $user_repository->find($player_id);
 
+				if ($checked_user === $current_user) {
+					continue;
+				}
+
 				foreach ($checked_user->getSubmissions() as $submission) {
 					if ($submission->getChallenge() === $challenge && $submission->getPeriod() === $period) {
 						$errors[] = 'Le joueur ' . $checked_user->getUsername() .
