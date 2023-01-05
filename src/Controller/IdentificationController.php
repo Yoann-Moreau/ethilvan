@@ -57,6 +57,10 @@ class IdentificationController extends AbstractController {
 				$user->setDeleted(false);
 
 				$user_repository->save($user, true);
+
+				$this->addFlash('success', 'Compte créé avec succès');
+
+				return $this->redirectToRoute('app_login');
 			}
 		}
 		elseif ($form->isSubmitted() && !$form->isValid()) {

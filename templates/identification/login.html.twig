@@ -9,6 +9,12 @@
 	<section class="window">
 		<h1>Connexion</h1>
 
+		<ul class="successes">
+			{% for message in app.flashes('success') %}
+				<li class="success">{{ message }}</li>
+			{% endfor %}
+		</ul>
+
 		<ul class="errors">
 			{% if error is not empty %}
 				<li class="error">
