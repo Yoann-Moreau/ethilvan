@@ -453,18 +453,28 @@ body {
 		position: absolute;
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 		bottom: 0;
 		left: 0;
 		width: 100%;
-		padding: 0.5em 1em;
+		padding-left: 1em;
 		background-color: @bg-main-darker;
 
 		&.current {
 			background-color: @dark-green;
 		}
 
-		i {
+		span i {
 			margin-right: 0.5em;
+		}
+
+		a {
+			display: block;
+			padding: 0.5em 1em;
+
+			&:hover {
+				background-color: @bg-button;
+			}
 		}
 	}
 }
