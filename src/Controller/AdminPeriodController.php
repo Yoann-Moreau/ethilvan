@@ -28,6 +28,7 @@ class AdminPeriodController extends AbstractController {
 			ValidatorInterface $validator): Response {
 
 		$form_errors = [];
+		$errors = [];
 
 		$period = new Period();
 		$form = $this->createForm(PeriodType::class, $period);
@@ -35,19 +36,28 @@ class AdminPeriodController extends AbstractController {
 
 		if ($form->isSubmitted() && $form->isValid()) {
 
-			$banner = $form->get('banner')->getData();
+			$start_date = $form->get('start_date')->getData();
+			$end_date = $form->get('end_date')->getData();
 
-			if (!empty($banner)) {
-				$file_name = $tools_service->slugify($period->getName()) . uniqid('_') . '.' . $banner->guessExtension();
-				$directory = $this->getParameter('period_banners_directory');
-
-				$banner->move($directory, $file_name);
-
-				$period->setBanner($file_name);
+			if ($end_date < $start_date) {
+				$errors[] = 'La date de fin doit être égale ou suéprieure à la date de début';
 			}
-			$period_repository->save($period, true);
 
-			return $this->redirectToRoute('app_admin_period_index', [], Response::HTTP_SEE_OTHER);
+			if (empty($errors)) {
+				$banner = $form->get('banner')->getData();
+
+				if (!empty($banner)) {
+					$file_name = $tools_service->slugify($period->getName()) . uniqid('_') . '.' . $banner->guessExtension();
+					$directory = $this->getParameter('period_banners_directory');
+
+					$banner->move($directory, $file_name);
+
+					$period->setBanner($file_name);
+				}
+				$period_repository->save($period, true);
+
+				return $this->redirectToRoute('app_admin_period_index', [], Response::HTTP_SEE_OTHER);
+			}
 		}
 		elseif ($form->isSubmitted() && !$form->isValid()) {
 			$form_errors = $validator->validate($form);
@@ -57,6 +67,7 @@ class AdminPeriodController extends AbstractController {
 				'period'      => $period,
 				'form'        => $form->createView(),
 				'form_errors' => $form_errors,
+				'errors'      => $errors,
 		]);
 	}
 
@@ -66,6 +77,7 @@ class AdminPeriodController extends AbstractController {
 			ToolsService $tools_service, ValidatorInterface $validator): Response {
 
 		$form_errors = [];
+		$errors = [];
 
 		$old_banner = $period->getBanner();
 
@@ -73,25 +85,35 @@ class AdminPeriodController extends AbstractController {
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$file = $form->get('banner')->getData();
 
-			if (!empty($file)) {
-				$file_name = $tools_service->slugify($period->getName()) . uniqid('_') . '.' . $file->guessExtension();
-				$directory = $this->getParameter('period_banners_directory');
+			$start_date = $form->get('start_date')->getData();
+			$end_date = $form->get('end_date')->getData();
 
-				// Delete old banner
-				if ($old_banner !== $file_name && $old_banner !== null) {
-					if (file_exists($directory . '/' . $old_banner)) {
-						unlink($directory . '/' . $old_banner);
-					}
-				}
-
-				$file->move($directory, $file_name);
-				$period->setBanner($file_name);
+			if ($end_date < $start_date) {
+				$errors[] = 'La date de fin doit être égale ou suéprieure à la date de début';
 			}
-			$period_repository->save($period, true);
 
-			return $this->redirectToRoute('app_admin_period_index', [], Response::HTTP_SEE_OTHER);
+			if (empty($errors)) {
+				$file = $form->get('banner')->getData();
+
+				if (!empty($file)) {
+					$file_name = $tools_service->slugify($period->getName()) . uniqid('_') . '.' . $file->guessExtension();
+					$directory = $this->getParameter('period_banners_directory');
+
+					// Delete old banner
+					if ($old_banner !== $file_name && $old_banner !== null) {
+						if (file_exists($directory . '/' . $old_banner)) {
+							unlink($directory . '/' . $old_banner);
+						}
+					}
+
+					$file->move($directory, $file_name);
+					$period->setBanner($file_name);
+				}
+				$period_repository->save($period, true);
+
+				return $this->redirectToRoute('app_admin_period_index', [], Response::HTTP_SEE_OTHER);
+			}
 		}
 		elseif ($form->isSubmitted() && !$form->isValid()) {
 			$form_errors = $validator->validate($form);
@@ -101,6 +123,7 @@ class AdminPeriodController extends AbstractController {
 				'period'      => $period,
 				'form'        => $form->createView(),
 				'form_errors' => $form_errors,
+				'errors'      => $errors,
 		]);
 	}
 
