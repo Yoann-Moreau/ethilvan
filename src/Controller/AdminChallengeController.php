@@ -41,7 +41,7 @@ class AdminChallengeController extends AbstractController {
 			$challenges = $challenge_repository->findOrderedByPeriod($elements_per_page, $offset);
 		}
 		else {
-			$challenges = $challenge_repository->findBy([], ['id' => 'ASC'], $elements_per_page, $offset);
+			$challenges = $challenge_repository->findBy([], ['id' => 'DESC'], $elements_per_page, $offset);
 		}
 
 		// Pagination
