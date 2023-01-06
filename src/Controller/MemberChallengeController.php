@@ -170,8 +170,10 @@ class MemberChallengeController extends AbstractController {
 
 				if ($already_submitted) {
 					// Add notification for admins
+					$submission_link = $this->generateUrl('app_admin_submission', ['id' => $submission->getId()]);
 					$message = 'Le joueur ' . $current_user->getUsername() . ' a répondu pour le défi ' . $challenge->getName() .
-							' du jeu ' . $challenge->getGame()->getName();
+							' du jeu ' . $challenge->getGame()->getName() . ". <a href='$submission_link'>Demande #" .
+							$submission->getId() . '</a>';
 					$notification = new AdminNotification();
 					$notification->setMessage($message);
 					$notification->setDate(new DateTime());
