@@ -108,4 +108,45 @@ class AdminSubmissionController extends AbstractController {
 		return $this->redirectToRoute('app_admin_submission_index', [], Response::HTTP_SEE_OTHER);
 	}
 
+
+	#[Route('/{id}/refuse', name: 'app_admin_submission_refuse', methods: ['POST'])]
+	public function refuse(Submission $submission, Request $request, SubmissionRepository $submission_repository,
+			NotificationRepository $notification_repository, SubmissionMessageRepository $message_repository,
+			SubmissionMessageImageRepository $image_repository): Response {
+
+		if ($this->isCsrfTokenValid('refuse' . $submission->getId(), $request->request->get('_token'))) {
+			$image_directory = $this->getParameter('submission_images_directory');
+
+			foreach ($submission->getSubmissionMessages() as $message) {
+				// Delete images
+				foreach ($message->getImages() as $image) {
+					if (file_exists($image_directory . '/' . $image->getImage())) {
+						unlink($image_directory . '/' . $image->getImage());
+					}
+					$image_repository->remove($image, true);
+				}
+				// Delete message
+				$message_repository->remove($message, true);
+			}
+			// Delete submission
+			$submission_repository->remove($submission, true);
+
+			$challenge_url = $this->generateUrl('app_member_single_challenge',
+					['id' => $submission->getChallenge()->getId()]);
+			$game_url = $this->generateUrl('app_member_single_game',
+					['id' => $submission->getChallenge()->getGame()->getId()]);
+
+			$message = "La validation du défi <a href='$challenge_url'>" . $submission->getChallenge()->getName() .
+					"</a> pour le jeu <a href='$game_url'>" .	$submission->getChallenge()->getGame()->getName() .
+					'</a> a été refusée pour la période ' . $submission->getPeriod()->getName();
+
+			$notification = new Notification();
+			$notification->setUser($submission->getUser());
+			$notification->setMessage($message);
+			$notification_repository->save($notification, true);
+		}
+
+		return $this->redirectToRoute('app_admin_submission_index', [], Response::HTTP_SEE_OTHER);
+	}
+
 }

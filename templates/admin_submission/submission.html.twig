@@ -81,6 +81,16 @@
 		{{ form_end(form) }}
 
 		<div class="btns right validate">
+			<form method="post" action="{{ path('app_admin_submission_refuse', {'id': submission.id}) }}"
+			      onsubmit="return confirm('Êtes-vous sûr(e) de vouloir refuser ce défi ? ' +
+			       'Cela supprimera tous les messages associés.');">
+				<input type="hidden" name="_token" value="{{ csrf_token('refuse' ~ submission.id) }}">
+				<button class="btn delete" type="submit">
+					<i class="fa-solid fa-trash"></i>
+					<span>Refuser le défi</span>
+				</button>
+			</form>
+
 			<form method="post" action="{{ path('app_admin_submission_validate', {'id': submission.id}) }}"
 			      onsubmit="return confirm('Êtes-vous sûr(e) de vouloir valider ce défi ?');">
 				<input type="hidden" name="_token" value="{{ csrf_token('validate' ~ submission.id) }}">
@@ -90,6 +100,7 @@
 				</button>
 			</form>
 		</div>
+
 	</div>
 
 {% endblock %}
