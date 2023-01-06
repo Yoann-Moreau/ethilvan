@@ -4,8 +4,10 @@
 namespace App\Controller;
 
 
+use App\Entity\AdminNotification;
 use App\Entity\User;
 use App\Form\RegistrationType;
+use App\Repository\AdminNotificationRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +23,8 @@ class IdentificationController extends AbstractController {
 
 	#[Route('/registration', name: 'app_registration')]
 	public function registration(Request $request, UserPasswordHasherInterface $password_hasher,
-			UserRepository $user_repository, ValidatorInterface $validator): Response {
+			UserRepository $user_repository, ValidatorInterface $validator,
+			AdminNotificationRepository $notification_repository): Response {
 
 		$user = new User();
 		$form = $this->createForm(RegistrationType::class, $user);
@@ -57,6 +60,14 @@ class IdentificationController extends AbstractController {
 				$user->setDeleted(false);
 
 				$user_repository->save($user, true);
+
+				// Notify admins
+				$user_link = $this->generateUrl('app_admin_user_edit', ['id' => $user->getId()]);
+				$message = "Un nouvel utilisateur vient de s'inscrire : <a href='$user_link'>". $username . '</a>';
+				$notification = new AdminNotification();
+				$notification->setMessage($message);
+				$notification->setDate(new DateTime());
+				$notification_repository->save($notification, true);
 
 				$this->addFlash('success', 'Compte créé avec succès');
 
