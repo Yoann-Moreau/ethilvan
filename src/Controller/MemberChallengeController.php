@@ -168,6 +168,16 @@ class MemberChallengeController extends AbstractController {
 				$this->postSubmissionMessages($new_message, $submissions, $current_user, $form, $message_repository,
 						$image_service, $image_repository);
 
+				if ($already_submitted) {
+					// Add notification for admins
+					$message = 'Le joueur ' . $current_user->getUsername() . ' a répondu pour le défi ' . $challenge->getName() .
+							' du jeu ' . $challenge->getGame()->getName();
+					$notification = new AdminNotification();
+					$notification->setMessage($message);
+					$notification->setDate(new DateTime());
+					$admin_notification_repository->save($notification, true);
+				}
+
 				// Redirect to notifications on success
 				return $this->redirectToRoute('app_member_notifications');
 			}
@@ -237,8 +247,7 @@ class MemberChallengeController extends AbstractController {
 			// Add notification for admins
 			$players_string = implode(', ', $players);
 			$message = 'Le défi ' . $challenge->getName() . ' pour le jeu ' . $challenge->getGame()->getName() .
-					' a été soumis à validation par les joueurs suivants : ' .
-					$players_string;
+					' a été soumis à validation par les joueurs suivants : ' . $players_string;
 			$notification = new AdminNotification();
 			$notification->setMessage($message);
 			$notification->setDate(new DateTime());
