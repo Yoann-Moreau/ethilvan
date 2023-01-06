@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Repository\AdminNotificationRepository;
 use App\Repository\GameRepository;
 use App\Repository\NotificationRepository;
 use App\Repository\SteamGameRepository;
@@ -67,7 +68,8 @@ class AjaxController extends AbstractController {
 
 
 	#[Route('/toggle_notification', name: 'ajax_toggle_notification', methods: ['POST'])]
-	public function ajaxToggleNotification(Request $request, NotificationRepository $notification_repository): Response {
+	public function ajaxToggleNotification(Request $request, NotificationRepository $notification_repository,
+			AdminNotificationRepository $admin_notification_repository): Response {
 
 		if (!$this->isGranted('ROLE_EV')) {
 			return new JsonResponse('Unauthorized');
@@ -75,15 +77,30 @@ class AjaxController extends AbstractController {
 
 		$notification_id = $request->request->get('id');
 		$toggle_mode = $request->request->get('toggle');
+		$area = $request->request->get('area');
 
-		$notification = $notification_repository->find($notification_id);
+		if ($area === 'admin' && !$this->isGranted('ROLE_ADMIN')) {
+			return new JsonResponse('Unauthorized');
+		}
+
+		if ($area === 'admin') {
+			$notification = $admin_notification_repository->find($notification_id);
+		}
+		elseif ($area === 'member') {
+			$notification = $notification_repository->find($notification_id);
+		}
+		else {
+			return new JsonResponse('Error - This area is not supported');
+		}
 
 		if (empty($notification)) {
 			return new JsonResponse('Error - This notification does not exist');
 		}
 
-		if ($notification->getUser()->getId() !== $this->getUser()->getId()) {
-			return new JsonResponse('Error - This notification does not belong to you');
+		if ($area === 'member') {
+			if ($notification->getUser()->getId() !== $this->getUser()->getId()) {
+				return new JsonResponse('Error - This notification does not belong to you');
+			}
 		}
 
 		if ($toggle_mode === 'on') {
@@ -96,7 +113,12 @@ class AjaxController extends AbstractController {
 			return new JsonResponse('Error - Unknown toggle mode');
 		}
 
-		$notification_repository->save($notification, true);
+		if ($area === 'member') {
+			$notification_repository->save($notification, true);
+		}
+		elseif ($area === 'admin') {
+			$admin_notification_repository->save($notification, true);
+		}
 
 		return new JsonResponse('ok');
 	}

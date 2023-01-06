@@ -15,10 +15,13 @@ async function toggleNotification(bell) {
 	const notification = bell.parentElement;
 	const id = parseInt(notification.dataset.id);
 	let seen = notification.classList.contains('seen');
+	const pathname = new URL(window.location.href).pathname;
+	const area = pathname.split('/')[1];
 
 	const parameters = {
 		id    : id,
 		toggle: seen ? 'on' : 'off',
+		area  : area,
 	}
 
 	if (seen) {
