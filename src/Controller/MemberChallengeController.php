@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminNotification;
 use App\Entity\Challenge;
 use App\Entity\Notification;
 use App\Entity\Period;
@@ -10,6 +11,7 @@ use App\Entity\SubmissionMessage;
 use App\Entity\SubmissionMessageImage;
 use App\Entity\User;
 use App\Form\SubmissionMessageType;
+use App\Repository\AdminNotificationRepository;
 use App\Repository\ChallengeRepository;
 use App\Repository\NotificationRepository;
 use App\Repository\PeriodRepository;
@@ -74,7 +76,8 @@ class MemberChallengeController extends AbstractController {
 			SubmissionMessageRepository $message_repository, UserRepository $user_repository,
 			PeriodRepository $period_repository, SubmissionMessageImageRepository $image_repository,
 			ValidatorInterface $validator, ImageService $image_service,
-			NotificationRepository $notification_repository): Response {
+			NotificationRepository $notification_repository,
+			AdminNotificationRepository $admin_notification_repository): Response {
 
 		$new_message = new SubmissionMessage();
 		$form = $this->createForm(SubmissionMessageType::class, $new_message);
@@ -160,7 +163,7 @@ class MemberChallengeController extends AbstractController {
 
 			if (empty($errors)) {
 				$submissions = $this->postSubmissions($already_submitted, $player_ids, $challenge, $period, $current_user,
-						$user_repository, $submission_repository, $notification_repository);
+						$user_repository, $submission_repository, $notification_repository, $admin_notification_repository);
 
 				$this->postSubmissionMessages($new_message, $submissions, $current_user, $form, $message_repository,
 						$image_service, $image_repository);
@@ -199,14 +202,18 @@ class MemberChallengeController extends AbstractController {
 	 */
 	private function postSubmissions(bool $already_submitted, array $player_ids, Challenge $challenge,
 			Period $period, User $current_user, UserRepository $user_repository, SubmissionRepository $submission_repository,
-			NotificationRepository $notification_repository): array {
+			NotificationRepository $notification_repository,
+			AdminNotificationRepository $admin_notification_repository): array {
 
 		$submissions = [];
 
 		if (!$already_submitted) {
 
+			$players = [];
 			foreach ($player_ids as $player_id) {
 				$user = $user_repository->find($player_id);
+
+				$players[] = $user->getUsername();
 
 				$new_submission = new Submission();
 				$new_submission->setUser($user);
@@ -226,6 +233,16 @@ class MemberChallengeController extends AbstractController {
 				$notification->setMessage($message);
 				$notification_repository->save($notification, true);
 			}
+
+			// Add notification for admins
+			$players_string = implode(', ', $players);
+			$message = 'Le défi ' . $challenge->getName() . ' pour le jeu ' . $challenge->getGame()->getName() .
+					' a été soumis à validation par les joueurs suivants : ' .
+					$players_string;
+			$notification = new AdminNotification();
+			$notification->setMessage($message);
+			$notification->setDate(new DateTime());
+			$admin_notification_repository->save($notification, true);
 		}
 		else { // if already submitted
 			$submissions[] = $submission_repository->findOneBy(['user'   => $current_user, 'challenge' => $challenge,
