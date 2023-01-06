@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/admin/period')]
 class AdminPeriodController extends AbstractController {
@@ -23,7 +24,11 @@ class AdminPeriodController extends AbstractController {
 
 
 	#[Route('/new', name: 'app_admin_period_new', methods: ['GET', 'POST'])]
-	public function new(Request $request, PeriodRepository $period_repository, ToolsService $tools_service): Response {
+	public function new(Request $request, PeriodRepository $period_repository, ToolsService $tools_service,
+			ValidatorInterface $validator): Response {
+
+		$form_errors = [];
+
 		$period = new Period();
 		$form = $this->createForm(PeriodType::class, $period);
 		$form->handleRequest($request);
@@ -44,17 +49,23 @@ class AdminPeriodController extends AbstractController {
 
 			return $this->redirectToRoute('app_admin_period_index', [], Response::HTTP_SEE_OTHER);
 		}
+		elseif ($form->isSubmitted() && !$form->isValid()) {
+			$form_errors = $validator->validate($form);
+		}
 
 		return $this->render('admin_period/new.html.twig', [
-				'period' => $period,
-				'form'   => $form->createView(),
+				'period'      => $period,
+				'form'        => $form->createView(),
+				'form_errors' => $form_errors,
 		]);
 	}
 
 
 	#[Route('/{id}/edit', name: 'app_admin_period_edit', methods: ['GET', 'POST'])]
 	public function edit(Request $request, Period $period, PeriodRepository $period_repository,
-			ToolsService $tools_service): Response {
+			ToolsService $tools_service, ValidatorInterface $validator): Response {
+
+		$form_errors = [];
 
 		$old_banner = $period->getBanner();
 
@@ -82,10 +93,14 @@ class AdminPeriodController extends AbstractController {
 
 			return $this->redirectToRoute('app_admin_period_index', [], Response::HTTP_SEE_OTHER);
 		}
+		elseif ($form->isSubmitted() && !$form->isValid()) {
+			$form_errors = $validator->validate($form);
+		}
 
 		return $this->render('admin_period/edit.html.twig', [
-				'period' => $period,
-				'form'   => $form->createView(),
+				'period'      => $period,
+				'form'        => $form->createView(),
+				'form_errors' => $form_errors,
 		]);
 	}
 

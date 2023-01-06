@@ -49,9 +49,9 @@ class PeriodType extends AbstractType {
 						],
 				])
 				->add('banner', FileType::class, [
-						'label'    => 'Bannière',
-						'mapped'   => false,
-						'required' => false,
+						'label'       => 'Bannière',
+						'mapped'      => false,
+						'required'    => false,
 						'constraints' => [
 								new File([
 										'maxSize'          => '512k',
@@ -62,6 +62,9 @@ class PeriodType extends AbstractType {
 										],
 										'mimeTypesMessage' => 'Seuls les formats PNG et JPEG sont supportés',
 								]),
+						],
+						'attr'        => [
+								'accept' => 'image/png, image/jpeg',
 						],
 				]);
 	}
