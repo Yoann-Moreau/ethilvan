@@ -1,0 +1,28 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Liste des notifications{% endblock %}
+
+{% block body %}
+	<h1>Liste des notifications</h1>
+
+	<div class="btns-container">
+		<div class="btns">
+			<form action="" method="post">
+				<button class="btn" type="submit">Marquer toutes les notifications comme lues</button>
+			</form>
+		</div>
+	</div>
+
+	<ul class="notifications col-50">
+		{% for notification in notifications %}
+			<li class="notification {% if notification.seen %}seen{% endif %}" data-id="{{ notification.id }}">
+				{% if not notification.seen %}
+					<i class="fa-solid fa-bell"></i>
+				{% else %}
+					<i class="fa-solid fa-bell-slash"></i>
+				{% endif %}
+				<p>{{ notification.message|raw }}</p>
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock %}

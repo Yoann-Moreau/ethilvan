@@ -19,7 +19,7 @@ class AdminNotification {
 	private ?string $message = null;
 
 	#[ORM\Column]
-	private ?bool $seen = null;
+	private ?bool $seen = false;
 
 	#[ORM\Column(type: Types::DATETIME_MUTABLE)]
 	private ?DateTimeInterface $date = null;
