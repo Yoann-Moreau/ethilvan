@@ -34,7 +34,7 @@ class ImageService {
 				$new_image->setImage($image_name . $ext);
 				$new_image->setSubmissionMessage($new_message);
 
-				$image_names[] = $image_name;
+				$image_names[] = $image_name . $ext;
 
 				$new_message->addImage($new_image);
 
