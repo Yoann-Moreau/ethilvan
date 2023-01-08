@@ -27,7 +27,7 @@ class SubmissionMessageType extends AbstractType {
 						'constraints' => [
 								new All([
 										new File([
-												'maxSize'          => '2048',
+												'maxSize'          => '2048k',
 												'maxSizeMessage'   => 'Les images ne doivent pas dépasser 2048ko',
 												'mimeTypes'        => [
 														'image/png',
