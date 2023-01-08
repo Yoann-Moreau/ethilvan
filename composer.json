@@ -31,7 +31,9 @@
 		"symfony/validator": "6.1.*",
 		"symfony/yaml": "6.1.*",
 		"twig/extra-bundle": "^3.4",
-		"twig/intl-extra": "^3.4"
+		"twig/intl-extra": "^3.4",
+		"ext-gd": "*",
+		"ext-fileinfo": "*"
 	},
 	"config": {
 		"allow-plugins": {
