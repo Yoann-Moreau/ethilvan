@@ -74,7 +74,7 @@ class ImageService {
 			return 'jpeg';
 		}
 		else {
-			$file->move($dest . $ext);
+			move_uploaded_file($file, $dest . $ext);
 			return $ext;
 		}
 	}
