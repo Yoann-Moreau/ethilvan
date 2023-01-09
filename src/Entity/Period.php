@@ -221,7 +221,7 @@ class Period {
 	// Ohter methods
 	// ==========================================================================
 
-	public function calculateRealTimeRankings():void {
+	public function calculateRealTimeRankings(): void {
 		$rankings = [];
 
 		foreach ($this->getSubmissions() as $submission) {
@@ -230,10 +230,13 @@ class Period {
 				$points = $submission->getChallenge()->getDifficulty()->getPoints();
 
 				if (array_key_exists($player->getUsername(), $rankings)) {
-					$rankings[$player->getUsername()] = $rankings[$player->getUsername()] + $points;
+					$rankings[$player->getUsername()]['points'] = $rankings[$player->getUsername()]['points'] + $points;
 				}
 				else {
-					$rankings[$player->getUsername()] = $points;
+					$rankings[$player->getUsername()] = [
+							'player' => $player,
+							'points' => $points,
+					];
 				}
 			}
 		}

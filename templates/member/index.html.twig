@@ -62,11 +62,13 @@
 					<h3>Classement actuel</h3>
 					<ul>
 						{% set position = 1 %}
-						{% for player,points in current_year.rankings|sort((a, b) => b <=> a) %}
+						{% for row in current_year.rankings|sort((a, b) => b.points <=> a.points) %}
 							<li>
 								<div class="position">{{ position }}</div>
-								<div class="player">{{ player }}</div>
-								<div class="points">{{ points }} pts</div>
+								<div class="player">
+									<a href="{{ path('app_member_user', {'id': row.player.id}) }}">{{ row.player.username }}</a>
+								</div>
+								<div class="points">{{ row.points }} pts</div>
 							</li>
 							{% set position = position + 1 %}
 						{% endfor %}
