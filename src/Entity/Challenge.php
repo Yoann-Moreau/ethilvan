@@ -46,6 +46,10 @@ class Challenge {
 	}
 
 
+	// ==========================================================================
+	// Getters and setters
+	// ==========================================================================
+
 	public function getId(): ?int {
 		return $this->id;
 	}
@@ -153,6 +157,21 @@ class Challenge {
 		}
 
 		return $this;
+	}
+
+	// ==========================================================================
+	// Other methods
+	// ==========================================================================
+
+	public function isValidForUser(User $user): bool {
+
+		foreach ($user->getSubmissions() as $submission) {
+			if ($submission->getChallenge() === $this && $submission->isValid()) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

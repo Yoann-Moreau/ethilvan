@@ -53,6 +53,11 @@
 						<i class="fa-solid fa-arrow-right"></i>
 					</a>
 				</div>
+				{% if challenge.isValidForUser(app.user) %}
+					<div class="done">
+						<i class="fa-solid fa-check"></i>
+					</div>
+				{% endif %}
 			</article>
 		{% endfor %}
 
