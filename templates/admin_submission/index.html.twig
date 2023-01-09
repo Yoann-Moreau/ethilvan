@@ -5,6 +5,13 @@
 {% block body %}
 	<h1>Liste des défis soumis à validation</h1>
 
+	<div class="btn-container">
+		<div class="btns">
+			<a class="btn" href="{{ path('app_admin_submission_index') }}">Défis non validés</a>
+			<a class="btn" href="{{ path('app_admin_submission_index', {'valid': 'true'}) }}">Défis déjà validés</a>
+		</div>
+	</div>
+
 	<div class="table submissions">
 
 		<div class="head">

@@ -23,9 +23,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class AdminSubmissionController extends AbstractController {
 
 	#[Route('/', name: 'app_admin_submission_index', methods: ['GET'])]
-	public function index(SubmissionRepository $submission_repository): Response {
+	public function index(Request $request, SubmissionRepository $submission_repository): Response {
 
-		$submissions = $submission_repository->findBy(['valid' => false], ['submission_date' => 'ASC']);
+		$valid = boolval($request->query->get('valid'));
+
+		if ($valid) {
+			$submissions = $submission_repository->findBy(['valid' => true], ['validation_date' => 'DESC']);
+		}
+		else {
+			$submissions = $submission_repository->findBy(['valid' => false], ['submission_date' => 'ASC']);
+		}
+
 
 		return $this->render('admin_submission/index.html.twig', [
 				'submissions' => $submissions,
