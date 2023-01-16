@@ -34,6 +34,13 @@
 				<input type="password" id="password" name="_password"/>
 			</div>
 
+			<div class="input-container">
+				<div class="checkbox-container">
+					<input type="checkbox" name="_remember_me" id="remember-me">
+					<label for="remember-me">Se souvenir de moi</label>
+				</div>
+			</div>
+
 			<p>Pas de compte ? <a href="{{ path('app_registration') }}">S'inscrire</a></p>
 
 			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
