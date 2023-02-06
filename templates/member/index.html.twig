@@ -5,7 +5,7 @@
 {% block main_class%}home{% endblock %}
 
 {% block body %}
-	<div class="year">
+	<div class="current-year">
 		{% if current_year is not null %}
 			<div class="banner-container">
 				<img class="banner" src="/uploads/period_banner/{{ current_year.banner }}"
@@ -82,7 +82,7 @@
 
 	</div>
 
-	<div class="event">
+	<div class="current-event">
 		{% if current_event is not null %}
 			<div class="banner-container">
 				<img class="banner" src="/uploads/period_banner/{{ current_event.banner }}"
