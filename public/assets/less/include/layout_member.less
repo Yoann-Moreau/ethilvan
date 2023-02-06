@@ -39,6 +39,10 @@ body {
 // Home
 // ==============================================
 
+.main-container.home {
+	flex-direction: row;
+}
+
 .year {
 	width: 70%;
 
@@ -67,30 +71,54 @@ body {
 		margin-bottom: @padding-window;
 	}
 
-	.current-year-ranking {
+}
 
-		li {
-			display: flex;
-			width: 100%;
+.ranking {
 
-			&:not(:last-child) {
-				margin-bottom: 0.7em;
-			}
+	li {
+		display: flex;
+		width: 100%;
 
-			.position {
-				width: 10%;
-			}
+		&:not(:last-child) {
+			margin-bottom: 0.7em;
+		}
 
-			.player {
-				width: 70%
-			}
+		.position {
+			width: 10%;
+		}
 
-			.points {
-				width: 20%;
-			}
+		.player {
+			width: 70%
+		}
+
+		.points {
+			width: 20%;
+		}
+	}
+}
+
+.event {
+	width: 30%;
+
+	.banner-container {
+		margin-top: -@padding-main;
+		margin-right: -@padding-main;
+		margin-bottom: @padding-main;
+
+		img {
+			width: calc(100% + @padding-main);
+			height: 30rem;
+			object-fit: cover;
 		}
 	}
 
+	.container {
+		padding-left: @padding-main;
+
+		.window:not(:last-child) {
+			margin-bottom: @padding-window;
+		}
+	}
 }
 
 

@@ -43,6 +43,7 @@ class MemberController extends AbstractController {
 			}
 			elseif ($period->getType() === 'event') {
 				$current_event = $period;
+				$current_event->calculateRealTimeRankings();
 			}
 		}
 

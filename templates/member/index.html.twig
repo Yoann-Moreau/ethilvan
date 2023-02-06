@@ -2,11 +2,13 @@
 
 {% block title %}Espace membre{% endblock %}
 
+{% block main_class%}home{% endblock %}
+
 {% block body %}
 	<div class="year">
 		{% if current_year is not null %}
 			<div class="banner-container">
-				<img class="year banner" src="/uploads/period_banner/{{ current_year.banner }}"
+				<img class="banner" src="/uploads/period_banner/{{ current_year.banner }}"
 				     alt="Bannière de l'année {{ current_year.year }}">
 			</div>
 		{% endif %}
@@ -58,7 +60,7 @@
 			</div>
 
 			<div class="container right">
-				<div class="current-year-ranking window">
+				<div class="ranking window">
 					<h3>Classement actuel</h3>
 					<ul>
 						{% set position = 1 %}
@@ -78,6 +80,38 @@
 
 		</div>
 
+	</div>
+
+	<div class="event">
+		{% if current_event is not null %}
+			<div class="banner-container">
+				<img class="banner" src="/uploads/period_banner/{{ current_event.banner }}"
+				     alt="Bannière de l'évènement {{ current_event.name }}">
+			</div>
+
+			<div class="container">
+				<div class="ranking window">
+					<h3>Classement actuel</h3>
+					<ul>
+						{% set position = 1 %}
+						{% for row in current_event.rankings|sort((a, b) => b.points <=> a.points) %}
+							<li>
+								<div class="position">{{ position }}</div>
+								<div class="player">
+									<a href="{{ path('app_member_user', {'id': row.player.id}) }}">{{ row.player.username }}</a>
+								</div>
+								<div class="points">{{ row.points }} pts</div>
+							</li>
+							{% set position = position + 1 %}
+						{% endfor %}
+					</ul>
+				</div>
+
+				<a class="btn" href="{{ path('app_member_valid_submissions', {'id': current_event.id}) }}">
+					Voir tous les défis validés
+				</a>
+			</div>
+		{% endif %}
 	</div>
 
 {% endblock %}
