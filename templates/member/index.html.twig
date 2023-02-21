@@ -2,7 +2,7 @@
 
 {% block title %}Espace membre{% endblock %}
 
-{% block main_class%}home{% endblock %}
+{% block main_class %}home{% endblock %}
 
 {% block body %}
 	<div class="current-year">
@@ -64,7 +64,12 @@
 					<h3>Classement actuel</h3>
 					<ul>
 						{% set position = 1 %}
+						{% set player = 1 %}
+						{% set previous_points = 0 %}
 						{% for row in current_year.rankings|sort((a, b) => b.points <=> a.points) %}
+							{% if previous_points != row.points %}
+								{% set position = player %}
+							{% endif %}
 							<li>
 								<div class="position">{{ position }}</div>
 								<div class="player">
@@ -72,7 +77,8 @@
 								</div>
 								<div class="points">{{ row.points }} pts</div>
 							</li>
-							{% set position = position + 1 %}
+							{% set player = player + 1 %}
+							{% set previous_points = row.points %}
 						{% endfor %}
 					</ul>
 				</div>
@@ -94,7 +100,12 @@
 					<h3>Classement actuel</h3>
 					<ul>
 						{% set position = 1 %}
+						{% set player = 1 %}
+						{% set previous_points = 0 %}
 						{% for row in current_event.rankings|sort((a, b) => b.points <=> a.points) %}
+							{% if previous_points != row.points %}
+								{% set position = player %}
+							{% endif %}
 							<li>
 								<div class="position">{{ position }}</div>
 								<div class="player">
@@ -102,7 +113,8 @@
 								</div>
 								<div class="points">{{ row.points }} pts</div>
 							</li>
-							{% set position = position + 1 %}
+							{% set player = player + 1 %}
+							{% set previous_points = row.points %}
 						{% endfor %}
 					</ul>
 				</div>
