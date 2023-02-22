@@ -5,7 +5,7 @@
 {% block body %}
 	<h1>{{ period.name }}</h1>
 
-	<div class="flex sb">
+	<div class="single-ranking flex sb">
 
 		<div class="container left">
 			<h3>Classement enregistré</h3>
@@ -55,7 +55,10 @@
 
 	<form method="post">
 		<input type="hidden" name="_token" value="{{ csrf_token('update_ranking' ~ period.id) }}">
-		<button type="submit">Enregistrer le classement en temps réel</button>
+		<button type="submit">
+			<i class="fa-solid fa-floppy-disk"></i>
+			<span>Enregistrer le classement en temps réel</span>
+		</button>
 	</form>
 
 {% endblock %}
