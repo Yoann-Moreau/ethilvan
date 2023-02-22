@@ -1,0 +1,61 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}{{ period.name }}{% endblock %}
+
+{% block body %}
+	<h1>{{ period.name }}</h1>
+
+	<div class="flex sb">
+
+		<div class="container left">
+			<h3>Classement enregistré</h3>
+
+			{% if ranking is not null %}
+				<ul class="rankings">
+					{% for ranking_position in ranking.rankingPositions %}
+						<li class="flex">
+							<div class="position">{{ ranking_position.position }}</div>
+							<div class="player">
+								<a href="{{ path('app_member_user', {'id': ranking_position.user.id}) }}">
+									{{ ranking_position.user.username }}
+								</a>
+							</div>
+							<div class="points">{{ ranking_position.points }} pts</div>
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+
+		<div class="container right">
+			<h3>Classement en temps réel</h3>
+
+			<ul class="rankings">
+				{% set position = 1 %}
+				{% set player = 1 %}
+				{% set previous_points = 0 %}
+				{% for row in period.rankings|sort((a, b) => b.points <=> a.points) %}
+					{% if previous_points != row.points %}
+						{% set position = player %}
+					{% endif %}
+					<li class="flex">
+						<div class="position">{{ position }}</div>
+						<div class="player">
+							<a href="{{ path('app_member_user', {'id': row.player.id}) }}">{{ row.player.username }}</a>
+						</div>
+						<div class="points">{{ row.points }} pts</div>
+					</li>
+					{% set player = player + 1 %}
+					{% set previous_points = row.points %}
+				{% endfor %}
+			</ul>
+		</div>
+
+	</div>
+
+	<form method="post">
+		<input type="hidden" name="_token" value="{{ csrf_token('update_ranking' ~ period.id) }}">
+		<button type="submit">Enregistrer le classement en temps réel</button>
+	</form>
+
+{% endblock %}

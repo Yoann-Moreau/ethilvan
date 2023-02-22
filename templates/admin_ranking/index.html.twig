@@ -1,0 +1,14 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Liste des classements{% endblock %}
+
+{% block body %}
+	<h1>Liste des classements</h1>
+
+	<ul class="periods">
+		{% for period in periods %}
+			<li><a href="{{ path('app_admin_ranking', {'id': period.id}) }}">{{ period.name }}</a></li>
+		{% endfor %}
+	</ul>
+
+{% endblock %}
