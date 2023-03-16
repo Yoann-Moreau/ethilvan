@@ -50,7 +50,12 @@
 	<section class="container left col-40">
 		{% for period in periods %}
 			<article class="ranking window">
-				<h3>{{ period.name }}</h3>
+				<h3>
+					{{ period.name }}
+					{% if period.ranking is null %}
+						<span class="ongoing-period">(en cours)</span>
+					{% endif %}
+				</h3>
 				{% if period.ranking is not null %}
 					<ul>
 						{% for rp in period.ranking.rankingPositions|sort((a, b) => a.position <=> b.position) %}

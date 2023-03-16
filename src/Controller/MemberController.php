@@ -297,7 +297,7 @@ class MemberController extends AbstractController {
 			ToolsService $tools_service): Response {
 
 		$current_year = (int)date("Y");
-		$periods = $period_repository->findBy(['year' => $current_year]);
+		$periods = $period_repository->findBy(['year' => $current_year], ['start_date' => 'DESC']);
 		$texts = $text_repository->findBy(['page' => 'real_time_final_ranking'], ['text_order' => 'ASC']);
 		$final_rankings = [];
 
