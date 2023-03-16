@@ -12,50 +12,11 @@
 		</a>
 	</div>
 
-	<p class="col-50"></p>
-
 	<div class="flex sb">
-		<section class="container left">
-
-			{% for period in periods %}
-				<article class="ranking window">
-					<h3>{{ period.name }}</h3>
-					{% if period.ranking is not null %}
-						<ul>
-							{% for rp in period.ranking.rankingPositions|sort((a, b) => a.position <=> b.position) %}
-								<li>
-									<div class="position">{{ rp.position }}</div>
-									<div class="player">
-										<a href="{{ path('app_member_user', {'id': rp.user.id}) }}">{{ rp.user.username }}</a>
-									</div>
-									<div class="points">{{ rp.points }} pts</div>
-								</li>
-							{% endfor %}
-						</ul>
-					{% else %}
-						<ul>
-							{% set position = 1 %}
-							{% set player = 1 %}
-							{% set previous_points = 0 %}
-							{% for row in period.rankings|sort((a, b) => b.points <=> a.points) %}
-								{% if previous_points != row.points %}
-									{% set position = player %}
-								{% endif %}
-								<li>
-									<div class="position">{{ position }}</div>
-									<div class="player">
-										<a href="{{ path('app_member_user', {'id': row.player.id}) }}">{{ row.player.username }}</a>
-									</div>
-									<div class="points">{{ row.points }} pts</div>
-								</li>
-								{% set player = player + 1 %}
-								{% set previous_points = row.points %}
-							{% endfor %}
-						</ul>
-					{% endif %}
-				</article>
+		<section class="container left texts-container col-50">
+			{% for text in texts %}
+				<p>{{ text.text|raw|nl2br }}</p>
 			{% endfor %}
-
 		</section>
 
 		<section class="container right">
@@ -76,7 +37,7 @@
 									{{ ranking['player'].username }}
 								</a>
 							</div>
-							<div class="points">{{ ranking['points'] }} pts</div>
+							<div class="points">{{ ranking['points'] }} <i class="fa-solid fa-star"></i></div>
 						</li>
 						{% set player = player + 1 %}
 						{% set previous_points = ranking.points %}
@@ -85,5 +46,46 @@
 			</article>
 		</section>
 	</div>
+
+	<section class="container left col-40">
+		{% for period in periods %}
+			<article class="ranking window">
+				<h3>{{ period.name }}</h3>
+				{% if period.ranking is not null %}
+					<ul>
+						{% for rp in period.ranking.rankingPositions|sort((a, b) => a.position <=> b.position) %}
+							<li>
+								<div class="position">{{ rp.position }}</div>
+								<div class="player">
+									<a href="{{ path('app_member_user', {'id': rp.user.id}) }}">{{ rp.user.username }}</a>
+								</div>
+								<div class="points">{{ rp.points }} pts</div>
+							</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<ul>
+						{% set position = 1 %}
+						{% set player = 1 %}
+						{% set previous_points = 0 %}
+						{% for row in period.rankings|sort((a, b) => b.points <=> a.points) %}
+							{% if previous_points != row.points %}
+								{% set position = player %}
+							{% endif %}
+							<li>
+								<div class="position">{{ position }}</div>
+								<div class="player">
+									<a href="{{ path('app_member_user', {'id': row.player.id}) }}">{{ row.player.username }}</a>
+								</div>
+								<div class="points">{{ row.points }} pts</div>
+							</li>
+							{% set player = player + 1 %}
+							{% set previous_points = row.points %}
+						{% endfor %}
+					</ul>
+				{% endif %}
+			</article>
+		{% endfor %}
+	</section>
 
 {% endblock %}

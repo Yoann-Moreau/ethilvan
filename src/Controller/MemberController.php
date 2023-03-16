@@ -14,6 +14,7 @@ use App\Repository\NotificationRepository;
 use App\Repository\PeriodRepository;
 use App\Repository\RankingPositionRepository;
 use App\Repository\SubmissionRepository;
+use App\Repository\TextRepository;
 use App\Repository\UserRepository;
 use App\Service\ToolsService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -292,10 +293,12 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/real_time_final_ranking', name: 'app_member_real_time_final_ranking', methods: ['GET'])]
-	public function realTimeFinalRanking(PeriodRepository $period_repository, ToolsService $tools_service): Response {
+	public function realTimeFinalRanking(PeriodRepository $period_repository, TextRepository $text_repository,
+			ToolsService $tools_service): Response {
 
 		$current_year = (int)date("Y");
 		$periods = $period_repository->findBy(['year' => $current_year]);
+		$texts = $text_repository->findBy(['page' => 'real_time_final_ranking'], ['text_order' => 'ASC']);
 		$final_rankings = [];
 
 		foreach ($periods as $period) {
@@ -335,6 +338,7 @@ class MemberController extends AbstractController {
 		return $this->render('member/real_time_final_ranking.html.twig', [
 				'periods'        => $periods,
 				'final_rankings' => $final_rankings,
+				'texts'          => $texts,
 		]);
 	}
 
