@@ -1,12 +1,11 @@
 @import "var.less";
 
 html {
-	height: 100%;
+
 }
 
 body {
 	display: flex;
-	height: 100%;
 	background-color: @bg-main-lighter;
 	color: @tc-main;
 	font-size: 1.6rem;
@@ -41,32 +40,33 @@ body {
 
 .main-container.home {
 	flex-direction: row;
+	padding: 0;
 }
 
 .current-year {
 	width: 70%;
-	padding-right: @padding-main;
 
 	.banner-container {
-		margin-top: -@padding-main;
-		margin-left: -@padding-main;
-		margin-right: -@padding-main;
-		margin-bottom: @padding-main;
 
 		img {
-			width: calc(100% + @padding-main);
+			width: 100%;
 			height: 30rem;
 			object-fit: cover;
 		}
 	}
 
+	.container {
+		padding: @padding-main;
+	}
+
 	.container.left {
-		margin-right: @padding-main;
-		width: calc(50% - @padding-main / 2);
+		padding-right: @padding-main / 2;
+		width: 50%;
 	}
 
 	.container.right {
-		width: calc(50% - @padding-main / 2);
+		padding-left: @padding-main / 2;
+		width: 50%;
 	}
 
 	.window:not(:last-child) {
@@ -100,26 +100,20 @@ body {
 }
 
 .current-event {
-	width: calc(30% + @padding-main);
-	margin-right: -@padding-main;
-	margin-bottom: -@padding-main;
-	padding-right: @padding-main;
+	width: 30%;
 	background-color: @bg-main;
 
 	.banner-container {
-		margin-top: -@padding-main;
-		margin-right: -@padding-main;
-		margin-bottom: @padding-main;
 
 		img {
-			width: calc(100% + @padding-main);
+			width: 100%;
 			height: 30rem;
 			object-fit: cover;
 		}
 	}
 
 	.container {
-		padding-left: @padding-main;
+		padding: @padding-main;
 
 		.window:not(:last-child) {
 			margin-bottom: @padding-window;
