@@ -15,13 +15,13 @@
 	<div class="flex sb">
 		<section class="container left texts-container col-50">
 			{% for text in texts %}
-				<p>{{ text.text|raw|nl2br }}</p>
+				<p class="paragraph">{{ text.text|raw|nl2br }}</p>
 			{% endfor %}
 		</section>
 
 		<section class="container right">
 			<article class="ranking window">
-				<h3>Classement final actuel</h3>
+				<h3>Classement actuel</h3>
 				<ul>
 					{% set position = 1 %}
 					{% set player = 1 %}
