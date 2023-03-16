@@ -15,6 +15,7 @@ use App\Repository\PeriodRepository;
 use App\Repository\RankingPositionRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\UserRepository;
+use App\Service\ToolsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -286,6 +287,54 @@ class MemberController extends AbstractController {
 		return $this->render('member/valid_submissions.html.twig', [
 				'period'      => $period,
 				'submissions' => $submissions,
+		]);
+	}
+
+
+	#[Route('/real_time_final_ranking', name: 'app_member_real_time_final_ranking', methods: ['GET'])]
+	public function realTimeFinalRanking(PeriodRepository $period_repository, ToolsService $tools_service): Response {
+
+		$current_year = (int)date("Y");
+		$periods = $period_repository->findBy(['year' => $current_year]);
+		$final_rankings = [];
+
+		foreach ($periods as $period) {
+			// Finished period with linked ranking
+			if ($period->getRanking() !== null) {
+				foreach ($period->getRanking()->getRankingPositions() as $ranking_position) {
+					$points = $tools_service->getPositionPointsForPeriod($period, $ranking_position->getPosition());
+					if (array_key_exists($ranking_position->getUser()->getUsername(), $final_rankings)) {
+						$final_rankings[$ranking_position->getUser()->getUsername()]['points'] += $points;
+					}
+					else {
+						$final_rankings[$ranking_position->getUser()->getUsername()]['points'] = $points;
+						$final_rankings[$ranking_position->getUser()->getUsername()]['player'] = $ranking_position->getUser();
+					}
+				}
+			}
+			// Ongoing period
+			else {
+				$period->calculateRealTimeRankings();
+				foreach ($period->getRankings() as $ranking) {
+					$points = $tools_service->getPositionPointsForPeriod($period, $ranking['position']);
+					if (array_key_exists($ranking['player']->getUsername(), $final_rankings)) {
+						$final_rankings[$ranking['player']->getUsername()]['points'] += $points;
+					}
+					else {
+						$final_rankings[$ranking['player']->getUsername()]['points'] = $points;
+						$final_rankings[$ranking['player']->getUsername()]['pplayer'] = $ranking_position->getUser();
+					}
+				}
+			}
+		}
+
+		uasort($final_rankings, function ($a, $b) {
+			return $b['points'] <=> $a['points'];
+		});
+
+		return $this->render('member/real_time_final_ranking.html.twig', [
+				'periods'        => $periods,
+				'final_rankings' => $final_rankings,
 		]);
 	}
 

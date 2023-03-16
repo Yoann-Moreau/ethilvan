@@ -206,6 +206,10 @@ textarea {
 .window {
 	padding: @padding-window;
 	background-color: @bg-window;
+
+	&:not(:last-child) {
+		margin-bottom: @padding-window;
+	}
 }
 
 .errors,

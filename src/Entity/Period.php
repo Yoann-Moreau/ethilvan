@@ -241,6 +241,23 @@ class Period {
 			}
 		}
 
+		uasort($rankings, function ($a, $b) {
+			return $b['points'] <=> $a['points'];
+		});
+
+		// Set position
+		$position = 1;
+		$player = 1;
+		$previous_points = 0;
+		foreach ($rankings as &$ranking) {
+			if ($ranking['points'] !== $previous_points) {
+				$position = $player;
+			}
+			$ranking['position'] = $position;
+			$player++;
+			$previous_points = $ranking['points'];
+		}
+
 		$this->setRankings($rankings);
 	}
 

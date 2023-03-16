@@ -1,0 +1,89 @@
+{% extends 'base_member.html.twig' %}
+
+{% block title %}Classement final en temps réel{% endblock %}
+
+{% block body %}
+	<h1>Classement final en temps réel</h1>
+
+	<div class="btns-container">
+		<a class="btn" href="{{ path('app_member') }}">
+			<i class="fa-solid fa-arrow-left"></i>
+			<span>Retour à l'accueil</span>
+		</a>
+	</div>
+
+	<p class="col-50"></p>
+
+	<div class="flex sb">
+		<section class="container left">
+
+			{% for period in periods %}
+				<article class="ranking window">
+					<h3>{{ period.name }}</h3>
+					{% if period.ranking is not null %}
+						<ul>
+							{% for rp in period.ranking.rankingPositions|sort((a, b) => a.position <=> b.position) %}
+								<li>
+									<div class="position">{{ rp.position }}</div>
+									<div class="player">
+										<a href="{{ path('app_member_user', {'id': rp.user.id}) }}">{{ rp.user.username }}</a>
+									</div>
+									<div class="points">{{ rp.points }} pts</div>
+								</li>
+							{% endfor %}
+						</ul>
+					{% else %}
+						<ul>
+							{% set position = 1 %}
+							{% set player = 1 %}
+							{% set previous_points = 0 %}
+							{% for row in period.rankings|sort((a, b) => b.points <=> a.points) %}
+								{% if previous_points != row.points %}
+									{% set position = player %}
+								{% endif %}
+								<li>
+									<div class="position">{{ position }}</div>
+									<div class="player">
+										<a href="{{ path('app_member_user', {'id': row.player.id}) }}">{{ row.player.username }}</a>
+									</div>
+									<div class="points">{{ row.points }} pts</div>
+								</li>
+								{% set player = player + 1 %}
+								{% set previous_points = row.points %}
+							{% endfor %}
+						</ul>
+					{% endif %}
+				</article>
+			{% endfor %}
+
+		</section>
+
+		<section class="container right">
+			<article class="ranking window">
+				<h3>Classement final actuel</h3>
+				<ul>
+					{% set position = 1 %}
+					{% set player = 1 %}
+					{% set previous_points = 0 %}
+					{% for ranking in final_rankings %}
+						{% if previous_points != ranking['points'] %}
+							{% set position = player %}
+						{% endif %}
+						<li>
+							<div class="position">{{ position }}</div>
+							<div class="player">
+								<a href="{{ path('app_member_user', {'id': ranking['player'].id}) }}">
+									{{ ranking['player'].username }}
+								</a>
+							</div>
+							<div class="points">{{ ranking['points'] }} pts</div>
+						</li>
+						{% set player = player + 1 %}
+						{% set previous_points = ranking.points %}
+					{% endfor %}
+				</ul>
+			</article>
+		</section>
+	</div>
+
+{% endblock %}
