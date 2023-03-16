@@ -45,10 +45,12 @@ body {
 
 .current-year {
 	width: 70%;
+	padding-right: @padding-main;
 
 	.banner-container {
 		margin-top: -@padding-main;
 		margin-left: -@padding-main;
+		margin-right: -@padding-main;
 		margin-bottom: @padding-main;
 
 		img {
@@ -98,7 +100,11 @@ body {
 }
 
 .current-event {
-	width: 30%;
+	width: calc(30% + @padding-main);
+	margin-right: -@padding-main;
+	margin-bottom: -@padding-main;
+	padding-right: @padding-main;
+	background-color: @bg-main;
 
 	.banner-container {
 		margin-top: -@padding-main;
@@ -118,6 +124,10 @@ body {
 		.window:not(:last-child) {
 			margin-bottom: @padding-window;
 		}
+	}
+
+	.window {
+		background-color: @bg-main-lighter;
 	}
 }
 
