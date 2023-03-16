@@ -17,17 +17,17 @@
 	<div class="table texts">
 
 		<div class="head">
-			<div class="col col-65">Texte</div>
-			<div class="col col-10">Page</div>
+			<div class="col col-55">Texte</div>
+			<div class="col col-20">Page</div>
 			<div class="col col-25">Actions</div>
 		</div>
 
 		{% for text in texts %}
 			<div class="row">
-				<div class="col col-65">
+				<div class="col col-55">
 					<a href="{{ path('app_text_edit', {'id': text.id}) }}">{{ text.title }}</a>
 				</div>
-				<div class="col col-10">{{ text.page }}</div>
+				<div class="col col-20">{{ text.page }}</div>
 				<div class="col col-25 btns">
 					<a class="btn" href="{{ path('app_text_edit', {'id': text.id}) }}">
 						<i class="fa-solid fa-pen"></i>
