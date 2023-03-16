@@ -325,7 +325,7 @@ class MemberController extends AbstractController {
 					}
 					else {
 						$final_rankings[$ranking['player']->getUsername()]['points'] = $points;
-						$final_rankings[$ranking['player']->getUsername()]['pplayer'] = $ranking_position->getUser();
+						$final_rankings[$ranking['player']->getUsername()]['player'] = $ranking['player'];
 					}
 				}
 			}
