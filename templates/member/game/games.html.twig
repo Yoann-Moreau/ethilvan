@@ -11,7 +11,7 @@
 			{% set event = false %}
 			{% for challenge in game.challenges %}
 				{% for period in challenge.periods %}
-					{% if period.startDate <= date('now') and period.endDate >= date('now') and period.type is same as 'event' %}
+					{% if period.startDate <= date('now') and period.endDate|date_modify("+1 day") >= date('now') and period.type is same as 'event' %}
 						{% set event = period.name %}
 					{% endif %}
 				{% endfor %}
