@@ -2,8 +2,18 @@
 
 {% block title %}Défis réalisés par {{ user.username }}{% endblock %}
 
+{% block main_class %}user-challenges{% endblock %}
+
 {% block body %}
-	<h1>Défis réalisés par {{ user.username }}</h1>
+	<h1>
+		Défis réalisés par
+		{% if user.avatar %}
+			<div class="avatar-container">
+				<img src="/uploads/avatar/{{ user.avatar }}" alt="Avatar de {{ user.username }}">
+			</div>
+		{% endif %}
+		{{ user.username }}
+	</h1>
 
 	<form method="get">
 		<div class="input-container search">
@@ -45,7 +55,13 @@
 			<div class="row">
 				<div class="col col-30">{{ submission.challenge.name }}</div>
 				<div class="col col-30">{{ submission.challenge.game.name }}</div>
-				<div class="col col-20">{{ submission.challenge.difficulty.name }}</div>
+				<div class="col col-20">
+					<span class="medal-container">
+						<img class="medal" src="/assets/img/{{ submission.challenge.difficulty.icon }}"
+						     alt="Médaille de {{ submission.challenge.difficulty.name }}">
+					</span>
+					<span>{{ submission.challenge.difficulty.name }}</span>
+				</div>
 				<div class="col col-20">{{ submission.period.name }}</div>
 			</div>
 		{% endfor %}
