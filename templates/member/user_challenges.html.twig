@@ -1,0 +1,57 @@
+{% extends 'base_member.html.twig' %}
+
+{% block title %}Défis réalisés par {{ user.username }}{% endblock %}
+
+{% block body %}
+	<h1>Défis réalisés par {{ user.username }}</h1>
+
+	<form method="get">
+		<div class="input-container search">
+			<label for="challenge-search"></label>
+			<input id="challenge-search" type="search" name="search" placeholder="Recherche" value="{{ search }}">
+			<button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+		</div>
+	</form>
+
+	<div class="table">
+
+		<div class="head">
+			<div class="col col-30">Défi</div>
+			<div class="col col-30 sort {% if sort_by is same as 'game' %}active{% endif %}">
+				<a href="{{ path('app_member_user_challenges', {'id': user.id, 'sort_by': 'game', 'page': 1, 'search': search}) }}">
+					Jeu<i class="fa-solid fa-arrow-up-a-z"></i>
+				</a>
+			</div>
+			<div class="col col-20 sort {% if sort_by is same as 'difficulty' %}active{% endif %}">
+				<a href="{{ path('app_member_user_challenges', {'id': user.id, 'sort_by': 'difficulty', 'page': 1, 'search': search}) }}">
+					Difficulté<i class="fa-solid fa-arrow-up-1-9"></i>
+				</a>
+			</div>
+			<div class="col col-20 sort {% if sort_by is same as 'period' %}active{% endif %}">
+				<a href="{{ path('app_member_user_challenges', {'id': user.id, 'sort_by': 'period', 'page': 1, 'search': search}) }}">
+					Période<i class="fa-solid fa-arrow-up-1-9"></i>
+				</a>
+			</div>
+			<div class="reset-sort">
+				<a href="{{ path('app_member_user_challenges', {'id': user.id, 'page': 1, 'search': search}) }}"
+				   title="Réinitialiser le tri">
+					<i class="fa-solid fa-xmark"></i>
+					<span>Réinitialiser</span>
+				</a>
+			</div>
+		</div>
+
+		{% for submission in submissions %}
+			<div class="row">
+				<div class="col col-30">{{ submission.challenge.name }}</div>
+				<div class="col col-30">{{ submission.challenge.game.name }}</div>
+				<div class="col col-20">{{ submission.challenge.difficulty.name }}</div>
+				<div class="col col-20">{{ submission.period.name }}</div>
+			</div>
+		{% endfor %}
+	</div>
+
+	{% set path = 'app_member_user_challenges' %}
+	{% set id = user.id %}
+	{{ include('include/pagination.html.twig') }}
+{% endblock %}

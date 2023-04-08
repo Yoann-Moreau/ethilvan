@@ -7,7 +7,12 @@
 		{% endif %}
 
 		<a class="page {% if p is same as page %}current{% endif %}"
-		   href="{{ path(path, {'sort_by': sort_by, 'page': p, 'search': search}) }}">{{ p }}</a>
+				{% if id is not defined %}
+					href="{{ path(path, {'sort_by': sort_by, 'page': p, 'search': search}) }}"
+				{% else %}
+					href="{{ path(path, {'id': id, 'sort_by': sort_by, 'page': p, 'search': search}) }}"
+				{% endif %}
+		>{{ p }}</a>
 
 		{% if p < page - 2 %}
 			<div class="separator">...</div>

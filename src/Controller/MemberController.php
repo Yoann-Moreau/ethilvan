@@ -16,6 +16,7 @@ use App\Repository\RankingPositionRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\TextRepository;
 use App\Repository\UserRepository;
+use App\Service\PaginationService;
 use App\Service\ToolsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -252,6 +253,51 @@ class MemberController extends AbstractController {
 				'last_ranking_positions' => $last_ranking_positions,
 				'difficulties'           => $difficulties,
 				'cups'                   => $cups,
+		]);
+	}
+
+
+	#[Route('/user/{id}/challenges', name: 'app_member_user_challenges', methods: ['GET'])]
+	public function user_challenges(int $id, Request $request, UserRepository $user_repository,
+			SubmissionRepository $submission_repository, PaginationService $pagination_service) {
+
+		$user = $user_repository->find($id);
+
+		if ($user === null || $user->isDeleted()) {
+			throw $this->createNotFoundException("L'utilisateur n'existe pas");
+		}
+
+		$elements_per_page = 12;
+
+		$sort_by = $request->query->get('sort_by');
+		$page = (int)$request->query->get('page');
+		$search = $request->query->get('search');
+
+		if ($sort_by !== 'game' && $sort_by !== 'difficulty' && $sort_by !== 'period') {
+			$sort_by = '';
+		}
+		if ($page < 1) {
+			$page = 1;
+		}
+		if ($search === null) {
+			$search = '';
+		}
+
+		$offset = $elements_per_page * ($page - 1);
+
+		$submissions = $submission_repository->search($user, $search, $elements_per_page, $offset, $sort_by);
+
+		// Pagination
+		$number_of_elements = $submission_repository->countWithSearch($user, $search);
+		$pages = $pagination_service->getPages($number_of_elements, $elements_per_page, $page);
+
+		return $this->render('member/user_challenges.html.twig', [
+				'user'        => $user,
+				'sort_by'    => $sort_by,
+				'page'       => $page,
+				'pages'      => $pages,
+				'search'     => $search,
+				'submissions' => $submissions,
 		]);
 	}
 
