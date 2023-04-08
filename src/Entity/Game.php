@@ -47,6 +47,8 @@ class Game {
 
 	private int $valid_submissions_count = 0;
 
+	private array $periodsWithValidSubmissions = [];
+
 
 	public function __construct() {
 		$this->challenges = new ArrayCollection();
@@ -197,6 +199,21 @@ class Game {
 	}
 
 
+	/**
+	 * @return array
+	 */
+	public function getPeriodsWithValidSubmissions(): array {
+		return $this->periodsWithValidSubmissions;
+	}
+
+	/**
+	 * @param array $periodsWithValidSubmissions
+	 */
+	public function setPeriodsWithValidSubmissions(array $periodsWithValidSubmissions): void {
+		$this->periodsWithValidSubmissions = $periodsWithValidSubmissions;
+	}
+
+
 	// ==========================================================================
 	// Other methods
 	// ==========================================================================
@@ -212,6 +229,26 @@ class Game {
 			foreach ($periods as $period) {
 				if ($challenge->getPeriods()->contains($period)) {
 					$counts[$challenge->getDifficulty()->getName()] = $counts[$challenge->getDifficulty()->getName()] + 1;
+				}
+			}
+		}
+
+		$this->setChallengesCounts($counts);
+	}
+
+
+	/**
+	 * @param User $user
+	 * @return void
+	 */
+	public function countValidChallengesForUser(User $user): void {
+		$counts = ['Bronze' => 0, 'Argent' => 0, 'Or' => 0, 'Platine' => 0];
+
+		foreach ($this->getChallenges() as $challenge) {
+			foreach ($challenge->getSubmissions() as $submission) {
+				if ($submission->getUser() === $user && $submission->isValid()) {
+					$counts[$challenge->getDifficulty()->getName()] = $counts[$challenge->getDifficulty()->getName()] + 1;
+					break;
 				}
 			}
 		}
@@ -241,6 +278,27 @@ class Game {
 		}
 
 		$this->setValidSubmissionsCount($count);
+	}
+
+
+	/**
+	 * @param User $user
+	 * @return void
+	 */
+	public function findPeriodsWithValidSubmissionsForUser(User $user): void {
+		$periods = [];
+
+		foreach ($this->getChallenges() as $challenge) {
+			foreach ($challenge->getSubmissions() as $submission) {
+				if ($submission->getUser() === $user && $submission->isValid()) {
+					if (!in_array($submission->getPeriod(), $periods)) {
+						$periods[] = $submission->getPeriod();
+					}
+				}
+			}
+		}
+
+		$this->setPeriodsWithValidSubmissions($periods);
 	}
 
 }

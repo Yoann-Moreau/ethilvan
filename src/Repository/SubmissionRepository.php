@@ -39,7 +39,7 @@ class SubmissionRepository extends ServiceEntityRepository {
 	}
 
 
-	public function search(User $user, string $search = '', int $limit = 10, int $offset = 0,
+	public function searchValidForUser(User $user, string $search = '', int $limit = 10, int $offset = 0,
 			string $sort_by = ''): array {
 
 		$query_builder = $this->createQueryBuilder('s')
@@ -83,7 +83,7 @@ class SubmissionRepository extends ServiceEntityRepository {
 	}
 
 
-	public function countWithSearch(User $user, string $search = ''): int {
+	public function countValidForUserWithSearch(User $user, string $search = ''): int {
 		$query_builder = $this->createQueryBuilder('s')
 				->select('count(s.id)')
 				->innerJoin('s.challenge', 'c')
@@ -101,6 +101,23 @@ class SubmissionRepository extends ServiceEntityRepository {
 		}
 
 		return $query_builder->getQuery()->getSingleScalarResult();
+	}
+
+
+	public function findValidForUser(User $user): array {
+		return $this->createQueryBuilder('s')
+				->innerJoin('s.period', 'p')
+				->innerJoin('s.challenge', 'c')
+				->innerJoin('c.game', 'g')
+				->innerJoin('c.difficulty', 'd')
+				->where('s.valid = true')
+				->andWhere('s.user = :user')
+				->setParameter('user', $user)
+				->orderBy('g.name', 'ASC')
+				->orderBy('p.start_date', 'ASC')
+				->orderBy('d.id', 'ASC')
+				->getQuery()
+				->getResult();
 	}
 
 }

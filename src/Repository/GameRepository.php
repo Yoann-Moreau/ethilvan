@@ -5,6 +5,7 @@ namespace App\Repository;
 
 
 use App\Entity\Game;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -55,6 +56,19 @@ class GameRepository extends ServiceEntityRepository {
 		return $this->createQueryBuilder('g')
 				->innerJoin('g.challenges', 'c')
 				->orderBy('g.name')
+				->getQuery()
+				->getResult();
+	}
+
+
+	public function getGamesWithValidSubmissionsForUser(User $user): array {
+		return $this->createQueryBuilder('g')
+				->innerJoin('g.challenges', 'c')
+				->innerJoin('c.submissions', 's')
+				->where('s.valid = true')
+				->andWhere('s.user = :user')
+				->setParameter('user', $user)
+				->orderBy('g.name', 'ASC')
 				->getQuery()
 				->getResult();
 	}

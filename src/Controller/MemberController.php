@@ -10,6 +10,7 @@ use App\Form\ChangePasswordType;
 use App\Form\ProfileEditType;
 use App\Repository\ChallengeDifficultyRepository;
 use App\Repository\CupRepository;
+use App\Repository\GameRepository;
 use App\Repository\NotificationRepository;
 use App\Repository\PeriodRepository;
 use App\Repository\RankingPositionRepository;
@@ -258,7 +259,7 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/user/{id}/challenges', name: 'app_member_user_challenges', methods: ['GET'])]
-	public function user_challenges(int $id, Request $request, UserRepository $user_repository,
+	public function userChallenges(int $id, Request $request, UserRepository $user_repository,
 			SubmissionRepository $submission_repository, PaginationService $pagination_service) {
 
 		$user = $user_repository->find($id);
@@ -285,19 +286,47 @@ class MemberController extends AbstractController {
 
 		$offset = $elements_per_page * ($page - 1);
 
-		$submissions = $submission_repository->search($user, $search, $elements_per_page, $offset, $sort_by);
+		$submissions = $submission_repository->searchValidForUser($user, $search, $elements_per_page, $offset, $sort_by);
 
 		// Pagination
-		$number_of_elements = $submission_repository->countWithSearch($user, $search);
+		$number_of_elements = $submission_repository->countValidForUserWithSearch($user, $search);
 		$pages = $pagination_service->getPages($number_of_elements, $elements_per_page, $page);
 
 		return $this->render('member/user_challenges.html.twig', [
 				'user'        => $user,
-				'sort_by'    => $sort_by,
-				'page'       => $page,
-				'pages'      => $pages,
-				'search'     => $search,
+				'sort_by'     => $sort_by,
+				'page'        => $page,
+				'pages'       => $pages,
+				'search'      => $search,
 				'submissions' => $submissions,
+		]);
+	}
+
+
+	#[Route('/user/{id}/challenges_by_game', name: 'app_member_user_challenges_by_game', methods: ['GET'])]
+	public function userChallengesByGame(int $id, UserRepository $user_repository, GameRepository $game_repository,
+			SubmissionRepository $submission_repository, ChallengeDifficultyRepository $difficulty_repository) {
+
+		$user = $user_repository->find($id);
+
+		if ($user === null || $user->isDeleted()) {
+			throw $this->createNotFoundException("L'utilisateur n'existe pas");
+		}
+
+		$games = $game_repository->getGamesWithValidSubmissionsForUser($user);
+		foreach ($games as $game) {
+			$game->countValidChallengesForUser($user);
+			$game->findPeriodsWithValidSubmissionsForUser($user);
+		}
+
+		$submissions = $submission_repository->findValidForUser($user);
+		$difficulties = $difficulty_repository->findAll();
+
+		return $this->render('member/user_challenges_by_game.html.twig', [
+				'user'         => $user,
+				'games'        => $games,
+				'submissions'  => $submissions,
+				'difficulties' => $difficulties,
 		]);
 	}
 

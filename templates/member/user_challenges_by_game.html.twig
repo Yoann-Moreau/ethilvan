@@ -1,0 +1,101 @@
+{% extends 'base_member.html.twig' %}
+
+{% block title %}Défis réalisés par {{ user.username }}{% endblock %}
+
+{% block main_class %}user-challenges-by-game{% endblock %}
+
+{% block javascripts %}
+	<script src="/assets/js/user_challenges_by_game.js" type="module"></script>
+{% endblock %}
+
+{% block body %}
+	<h1>
+		Défis réalisés par
+		{% if user.avatar %}
+			<div class="avatar-container">
+				<img src="/uploads/avatar/{{ user.avatar }}" alt="Avatar de {{ user.username }}">
+			</div>
+		{% endif %}
+		{{ user.username }}
+	</h1>
+
+	<div class="btns-container">
+		<div class="btns">
+			<a href="{{ path('app_member_user_challenges', {'id': user.id}) }}" class="btn">
+				<i class="fa-solid fa-arrow-left"></i>
+				<span>Retour aux défis</span>
+			</a>
+		</div>
+	</div>
+
+	<div class="container flex sb">
+
+		<ul class="games col-50">
+
+			{% for game in games %}
+				<li class="game" data-id="{{ game.id }}">
+					<h3>{{ game.name }}</h3>
+					<div class="container flex">
+						<div class="medals-container">
+							{% for difficulty in difficulties %}
+								<div class="medal-container">
+									<div class="medal">
+										<img src="/assets/img/{{ difficulty.icon }}" alt="Médaille de {{ difficulty.name }}">
+									</div>
+									<div class="medal-number">{{ game.challengesCounts[difficulty.name] }}</div>
+								</div>
+							{% endfor %}
+						</div>
+						<div class="green">
+							<i class="fa-solid fa-chevron-right"></i>
+						</div>
+					</div>
+
+				</li>
+			{% endfor %}
+
+		</ul>
+
+
+		{% set hidden = '' %}
+		{% for game in games %}
+			<div class="single-game-challenges col-45 {{ hidden }}" data-id="{{ game.id }}">
+				{% set hidden = 'hidden' %}
+
+				<div class="title-container">
+					<div class="game-image-container">
+						<img src="/uploads/game/{{ game.image }}" alt="Image de {{ game.name }}">
+					</div>
+					<h2>{{ game.name }}</h2>
+				</div>
+
+				<ul class="periods">
+					{% for period in game.periodsWithValidSubmissions %}
+						<li class="period">
+							<h3>{{ period.name }}</h3>
+							<ul class="submissions">
+								{% for submission in submissions %}
+									{% if submission.period == period and submission.challenge.game == game %}
+										<li class="submission">
+											<div class="medal-container">
+												<img class="medal" src="/assets/img/{{ submission.challenge.difficulty.icon }}"
+												     alt="Médaille de {{ submission.challenge.difficulty.name }}">
+											</div>
+											<div>
+												<a href="{{ path('app_member_single_challenge', {'id': submission.challenge.id }) }}">
+													{{ submission.challenge.name }}
+												</a>
+											</div>
+										</li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endfor %}
+
+	</div>
+
+{% endblock %}

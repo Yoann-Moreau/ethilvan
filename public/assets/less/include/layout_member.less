@@ -595,7 +595,8 @@ body {
 // User challenges
 // ==============================================
 
-.user-challenges {
+.user-challenges,
+.user-challenges-by-game {
 
 	h1 {
 		display: flex;
@@ -612,6 +613,19 @@ body {
 			border-radius: 50%;
 		}
 	}
+}
+
+.user-challenges {
+
+	.search-container {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 1em;
+
+		.search {
+			margin-bottom: 0;
+		}
+	}
 
 	.medal-container {
 		width: 1.2em;
@@ -620,6 +634,107 @@ body {
 
 		img {
 			.contain();
+		}
+	}
+}
+
+.user-challenges-by-game {
+
+	.game {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 2.8rem;
+		background-color: @bg-main;
+		padding: 0.4em 0.6em;
+		cursor: pointer;
+
+		&:hover {
+			background-color: @bg-button;
+		}
+
+		&:not(:last-child) {
+			margin-bottom: 0.5em;
+		}
+
+		h3 {
+			font-size: 0.8em;
+			font-weight: bold;
+			color: @tc-main;
+			margin-bottom: 0;
+			text-transform: none;
+		}
+
+		.medals-container {
+			display: flex;
+
+			.medal-container {
+				display: flex;
+				margin-right: 0.5em;
+
+				.medal {
+					width: 1em;
+					height: 1em;
+					margin-right: 0.1em;
+
+					img {
+						.contain();
+					}
+				}
+
+				.medal-number {
+					font-size: 0.9em;
+					min-width: 1em;
+				}
+			}
+		}
+	}
+
+	.single-game-challenges {
+		padding: 1.5em 2em;
+		background-color: @bg-main;
+
+		.title-container {
+			display: flex;
+			align-items: center;
+			margin-bottom: 1em;
+
+			.game-image-container {
+				width: 10rem;
+				height: 10rem * 215 / 460;
+			}
+
+			h2 {
+				margin-bottom: 0;
+				margin-left: 0.5em;
+			}
+		}
+
+		h3 {
+			color: @tc-main;
+			text-transform: none;
+			font-weight: bold;
+		}
+
+		.period {
+
+			&:not(:last-child) {
+				margin-bottom: 1.5em;
+			}
+		}
+
+		.submission {
+			display: flex;
+		}
+
+		.medal-container {
+			width: 1.2em;
+			height: 1.2em;
+			margin-right: 0.5em;
+
+			img {
+				.contain();
+			}
 		}
 	}
 }

@@ -15,13 +15,17 @@
 		{{ user.username }}
 	</h1>
 
-	<form method="get">
-		<div class="input-container search">
-			<label for="challenge-search"></label>
-			<input id="challenge-search" type="search" name="search" placeholder="Recherche" value="{{ search }}">
-			<button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-		</div>
-	</form>
+	<div class="search-container">
+		<form method="get">
+			<div class="input-container search">
+				<label for="challenge-search"></label>
+				<input id="challenge-search" type="search" name="search" placeholder="Recherche" value="{{ search }}">
+				<button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+			</div>
+		</form>
+
+		<a href="{{ path('app_member_user_challenges_by_game', {'id': user.id}) }}" class="btn">Voir les défis par jeu</a>
+	</div>
 
 	<div class="table">
 
