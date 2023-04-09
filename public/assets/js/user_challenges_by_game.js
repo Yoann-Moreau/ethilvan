@@ -10,15 +10,21 @@ const gamesInfo = document.getElementsByClassName('single-game-challenges');
 // Functions
 // ============================================================================
 
-function displayGameInfo(game) {
+function displayGameInfo(selectedGame) {
+	for (const game of games) {
+		game.classList.remove('current');
+	}
+	selectedGame.classList.add('current');
+
 	for (const gameInfo of gamesInfo) {
-		if (game.dataset.id === gameInfo.dataset.id) {
+		if (selectedGame.dataset.id === gameInfo.dataset.id) {
 			gameInfo.classList.remove('hidden');
 		}
 		else {
 			gameInfo.classList.add('hidden');
 		}
 	}
+	window.scrollTo(0, 0);
 }
 
 

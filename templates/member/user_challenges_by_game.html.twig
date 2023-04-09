@@ -32,8 +32,10 @@
 
 		<ul class="games col-50">
 
+			{% set current = 'current' %}
 			{% for game in games %}
-				<li class="game" data-id="{{ game.id }}">
+				<li class="game {{ current }}" data-id="{{ game.id }}">
+					{% set current = '' %}
 					<h3>{{ game.name }}</h3>
 					<div class="container flex">
 						<div class="medals-container">

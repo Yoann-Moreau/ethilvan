@@ -57,8 +57,16 @@
 
 		{% for submission in submissions %}
 			<div class="row">
-				<div class="col col-30">{{ submission.challenge.name }}</div>
-				<div class="col col-30">{{ submission.challenge.game.name }}</div>
+				<div class="col col-30">
+					<a href="{{ path('app_member_single_challenge', {'id': submission.challenge.id}) }}">
+						{{ submission.challenge.name }}
+					</a>
+				</div>
+				<div class="col col-30">
+					<a href="{{ path('app_member_single_game', {'id': submission.challenge.game.id}) }}">
+						{{ submission.challenge.game.name }}
+					</a>
+				</div>
 				<div class="col col-20">
 					<span class="medal-container">
 						<img class="medal" src="/assets/img/{{ submission.challenge.difficulty.icon }}"

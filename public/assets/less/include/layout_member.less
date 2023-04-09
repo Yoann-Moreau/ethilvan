@@ -644,7 +644,7 @@ body {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		font-size: 2.8rem;
+		font-size: 2.5rem;
 		background-color: @bg-main;
 		padding: 0.4em 0.6em;
 		cursor: pointer;
@@ -657,8 +657,12 @@ body {
 			margin-bottom: 0.5em;
 		}
 
+		&.current {
+			background-color: @dark-green;
+		}
+
 		h3 {
-			font-size: 0.8em;
+			font-size: 0.7em;
 			font-weight: bold;
 			color: @tc-main;
 			margin-bottom: 0;
@@ -693,6 +697,7 @@ body {
 	.single-game-challenges {
 		padding: 1.5em 2em;
 		background-color: @bg-main;
+		height: fit-content;
 
 		.title-container {
 			display: flex;
@@ -702,16 +707,22 @@ body {
 			.game-image-container {
 				width: 10rem;
 				height: 10rem * 215 / 460;
+
+				img {
+					.contain();
+				}
 			}
 
 			h2 {
 				margin-bottom: 0;
 				margin-left: 0.5em;
+				font-size: 2.8rem;
 			}
 		}
 
 		h3 {
 			color: @tc-main;
+			font-size: 2.2rem;
 			text-transform: none;
 			font-weight: bold;
 		}
@@ -725,6 +736,7 @@ body {
 
 		.submission {
 			display: flex;
+			margin-bottom: 0.5em;
 		}
 
 		.medal-container {
