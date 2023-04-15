@@ -50,6 +50,11 @@ class ImageService {
 		$mime_type = $file->getMimeType();
 		$ext = $file->guessExtension();
 
+		list($file_width, $file_height) = getimagesize($file);
+		if ($file_width > 1920 || $file_height > 1080) {
+			$this->resizeImage($file, 1920, 1080);
+		}
+
 		if (filesize($file) > $size) {
 
 			if ($mime_type === 'image/jpeg') {
@@ -76,6 +81,51 @@ class ImageService {
 		else {
 			move_uploaded_file($file, $dest . $ext);
 			return $ext;
+		}
+	}
+
+
+	public function resizeImage(UploadedFile $file, int $target_width, int $target_height, bool $crop = false): void {
+		$mime_type = $file->getMimeType();
+
+		list($file_width, $file_height) = getimagesize($file);
+		$ratio = $file_width / $file_height;
+
+		if ($crop) {
+			if ($file_width > $file_height) {
+				$file_width = ceil($file_width - ($file_width * abs($ratio - $target_width / $target_height)));
+			}
+			else {
+				$file_height = ceil($file_height - ($file_height * abs($ratio - $target_width / $target_height)));
+			}
+			$new_width = $target_width;
+			$new_height = $target_height;
+		}
+		else {
+			if ($target_width / $target_height > $ratio) {
+				$new_width = $target_height * $ratio;
+				$new_height = $target_height;
+			}
+			else {
+				$new_width = $target_width;
+				$new_height = $target_width / $ratio;
+			}
+		}
+
+		if ($mime_type === 'image/jpeg') {
+			$src = imagecreatefromjpeg($file);
+		}
+		else {
+			$src = imagecreatefrompng($file);
+		}
+		$destination = imagecreatetruecolor($new_width, $new_height);
+		imagecopyresampled($destination, $src, 0, 0, 0, 0, $new_width, $new_height, $file_width, $file_height);
+
+		if ($mime_type === 'image/jpeg') {
+			imagejpeg($destination, $file->getPathname());
+		}
+		else {
+			imagepng($destination, $file->getPathname());
 		}
 	}
 
