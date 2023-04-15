@@ -114,17 +114,17 @@ class ImageService {
 
 		if ($mime_type === 'image/jpeg') {
 			$src = imagecreatefromjpeg($file);
-		}
-		else {
-			$src = imagecreatefrompng($file);
-		}
-		$destination = imagecreatetruecolor($new_width, $new_height);
-		imagecopyresampled($destination, $src, 0, 0, 0, 0, $new_width, $new_height, $file_width, $file_height);
-
-		if ($mime_type === 'image/jpeg') {
+			$destination = imagecreatetruecolor($new_width, $new_height);
+			imagecopyresampled($destination, $src, 0, 0, 0, 0, $new_width, $new_height, $file_width, $file_height);
 			imagejpeg($destination, $file->getPathname());
 		}
 		else {
+			$src = imagecreatefrompng($file);
+			$destination = imagecreatetruecolor($new_width, $new_height);
+			imagesavealpha($destination, true);
+			$trans_color = imagecolorallocatealpha($destination, 0, 0, 0, 127);
+			imagefill($destination, 0, 0, $trans_color);
+			imagecopyresampled($destination, $src, 0, 0, 0, 0, $new_width, $new_height, $file_width, $file_height);
 			imagepng($destination, $file->getPathname());
 		}
 	}

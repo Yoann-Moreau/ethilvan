@@ -20,8 +20,8 @@ class ProfileEditType extends AbstractType {
 						'required'    => false,
 						'constraints' => [
 								new File([
-										'maxSize'          => '255k',
-										'maxSizeMessage'   => "L'avatar doit peser moins de 256ko",
+										'maxSize'          => '1024k',
+										'maxSizeMessage'   => "L'avatar doit peser moins de 1024ko",
 										'mimeTypes'        => [
 												'image/png',
 												'image/jpeg',

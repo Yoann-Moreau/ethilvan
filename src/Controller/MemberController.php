@@ -17,6 +17,7 @@ use App\Repository\RankingPositionRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\TextRepository;
 use App\Repository\UserRepository;
+use App\Service\ImageService;
 use App\Service\PaginationService;
 use App\Service\ToolsService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -99,7 +100,7 @@ class MemberController extends AbstractController {
 
 	#[Route('/profile/edit', name: 'app_member_profile_edit', methods: ['GET', 'POST'])]
 	public function profileEdit(Request $request, UserRepository $user_repository,
-			ValidatorInterface $validator): Response {
+			ValidatorInterface $validator, ImageService $image_service): Response {
 
 		$form_errors = [];
 
@@ -111,9 +112,13 @@ class MemberController extends AbstractController {
 			$avatar = $form->get('avatar')->getData();
 
 			if (!empty($avatar)) {
-				$avatar_name = $user->getId() . '_' . uniqid() . $avatar->guessExtension();
+				$avatar_name = $user->getId() . '_' . uniqid() . '.' .$avatar->guessExtension();
 				$directory = $this->getParameter('avatars_directory');
+				$image_service->resizeImage($avatar, 200, 200);
 				$avatar->move($directory, $avatar_name);
+				if (file_exists($directory . '/' . $user->getAvatar())) {
+					unlink($directory . '/' . $user->getAvatar());
+				}
 				$user->setAvatar($avatar_name);
 			}
 
