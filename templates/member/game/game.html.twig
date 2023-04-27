@@ -22,7 +22,13 @@
 	<section class="challenges-list">
 
 		{% for challenge in game.challenges|sort((a, b) => a.difficulty <=> b.difficulty) %}
-			<article class="challenge-card">
+			{% set expired = '' %}
+			{% for period in challenge.periods %}
+				{% if period.endDate < date('now') and not challenge.isValidForUser(app.user) %}
+					{% set expired = 'expired' %}
+				{% endif %}
+			{% endfor %}
+			<article class="challenge-card {{ expired }}">
 				<div class="title-container">
 					<div class="medal">
 						<img src="/assets/img/{{ challenge.difficulty.icon }}"
