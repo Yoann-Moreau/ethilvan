@@ -4,8 +4,6 @@ Ethil Van's website is a Symfony 6.1 project
 
 ## Installation
 
-Run `composer install` inside the root directory, this will create a vendor directory with the dependencies.
-
 Create a `.env.local` file inside the root directory with the following information customized to your needs:
 ```ini
 APP_ENV=dev
@@ -19,6 +17,12 @@ SENDER_EMAIL="email@email.email"
 ADMIN_EMAIL="email@email.email"
 ACCOUNT_ACTIVATION_TEMPLATE_ID=template_id_here
 ```
+
+Run `composer install` inside the root directory, this will create a vendor directory with the dependencies.
+
+Run `php bin/console doctrine:database:create` to create the database.
+
+Run `php bin/console doctrine:migrations:migrate` to create the tables.
 
 ## Contributing
 
@@ -38,7 +42,7 @@ Please respect the following rules:
 * Variables names must be in camelCase
 
 ### HTML & mustache
-* Class and id names, and input names must in kebab-case
+* Class, id and input names must be in kebab-case
 
 ### Stylesheets
 This project uses Less as the CSS preprocessor.
