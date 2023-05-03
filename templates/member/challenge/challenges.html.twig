@@ -16,8 +16,9 @@
 	<div class="table">
 
 		<div class="head">
+			<div class="col col-5"></div>
 			<div class="col col-30">Défi</div>
-			<div class="col col-30 sort {% if sort_by is same as 'game' %}active{% endif %}">
+			<div class="col col-25 sort {% if sort_by is same as 'game' %}active{% endif %}">
 				<a href="{{ path('app_member_challenges', {'sort_by': 'game', 'page': 1, 'search': search}) }}">
 					Jeu<i class="fa-solid fa-arrow-up-a-z"></i>
 				</a>
@@ -42,10 +43,15 @@
 
 		{% for challenge in challenges %}
 			<div class="row">
+				<div class="col col-5">
+					{% if challenge.isValidForUser(app.user) %}
+						<i class="fa-solid fa-check"></i>
+					{% endif %}
+				</div>
 				<div class="col col-30">
 					<a href="{{ path('app_member_single_challenge', {'id': challenge.id}) }}">{{ challenge.name }}</a>
 				</div>
-				<div class="col col-30">{{ challenge.game.name }}</div>
+				<div class="col col-25">{{ challenge.game.name }}</div>
 				<div class="col col-20">{{ challenge.difficulty.name }}</div>
 				<div class="col col-20">{{ challenge.periods|join(', ') }}</div>
 			</div>
