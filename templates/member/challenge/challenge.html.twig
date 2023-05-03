@@ -2,6 +2,10 @@
 
 {% block title %}{{ challenge.name }}{% endblock %}
 
+{% block javascripts %}
+	<script type="module" src="/assets/js/challenge.js"></script>
+{% endblock %}
+
 {% block body %}
 	<div class="challenge-title-container">
 		<div class="subcontainer left">
@@ -113,7 +117,11 @@
 			</div>
 
 			<div class="btns right">
-				<button class="btn" type="submit">
+				<div id="submit-loader" class="btn hidden">
+					<i class="fa-solid fa-spinner"></i>
+					<span>Envoi en cours...</span>
+				</div>
+				<button id="challenge-submit" class="btn" type="submit">
 					<i class="fa-solid fa-play"></i>
 					<span>Demander la validation de ce défi</span>
 				</button>

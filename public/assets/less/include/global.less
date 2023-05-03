@@ -254,6 +254,10 @@ i.fa-solid.fa-star {
 	color: @gold;
 }
 
+i.fa-solid.fa-spinner {
+	animation: spin 2s linear infinite;
+}
+
 .hidden {
 	display: none !important;
 }
@@ -377,5 +381,18 @@ i.fa-solid.fa-star {
 	.separator {
 		height: 4rem;
 		margin: 0 1em 0 0.5em;
+	}
+}
+
+// ==============================================
+// Animations
+// ==============================================
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
 	}
 }
