@@ -76,3 +76,16 @@
 	height: 100%;
 	object-fit: contain;
 }
+
+.scroll-y() {
+	overflow-y: auto;
+	scrollbar-width: thin;
+
+	&::-webkit-scrollbar {
+		width: 5px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: #aaa;
+	}
+}

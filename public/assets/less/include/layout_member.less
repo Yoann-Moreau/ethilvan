@@ -441,6 +441,11 @@ body {
 	margin: 1em;
 	background-color: @bg-main;
 
+	.scroll-container {
+		height: 18rem;
+		.scroll-y();
+	}
+
 	&.expired {
 		opacity: 0.5;
 	}
@@ -475,10 +480,7 @@ body {
 	}
 
 	.description {
-		height: 10rem;
-		overflow-y: auto;
 		font-size: 0.9em;
-		scrollbar-width: thin;
 	}
 
 	.periods {

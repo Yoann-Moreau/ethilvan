@@ -28,22 +28,26 @@
 					{% set expired = 'expired' %}
 				{% endif %}
 			{% endfor %}
+
 			<article class="challenge-card {{ expired }}">
-				<div class="title-container">
-					<div class="medal">
-						<img src="/assets/img/{{ challenge.difficulty.icon }}"
-						     alt="Médaille de {{ challenge.difficulty.name }}" title="Défi {{ challenge.difficulty.name }}">
+				<div class="scroll-container">
+					<div class="title-container">
+						<div class="medal">
+							<img src="/assets/img/{{ challenge.difficulty.icon }}"
+							     alt="Médaille de {{ challenge.difficulty.name }}" title="Défi {{ challenge.difficulty.name }}">
+						</div>
+						<a href="{{ path('app_member_single_challenge', {'id': challenge.id}) }}"><h3>{{ challenge.name }}</h3></a>
 					</div>
-					<a href="{{ path('app_member_single_challenge', {'id': challenge.id}) }}"><h3>{{ challenge.name }}</h3></a>
+					<div class="players">
+						{% if challenge.numberOfPlayers is same as 1 %}
+							<i class="fa-solid fa-user"></i> 1 joueur
+						{% else %}
+							<i class="fa-solid fa-users"></i> {{ challenge.numberOfPlayers }} joueurs
+						{% endif %}
+					</div>
+					<p class="description">{{ challenge.description|nl2br }}</p>
 				</div>
-				<div class="players">
-					{% if challenge.numberOfPlayers is same as 1 %}
-						<i class="fa-solid fa-user"></i> 1 joueur
-					{% else %}
-						<i class="fa-solid fa-users"></i> {{ challenge.numberOfPlayers }} joueurs
-					{% endif %}
-				</div>
-				<p class="description">{{ challenge.description|nl2br }}</p>
+
 				{% set current = '' %}
 				{% for period in challenge.periods %}
 					{% if period.startDate <= date('now') and period.endDate|date_modify("+1 day") >= date('now') and period.type is same as 'event' %}
@@ -59,11 +63,13 @@
 						<i class="fa-solid fa-arrow-right"></i>
 					</a>
 				</div>
+
 				{% if challenge.isValidForUser(app.user) %}
 					<div class="done">
 						<i class="fa-solid fa-check"></i>
 					</div>
 				{% endif %}
+
 			</article>
 		{% endfor %}
 
