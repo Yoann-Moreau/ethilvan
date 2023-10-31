@@ -19,60 +19,28 @@
 		</div>
 	</div>
 
-	<section class="challenges-list">
-
-		{% for challenge in game.challenges|sort((a, b) => a.difficulty <=> b.difficulty) %}
-			{% set expired = '' %}
-			{% for period in challenge.periods %}
-				{% if period.endDate < date('now') and not challenge.isValidForUser(app.user) %}
-					{% set expired = 'expired' %}
+	{% for period in periods %}
+		{% if period.incompleteChallenges or period.completedChallenges %}
+			<div class="period-container">
+				<h3>{{ period.name }}</h3>
+				{% if period.incompleteChallenges %}
+					<h4>Défis non complétés</h4>
+					<section class="challenges-list">
+						{% for challenge in period.incompleteChallenges %}
+							{% include 'member/game/_challenge.html.twig' %}
+						{% endfor %}
+					</section>
 				{% endif %}
-			{% endfor %}
-
-			<article class="challenge-card {{ expired }}">
-				<div class="scroll-container">
-					<div class="title-container">
-						<div class="medal">
-							<img src="/assets/img/{{ challenge.difficulty.icon }}"
-							     alt="Médaille de {{ challenge.difficulty.name }}" title="Défi {{ challenge.difficulty.name }}">
-						</div>
-						<a href="{{ path('app_member_single_challenge', {'id': challenge.id}) }}"><h3>{{ challenge.name }}</h3></a>
-					</div>
-					<div class="players">
-						{% if challenge.numberOfPlayers is same as 1 %}
-							<i class="fa-solid fa-user"></i> 1 joueur
-						{% else %}
-							<i class="fa-solid fa-users"></i> {{ challenge.numberOfPlayers }} joueurs
-						{% endif %}
-					</div>
-					<p class="description">{{ challenge.description|nl2br }}</p>
-				</div>
-
-				{% set current = '' %}
-				{% for period in challenge.periods %}
-					{% if period.startDate <= date('now') and period.endDate|date_modify("+1 day") >= date('now') and period.type is same as 'event' %}
-						{% set current = 'current' %}
-					{% endif %}
-				{% endfor %}
-				<div class="periods {{ current }}">
-					<span>
-						<i class="fa-solid fa-calendar-days"></i>
-						{{ challenge.periods|sort((a, b) => a.year <=> b.year)|join(', ') }}
-					</span>
-					<a href="{{ path('app_member_single_challenge', {'id': challenge.id}) }}">
-						<i class="fa-solid fa-arrow-right"></i>
-					</a>
-				</div>
-
-				{% if challenge.isValidForUser(app.user) %}
-					<div class="done">
-						<i class="fa-solid fa-check"></i>
-					</div>
+				{% if period.completedChallenges %}
+					<h4>Défis complétés</h4>
+					<section class="challenges-list completed">
+						{% for challenge in period.completedChallenges %}
+							{% include 'member/game/_challenge.html.twig' %}
+						{% endfor %}
+					</section>
 				{% endif %}
-
-			</article>
-		{% endfor %}
-
-	</section>
+			</div>
+		{% endif %}
+	{% endfor %}
 
 {% endblock %}

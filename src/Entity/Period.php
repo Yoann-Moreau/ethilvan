@@ -46,6 +46,10 @@ class Period {
 
 	private array $rankings = [];
 
+	private array $incomplete_challenges = [];
+
+	private array $completed_challenges = [];
+
 
 	public function __construct() {
 		$this->challenges = new ArrayCollection();
@@ -214,6 +218,24 @@ class Period {
 	 */
 	public function setRankings(array $rankings): void {
 		$this->rankings = $rankings;
+	}
+
+
+	public function getIncompleteChallenges(): array {
+		return $this->incomplete_challenges;
+	}
+
+	public function setIncompleteChallenges(array $incomplete_challenges): void {
+		$this->incomplete_challenges = $incomplete_challenges;
+	}
+
+
+	public function getCompletedChallenges(): array {
+		return $this->completed_challenges;
+	}
+
+	public function setCompletedChallenges(array $completed_challenges): void {
+		$this->completed_challenges = $completed_challenges;
 	}
 
 

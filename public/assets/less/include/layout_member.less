@@ -428,9 +428,36 @@ body {
 	}
 }
 
+.period-container {
+	margin-bottom: 4rem;
+
+	h4 {
+		margin-top: 1em;
+		text-indent: 1em;
+	}
+}
+
 .challenges-list {
 	display: flex;
 	flex-wrap: wrap;
+
+	&.completed {
+
+		.challenge-card {
+			width: 25rem;
+			height: 18rem;
+			font-size: 1em;
+			background-color: fade(@light-grey, 15%);
+
+			h3 {
+				font-size: 1em;
+			}
+
+			.scroll-container {
+				height: 11rem;
+			}
+		}
+	}
 }
 
 .challenge-card {
@@ -457,6 +484,7 @@ body {
 
 		.medal {
 			width: 2.5rem;
+			min-width: 2.5rem;
 			height: 2.5rem;
 			margin-right: 0.8em;
 
@@ -522,7 +550,7 @@ body {
 		width: 2em;
 		height: 2em;
 		border-radius: 50%;
-		background-color: @dark-green;
+		background-color: lighten(@dark-green, 10%);
 		color: @tc-main;
 	}
 }

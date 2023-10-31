@@ -53,4 +53,20 @@ class PeriodRepository extends ServiceEntityRepository {
 			->getResult();
 	}
 
+
+	/**
+	 * @return Period[]
+	 */
+	public function findNonCurrentPeriods(): array {
+		$now = date('Y-m-d');
+
+		return $this->createQueryBuilder('p')
+			->select('p')
+			->where('p.start_date > :now')
+			->orWhere('p.end_date < :now')
+			->setParameter('now', $now)
+			->getQuery()
+			->getResult();
+	}
+
 }
