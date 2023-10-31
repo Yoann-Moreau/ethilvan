@@ -341,7 +341,11 @@ class MemberController extends AbstractController {
 			EntityManagerInterface $entity_manager, NotificationRepository $notification_repository): Response {
 
 		$current_user = $user_repository->find($this->getUser()->getId());
-		$notifications = $notification_repository->findBy(['user' => $current_user], ['seen' => 'ASC', 'id' => 'DESC']);
+		$notifications = $notification_repository->findBy(
+				['user' => $current_user],
+				['seen' => 'ASC', 'id' => 'DESC'],
+				20
+		);
 
 		if ($request->isMethod('POST')) {
 			foreach ($notifications as $notification) {

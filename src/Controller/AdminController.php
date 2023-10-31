@@ -26,7 +26,11 @@ class AdminController extends AbstractController {
 	public function notifications(Request $request, AdminNotificationRepository $repository,
 			EntityManagerInterface $entity_manager): Response {
 
-		$notifications = $repository->findBy([], ['seen' => 'ASC', 'id' => 'DESC']);
+		$notifications = $repository->findBy(
+				[],
+				['seen' => 'ASC', 'id' => 'DESC'],
+				50
+		);
 
 		if ($request->isMethod('POST')) {
 			foreach ($notifications as $notification) {
