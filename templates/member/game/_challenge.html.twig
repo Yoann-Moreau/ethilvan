@@ -1,6 +1,6 @@
 {% set expired = '' %}
 			{% for period in challenge.periods %}
-				{% if period.endDate < date('now') and not challenge.isValidForUser(app.user) %}
+				{% if period.endDate|date_modify("+1 day") < date('now') and not challenge.isValidForUser(app.user) %}
 					{% set expired = 'expired' %}
 				{% endif %}
 			{% endfor %}
