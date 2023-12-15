@@ -7,6 +7,8 @@ use App\Entity\ChallengeDifficulty;
 use App\Entity\Game;
 use App\Entity\Period;
 use App\Repository\GameRepository;
+use App\Repository\PeriodRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -51,6 +53,10 @@ class ChallengeType extends AbstractType {
 						'class'        => Period::class,
 						'choice_label' => 'name',
 						'multiple'     => true,
+						'query_builder' => function (PeriodRepository $period_repository): QueryBuilder {
+							return $period_repository->createQueryBuilder('p')
+									->orderBy('p.end_date', 'DESC');
+						},
 				]);
 	}
 
