@@ -10,8 +10,6 @@ use App\Repository\ChallengeRepository;
 use App\Repository\PeriodRepository;
 use App\Service\ToolsService;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -182,7 +180,10 @@ class AdminPeriodController extends AbstractController {
 				['period' => $period]
 		);
 
+		$delete_form = $this->createFormBuilder()->getForm();
+
 		$copy_form->handleRequest($request);
+		$delete_form->handleRequest($request);
 
 		if ($copy_form->isSubmitted() && $copy_form->isValid()) {
 			$target_period = $copy_form->get('period')->getData();
@@ -200,11 +201,26 @@ class AdminPeriodController extends AbstractController {
 			);
 		}
 
+		if ($delete_form->isSubmitted() && $delete_form->isValid()) {
+
+			foreach ($period->getChallenges() as $challenge) {
+				$challenge->removePeriod($period);
+			}
+			$entity_manager->flush();
+
+			return $this->redirectToRoute(
+					'app_admin_period_challenges',
+					['id' => $period->getId()],
+					Response::HTTP_SEE_OTHER
+			);
+		}
+
 		return $this->render('admin_period/challenges.html.twig', [
 				'period'       => $period,
 				'total'        => $total,
 				'difficulties' => $difficulties,
 				'copy_form'    => $copy_form->createView(),
+				'delete_form'  => $delete_form->createView(),
 		]);
 	}
 

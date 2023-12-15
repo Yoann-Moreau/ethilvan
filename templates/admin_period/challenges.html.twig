@@ -50,6 +50,21 @@
 		</div>
 
 		{{ form_end(copy_form) }}
+	</section>
 
+	<section class="delete-challenges window">
+		<h2>Supprimer les défis</h2>
+		<p>Cela désaffectera tous les défis de la période {{ period.name }}.</p>
+
+		{{ form_start(delete_form) }}
+
+		<div class="btns right">
+			<button type="submit">
+				<i class="fa-solid fa-trash"></i>
+				<span>Supprimer les défis</span>
+			</button>
+		</div>
+
+		{{ form_end(delete_form) }}
 	</section>
 {% endblock %}
