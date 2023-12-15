@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Challenge;
+use App\Entity\ChallengeDifficulty;
+use App\Entity\Period;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -118,6 +120,23 @@ class ChallengeRepository extends ServiceEntityRepository {
 					->orWhere('p.name LIKE :search')
 					->orWhere('d.name LIKE :search')
 					->setParameter('search', '%' . $search . '%');
+		}
+
+		return $query_builder->getQuery()->getSingleScalarResult();
+	}
+
+
+	public function countByPeriodAndDifficulty(Period $period, ChallengeDifficulty $difficulty = null): int {
+		$query_builder = $this->createQueryBuilder('c')
+				->select('count(c.id)')
+				->innerJoin('c.difficulty', 'd')
+				->innerJoin('c.periods', 'p')
+				->where('p = :p')
+				->setParameter('p', $period);
+
+		if ($difficulty !== null) {
+			$query_builder->andWhere('d = :d')
+				->setParameter('d', $difficulty);
 		}
 
 		return $query_builder->getQuery()->getSingleScalarResult();

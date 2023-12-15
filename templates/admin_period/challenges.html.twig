@@ -1,0 +1,55 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Défis de la période {{ period.name }}{% endblock %}
+
+{% block javascripts %}
+	<script type="module" src="/assets/js/admin_period_challenges.js"></script>
+{% endblock %}
+
+{% block body %}
+	<h1>Défis de la période {{ period.name }}</h1>
+
+	<section class="period-challenges window">
+		<h2>Défis</h2>
+		<article class="medals-container">
+			{% for difficulty in difficulties %}
+				<div class="medal-container">
+					<div class="medal">
+						<img src="/assets/img/{{ difficulty.icon }}" alt="Médaille de {{ difficulty.name }}"
+						     title="Défi {{ difficulty.name }}">
+					</div>
+					<div class="medal-number">{{ difficulty.totalChallenges }}</div>
+				</div>
+			{% endfor %}
+			<div class="equals"><i class="fa-solid fa-equals"></i></div>
+			<div class="total-challenges"><span class="total">{{ total }} </span>défis</div>
+		</article>
+	</section>
+
+	<section class="copy-challenges window">
+		<h2>Copier les défis vers une autre période</h2>
+
+		<p>Cela affectera tous les défis de la période {{ period.name }} à la période choisie.</p>
+
+		{{ form_start(copy_form) }}
+
+		<div class="input-container">
+			{{ form_label(copy_form.period) }}
+			{{ form_widget(copy_form.period) }}
+		</div>
+
+		<div class="btns right">
+			<div id="submit-loader" class="btn hidden">
+				<i class="fa-solid fa-spinner"></i>
+				<span>Copie en cours...</span>
+			</div>
+			<button id="copy-submit" type="submit">
+				<i class="fa-solid fa-copy"></i>
+				<span>Copier les défis</span>
+			</button>
+		</div>
+
+		{{ form_end(copy_form) }}
+
+	</section>
+{% endblock %}

@@ -3,10 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Period;
+use App\Form\CopyChallengesType;
 use App\Form\PeriodType;
+use App\Repository\ChallengeDifficultyRepository;
+use App\Repository\ChallengeRepository;
 use App\Repository\PeriodRepository;
 use App\Service\ToolsService;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,14 +25,18 @@ class AdminPeriodController extends AbstractController {
 	#[Route('/', name: 'app_admin_period_index', methods: ['GET'])]
 	public function index(PeriodRepository $period_repository): Response {
 		return $this->render('admin_period/index.html.twig', [
-				'periods' => $period_repository->findAll(),
+				'periods' => $period_repository->findBy([], ['id' => 'DESC']),
 		]);
 	}
 
 
 	#[Route('/new', name: 'app_admin_period_new', methods: ['GET', 'POST'])]
-	public function new(Request $request, PeriodRepository $period_repository, ToolsService $tools_service,
-			ValidatorInterface $validator): Response {
+	public function new(
+			Request $request,
+			PeriodRepository $period_repository,
+			ToolsService $tools_service,
+			ValidatorInterface $validator
+	): Response {
 
 		$form_errors = [];
 		$errors = [];
@@ -73,8 +84,13 @@ class AdminPeriodController extends AbstractController {
 
 
 	#[Route('/{id}/edit', name: 'app_admin_period_edit', methods: ['GET', 'POST'])]
-	public function edit(Request $request, Period $period, PeriodRepository $period_repository,
-			ToolsService $tools_service, ValidatorInterface $validator): Response {
+	public function edit(
+			Request $request,
+			Period $period,
+			PeriodRepository $period_repository,
+			ToolsService $tools_service,
+			ValidatorInterface $validator
+	): Response {
 
 		$form_errors = [];
 		$errors = [];
@@ -129,12 +145,67 @@ class AdminPeriodController extends AbstractController {
 
 
 	#[Route('/{id}', name: 'app_admin_period_delete', methods: ['POST'])]
-	public function delete(Request $request, Period $period, PeriodRepository $period_repository): Response {
+	public function delete(
+			Request $request,
+			Period $period,
+			PeriodRepository $period_repository
+	): Response {
+
 		if ($this->isCsrfTokenValid('delete' . $period->getId(), $request->request->get('_token'))) {
 			$period_repository->remove($period, true);
 		}
 
 		return $this->redirectToRoute('app_admin_period_index', [], Response::HTTP_SEE_OTHER);
+	}
+
+
+	#[Route('/{id}/challenges', name: 'app_admin_period_challenges', methods: ['GET', 'POST'])]
+	public function challenges(
+			Request $request,
+			Period $period,
+			ChallengeRepository $challenge_repository,
+			ChallengeDifficultyRepository $difficulty_repository,
+			FormFactoryInterface $form_factory,
+			EntityManagerInterface $entity_manager,
+	): Response {
+
+		$total = $challenge_repository->countByPeriodAndDifficulty($period);
+		$difficulties = $difficulty_repository->findAll();
+		foreach ($difficulties as $difficulty) {
+			$difficulty->setTotalChallenges($challenge_repository->countByPeriodAndDifficulty($period, $difficulty));
+		}
+
+		$copy_form = $form_factory->createNamed(
+				'copy-challenges-form',
+				CopyChallengesType::class,
+				null,
+				['period' => $period]
+		);
+
+		$copy_form->handleRequest($request);
+
+		if ($copy_form->isSubmitted() && $copy_form->isValid()) {
+			$target_period = $copy_form->get('period')->getData();
+
+			foreach ($period->getChallenges() as $challenge) {
+				$challenge->addPeriod($target_period);
+			}
+
+			$entity_manager->flush();
+
+			return $this->redirectToRoute(
+					'app_admin_period_challenges',
+					['id' => $target_period->getId()],
+					Response::HTTP_SEE_OTHER
+			);
+		}
+
+		return $this->render('admin_period/challenges.html.twig', [
+				'period'       => $period,
+				'total'        => $total,
+				'difficulties' => $difficulties,
+				'copy_form'    => $copy_form->createView(),
+		]);
 	}
 
 }

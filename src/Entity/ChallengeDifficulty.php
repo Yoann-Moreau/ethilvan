@@ -27,6 +27,8 @@ class ChallengeDifficulty {
 	#[ORM\OneToMany(mappedBy: 'difficulty', targetEntity: Challenge::class)]
 	private Collection $challenges;
 
+	private int $total_challenges = 0;
+
 
 	public function __construct() {
 		$this->challenges = new ArrayCollection();
@@ -96,6 +98,15 @@ class ChallengeDifficulty {
 		}
 
 		return $this;
+	}
+
+
+	public function getTotalChallenges(): int {
+		return $this->total_challenges;
+	}
+
+	public function setTotalChallenges(int $total_challenges): void {
+		$this->total_challenges = $total_challenges;
 	}
 
 }

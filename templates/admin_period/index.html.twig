@@ -17,17 +17,17 @@
 	<div class="table periods">
 
 		<div class="head">
-			<div class="col col-25">Nom</div>
+			<div class="col col-20">Nom</div>
 			<div class="col col-10">Type</div>
 			<div class="col col-10">Année</div>
 			<div class="col col-15">Début</div>
 			<div class="col col-15">Fin</div>
-			<div class="col col-25">Actions</div>
+			<div class="col col-30">Actions</div>
 		</div>
 
 		{% for period in periods %}
 			<div class="row">
-				<div class="col col-25">
+				<div class="col col-20">
 					<a href="{{ path('app_admin_period_edit', {'id': period.id}) }}">{{ period.name }}</a>
 				</div>
 				<div class="col col-10">
@@ -40,7 +40,11 @@
 				<div class="col col-10">{{ period.year }}</div>
 				<div class="col col-15">{{ period.startDate|format_date('long', locale='fr') }}</div>
 				<div class="col col-15">{{ period.endDate|format_date('long', locale='fr') }}</div>
-				<div class="col col-25 btns">
+				<div class="col col-30 btns">
+					<a class="btn" href="{{ path('app_admin_period_challenges', {'id': period.id}) }}">
+						<i class="fa-solid fa-medal"></i>
+						<span>Défis</span>
+					</a>
 					<a class="btn" href="{{ path('app_admin_period_edit', {'id': period.id}) }}">
 						<i class="fa-solid fa-pen"></i>
 						<span>Editer</span>
