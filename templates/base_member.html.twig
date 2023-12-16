@@ -47,7 +47,7 @@
 				<i class="fa-solid fa-users"></i>
 				<span>Ethil-Vanniens</span>
 			</a>
-			<a href="{{ path('app_member_games') }}">
+			<a href="{{ path('app_member_games', {'current': true}) }}">
 				<i class="fa-solid fa-gamepad"></i>
 				<span>Jeux</span>
 			</a>
@@ -80,7 +80,7 @@
 	</div>
 </header>
 
-<main class="main-container {% block main_class%}{% endblock %}">
+<main class="main-container {% block main_class %}{% endblock %}">
 	{% block body %}{% endblock %}
 </main>
 </body>

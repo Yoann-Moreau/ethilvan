@@ -5,6 +5,7 @@ namespace App\Repository;
 
 
 use App\Entity\Game;
+use App\Entity\Period;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -50,11 +51,20 @@ class GameRepository extends ServiceEntityRepository {
 
 
 	/**
-	 * @return Game[]
+	 * @param Period[]|null $periods
+	 * @return array
 	 */
-	public function getGamesWithChallenges(): array {
-		return $this->createQueryBuilder('g')
-				->innerJoin('g.challenges', 'c')
+	public function getGamesWithChallenges(array $periods = null): array {
+		$query_builder = $this->createQueryBuilder('g')
+				->innerJoin('g.challenges', 'c');
+
+		if ($periods !== null) {
+			$query_builder->innerJoin('c.periods', 'p')
+				->where('p IN (:periods)')
+				->setParameter('periods', $periods);
+		}
+
+		return $query_builder
 				->orderBy('g.name')
 				->getQuery()
 				->getResult();

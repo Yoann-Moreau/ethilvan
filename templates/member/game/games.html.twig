@@ -3,7 +3,17 @@
 {% block title %}Liste des jeux{% endblock %}
 
 {% block body %}
-	<h1>Liste des jeux</h1>
+	<div class="flex sb">
+		<h1>Liste des jeux</h1>
+
+		<div class="btns">
+			{% if current_periods_only %}
+				<a class="btn" href="{{ path('app_member_games', {'current': false}) }}">Toutes les périodes</a>
+			{% else %}
+				<a class="btn" href="{{ path('app_member_games', {'current': true}) }}">Période(s) courante(s) uniquement</a>
+			{% endif %}
+		</div>
+	</div>
 
 	<section class="game-list">
 

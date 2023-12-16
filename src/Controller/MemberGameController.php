@@ -4,11 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Repository\ChallengeDifficultyRepository;
-use App\Repository\ChallengeRepository;
 use App\Repository\GameRepository;
 use App\Repository\PeriodRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,16 +17,28 @@ class MemberGameController extends AbstractController {
 
 	#[Route('/games', name: 'app_member_games', methods: ['GET'])]
 	public function games(
+			Request $request,
 			GameRepository $game_repository,
 			UserRepository $user_repository,
 			PeriodRepository $period_repository,
-			ChallengeDifficultyRepository $difficulty_repository
+			ChallengeDifficultyRepository $difficulty_repository,
 	): Response {
 
 		$current_user = $user_repository->find($this->getUser()->getId());
 		$current_periods = $period_repository->findCurrentPeriods();
 
-		$games = $game_repository->getGamesWithChallenges();
+		$current_periods_only = (bool)$request->query->get('current');
+
+		$session = $request->getSession();
+		$session->set('current_periods_only', $current_periods_only);
+
+		if (!$current_periods_only) {
+			$games = $game_repository->getGamesWithChallenges();
+		}
+		else {
+			$games = $game_repository->getGamesWithChallenges($current_periods);
+		}
+
 		foreach ($games as $game) {
 			$game->countChallenges($current_periods);
 			$game->countValidSubmissions($current_user, $current_periods);
@@ -35,20 +47,25 @@ class MemberGameController extends AbstractController {
 		$difficulties = $difficulty_repository->findAll();
 
 		return $this->render('member/game/games.html.twig', [
-				'games'        => $games,
-				'difficulties' => $difficulties,
+				'games'                => $games,
+				'difficulties'         => $difficulties,
+				'current_periods_only' => $current_periods_only,
 		]);
 	}
 
 
 	#[Route('/game/{id}', name: 'app_member_single_game', methods: ['GET'])]
 	public function single_game(
+			Request $request,
 			Game $game,
 			UserRepository $user_repository,
-			PeriodRepository $period_repository
+			PeriodRepository $period_repository,
 	): Response {
 
 		$current_user = $user_repository->find($this->getUser()->getId());
+
+		$session = $request->getSession();
+		$current_periods_only = $session->get('current_periods_only');
 
 		$current_periods = $period_repository->findCurrentPeriods();
 		$non_current_periods = $period_repository->findNonCurrentPeriods();
@@ -91,8 +108,9 @@ class MemberGameController extends AbstractController {
 		}
 
 		return $this->render('member/game/game.html.twig', [
-				'game'    => $game,
-				'periods' => $periods,
+				'game'                 => $game,
+				'periods'              => $periods,
+				'current_periods_only' => $current_periods_only,
 		]);
 	}
 
