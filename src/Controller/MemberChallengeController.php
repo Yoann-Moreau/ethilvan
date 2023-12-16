@@ -98,12 +98,12 @@ class MemberChallengeController extends AbstractController {
 			}
 		}
 
-		// Check if user has already submitted this challenge for this period
+		// Check if user has already submitted this challenge
 		$already_submitted = false;
 		$current_submission = null;
 		$is_valid = false;
 		foreach ($current_user->getSubmissions() as $submission) {
-			if ($submission->getChallenge()->getId() === $challenge->getId() && $submission->getPeriod() === $period) {
+			if ($submission->getChallenge()->getId() === $challenge->getId()) {
 				$already_submitted = true;
 				$current_submission = $submission;
 				$is_valid = $submission->isValid();
