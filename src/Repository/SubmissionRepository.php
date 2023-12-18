@@ -39,6 +39,68 @@ class SubmissionRepository extends ServiceEntityRepository {
 	}
 
 
+	public function search(?bool $valid = null, string $search = '', int $limit = 10, int $offset = 0): array {
+		$query_builder = $this->createQueryBuilder('s')
+				->innerJoin('s.challenge', 'c')
+				->innerJoin('c.game', 'g')
+				->innerJoin('c.difficulty', 'd')
+				->innerJoin('s.period', 'p');
+
+		if ($valid !== null) {
+			$query_builder->andWhere('s.valid = :valid')
+				->setParameter('valid', $valid);
+		}
+
+		if (!empty($search)) {
+			$query_builder
+					->andWhere('c.name LIKE :search OR g.name LIKE :search OR p.name LIKE :search OR d.name LIKE :search')
+					->setParameter('search', '%' . $search . '%');
+		}
+
+		if ($valid) {
+			$query_builder->orderBy('s.validation_date', 'DESC');
+		}
+		else {
+			$query_builder->orderBy('s.submission_date', 'ASC');
+		}
+
+		if ($limit !== 0) {
+			$query_builder
+					->setMaxResults($limit)
+					->setFirstResult($offset);
+		}
+
+		return $query_builder
+				->getQuery()
+				->getResult();
+	}
+
+
+	public function countWithSearch(?bool $valid = null, string $search = ''): int {
+		$query_builder = $this->createQueryBuilder('s')
+				->select('count(s.id)')
+				->innerJoin('s.challenge', 'c')
+				->innerJoin('c.game', 'g')
+				->innerJoin('c.difficulty', 'd')
+				->innerJoin('s.period', 'p');
+
+		if ($valid !== null) {
+			$query_builder->andWhere('s.valid = :valid')
+					->setParameter('valid', $valid);
+		}
+
+		if (!empty($search)) {
+			$query_builder
+					->andWhere('c.name LIKE :search OR g.name LIKE :search OR p.name LIKE :search OR d.name LIKE :search')
+					->setParameter('search', '%' . $search . '%');
+		}
+
+		return $query_builder
+				->getQuery()
+				->getSingleScalarResult();
+	}
+
+
 	public function searchValidForUser(User $user, string $search = '', int $limit = 10, int $offset = 0,
 			string $sort_by = ''): array {
 

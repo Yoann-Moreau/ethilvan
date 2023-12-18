@@ -1,0 +1,20 @@
+<div class="pagination">
+
+	{% for p in pages %}
+
+		{% if p > page + 2 %}
+			<div class="separator">...</div>
+		{% endif %}
+
+		<a class="page {% if p is same as page %}current{% endif %}"
+		   href="{{ path(path, {'valid': valid, 'page': p, 'search': search}) }}">
+			{{ p }}
+		</a>
+
+		{% if p < page - 2 %}
+			<div class="separator">...</div>
+		{% endif %}
+
+	{% endfor %}
+
+</div>

@@ -12,6 +12,7 @@ use App\Repository\SubmissionMessageRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\UserRepository;
 use App\Service\ImageService;
+use App\Service\PaginationService;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,20 +24,39 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class AdminSubmissionController extends AbstractController {
 
 	#[Route('/', name: 'app_admin_submission_index', methods: ['GET'])]
-	public function index(Request $request, SubmissionRepository $submission_repository): Response {
+	public function index(
+			Request $request,
+			SubmissionRepository $submission_repository,
+			PaginationService $pagination_service
+	): Response {
+
+		$elements_per_page = 12;
 
 		$valid = boolval($request->query->get('valid'));
+		$page = (int)$request->query->get('page');
+		$search = $request->query->get('search');
 
-		if ($valid) {
-			$submissions = $submission_repository->findBy(['valid' => true], ['validation_date' => 'DESC']);
+		if ($page < 1) {
+			$page = 1;
 		}
-		else {
-			$submissions = $submission_repository->findBy(['valid' => false], ['submission_date' => 'ASC']);
+		if ($search === null) {
+			$search = '';
 		}
 
+		$offset = $elements_per_page * ($page - 1);
+
+		$submissions = $submission_repository->search($valid, $search, $elements_per_page, $offset);
+
+		// Pagination
+		$number_of_elements = $submission_repository->countWithSearch($valid, $search);
+		$pages = $pagination_service->getPages($number_of_elements, $elements_per_page, $page);
 
 		return $this->render('admin_submission/index.html.twig', [
 				'submissions' => $submissions,
+				'valid'       => $valid,
+				'search'      => $search,
+				'page'        => $page,
+				'pages'       => $pages,
 		]);
 	}
 
@@ -104,7 +124,7 @@ class AdminSubmissionController extends AbstractController {
 					['id' => $submission->getChallenge()->getGame()->getId()]);
 
 			$message = "Le défi <a href='$challenge_url'>" . $submission->getChallenge()->getName() .
-					"</a> pour le jeu <a href='$game_url'>" .	$submission->getChallenge()->getGame()->getName() .
+					"</a> pour le jeu <a href='$game_url'>" . $submission->getChallenge()->getGame()->getName() .
 					'</a> a été validé pour la période ' . $submission->getPeriod()->getName();
 
 			$notification = new Notification();
@@ -145,7 +165,7 @@ class AdminSubmissionController extends AbstractController {
 					['id' => $submission->getChallenge()->getGame()->getId()]);
 
 			$message = "La validation du défi <a href='$challenge_url'>" . $submission->getChallenge()->getName() .
-					"</a> pour le jeu <a href='$game_url'>" .	$submission->getChallenge()->getGame()->getName() .
+					"</a> pour le jeu <a href='$game_url'>" . $submission->getChallenge()->getGame()->getName() .
 					'</a> a été refusée pour la période ' . $submission->getPeriod()->getName();
 
 			$notification = new Notification();

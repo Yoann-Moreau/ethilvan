@@ -5,10 +5,27 @@
 {% block body %}
 	<h1>Liste des défis soumis à validation</h1>
 
-	<div class="btn-container">
-		<div class="btns">
-			<a class="btn" href="{{ path('app_admin_submission_index') }}">Défis non validés</a>
-			<a class="btn" href="{{ path('app_admin_submission_index', {'valid': 'true'}) }}">Défis déjà validés</a>
+	<div class="flex sb">
+		<form method="get">
+			<div class="input-container search">
+				<label for="challenge-search"></label>
+				<input id="challenge-search" type="search" name="search" placeholder="Recherche" value="{{ search }}">
+				<input type="hidden" name="valid" value="{{ valid }}">
+				<button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+			</div>
+		</form>
+
+		<div class="btn-container">
+			<div class="btns">
+				<a class="btn" href="{{ path('app_admin_submission_index') }}">
+					<i class="fa-solid fa-x"></i>
+					<span>Défis non validés</span>
+				</a>
+				<a class="btn" href="{{ path('app_admin_submission_index', {'valid': 'true'}) }}">
+					<i class="fa-solid fa-check"></i>
+					<span>Défis déjà validés</span>
+				</a>
+			</div>
 		</div>
 	</div>
 
@@ -37,5 +54,8 @@
 		{% endfor %}
 
 	</div>
+
+	{% set path = 'app_admin_submission_index' %}
+	{{ include('include/submission_pagination.html.twig') }}
 
 {% endblock %}
