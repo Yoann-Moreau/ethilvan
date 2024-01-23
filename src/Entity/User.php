@@ -82,6 +82,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
 	private array $ranking_position_counts;
 
+	private array $year_ranking_position_counts;
+
+	private array $final_points;
+
+	private array $trophies;
+
 	public function __construct() {
 		$this->submissions = new ArrayCollection();
 		$this->submission_messages = new ArrayCollection();
@@ -354,6 +360,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 	}
 
 
+	public function getYearRankingPositionCounts(): array {
+		return $this->year_ranking_position_counts;
+	}
+
+	public function setYearRankingPositionCounts(array $year_ranking_position_counts): void {
+		$this->year_ranking_position_counts = $year_ranking_position_counts;
+	}
+
+
+	public function getFinalPoints(): array {
+		return $this->final_points;
+	}
+
+	public function setFinalPoints(array $final_points): void {
+		$this->final_points = $final_points;
+	}
+
+
+	public function getTrophies(): array {
+		return $this->trophies;
+	}
+
+	public function setTrophies(array $trophies): void {
+		$this->trophies = $trophies;
+	}
+
+
 	// ==========================================================================
 	// Other methods
 	// ==========================================================================
@@ -384,6 +417,120 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 		}
 
 		$this->setRankingPositionCounts($counts);
+	}
+
+
+	public function countYearRankingPositions(): void {
+		$current_year = date('Y');
+		$year_ranking_positions = [];
+
+		for ($year = 2023; $year < $current_year; $year++) {
+			$year_ranking_positions[$year] = [1 => 0, 2 => 0, 3 => 0];
+		}
+
+		foreach ($this->getRankingPositions() as $ranking_position) {
+			$year = $ranking_position->getRanking()->getPeriod()->getYear();
+			if ($year >= $current_year || $year === 2022) {
+				continue;
+			}
+			foreach ($year_ranking_positions[$year] as $key => &$count) {
+				if ($ranking_position->getPosition() === $key) {
+					$count++;
+				}
+			}
+		}
+
+		$this->setYearRankingPositionCounts($year_ranking_positions);
+	}
+
+
+	public function countFinalPoints(): void {
+		$current_year = date('Y');
+		$final_points = [];
+
+		for ($year = 2023; $year < $current_year; $year++) {
+			$final_points[$year] = 0;
+		}
+
+		foreach ($this->getRankingPositions() as $ranking_position) {
+			$year = $ranking_position->getRanking()->getPeriod()->getYear();
+			if ($year >= $current_year || $year === 2022) {
+				continue;
+			}
+			$period_type = $ranking_position->getRanking()->getPeriod()->getType();
+			$multiplier = 1;
+			if ($period_type === 'year') {
+				$multiplier = 2;
+			}
+			$final_points[$year] += $this->getPositionPoints($ranking_position->getPosition()) * $multiplier;
+		}
+
+		$this->setFinalPoints($final_points);
+	}
+
+
+	/**
+	 * @param User[] $users
+	 * @return void
+	 */
+	public function countTrophies(array $users): void {
+		$counts = [1 => 0, 2 => 0, 3 => 0];
+		$sorted_users = [];
+		$years = [];
+
+		foreach ($users as $user) {
+			$user->countFinalPoints();
+			$user->countYearRankingPositions();
+			$sorted_users[] = $user;
+			foreach ($user->getRankingPositions() as $ranking_position) {
+				$year = $ranking_position->getRanking()->getPeriod()->getYear();
+				if ($year === 2022) {
+					continue;
+				}
+				if (!in_array($year, $years)) {
+					$years[] = $year;
+				}
+			}
+		}
+
+		foreach ($years as $year) {
+			usort($sorted_users, function ($a, $b) use ($year) {
+				$return_value = $b->getFinalPoints()[$year] <=> $a->getFinalPoints()[$year];
+				if ($return_value === 0) {
+					$return_value = $b->getYearRankingPositionCounts()[$year][1] <=>
+							$a->getYearRankingPositionCounts()[$year][1];
+					if ($return_value === 0) {
+						$return_value = $b->getYearRankingPositionCounts()[$year][2] <=>
+								$a->getYearRankingPositionCounts()[$year][2];
+						if ($return_value === 0) {
+							$return_value = $b->getYearRankingPositionCounts()[$year][3] <=>
+									$a->getYearRankingPositionCounts()[$year][3];
+						}
+					}
+				}
+				return $return_value;
+			});
+
+
+			foreach ($counts as $key => &$count) {
+				if (array_search($this, $sorted_users) + 1 === $key) {
+					$count++;
+				}
+			}
+		}
+
+		$this->setTrophies($counts);
+	}
+
+
+	private function getPositionPoints(int $position): int {
+		return match ($position) {
+			1 => 10,
+			2 => 7,
+			3 => 5,
+			4 => 3,
+			default => 1,
+		};
 	}
 
 }

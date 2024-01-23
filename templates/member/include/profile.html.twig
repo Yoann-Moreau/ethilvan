@@ -90,7 +90,21 @@
 				{% endfor %}
 			</ul>
 		</article>
-		<article class="trophies-container"></article>
+		<article class="trophies-container">
+			{% for trophy in trophies %}
+				{% set suffix = 'ème' %}
+				{% if trophy.position is same as 1 %}
+					{% set suffix = 'ère' %}
+				{% endif %}
+				<div class="trophy-container">
+					<div class="trophy">
+						<img src="/assets/img/{{ trophy.icon }}" alt="Trophée de {{ trophy.name }}"
+						     title="{{ trophy.position }}{{ suffix }} position">
+					</div>
+					<div class="trophy-number">{{ user.trophies[trophy.position] }}</div>
+				</div>
+			{% endfor %}
+		</article>
 		<article class="last-trophies"></article>
 	</section>
 </div>

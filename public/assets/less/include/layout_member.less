@@ -282,19 +282,22 @@ body {
 	background-color: @bg-main;
 
 	.medals-container,
-	.cups-container {
+	.cups-container,
+	.trophies-container {
 		display: flex;
 		width: 100%;
 
 		.medal-container,
-		.cup-container {
+		.cup-container,
+		.trophy-container {
 			display: flex;
 			align-items: center;
 			font-size: 4rem;
 		}
 
 		.medal,
-		.cup {
+		.cup,
+		.trophy {
 			width: 5rem;
 			height: 5rem;
 			margin-right: 0.5em;
@@ -305,14 +308,16 @@ body {
 		}
 
 		.medal-number,
-		.cup-number {
+		.cup-number,
+		.trophy-number {
 			margin-right: 1.3em;
 			color: @tc-main;
 		}
 	}
 
 	.last-medals,
-	.last-cups {
+	.last-cups,
+	.last-trophies {
 		margin: 1.5em 0;
 		font-size: 2rem;
 

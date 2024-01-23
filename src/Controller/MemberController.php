@@ -16,6 +16,7 @@ use App\Repository\PeriodRepository;
 use App\Repository\RankingPositionRepository;
 use App\Repository\SubmissionRepository;
 use App\Repository\TextRepository;
+use App\Repository\TrophyRepository;
 use App\Repository\UserRepository;
 use App\Service\ImageService;
 use App\Service\PaginationService;
@@ -73,16 +74,23 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/profile', name: 'app_member_profile', methods: ['GET'])]
-	public function profile(UserRepository $user_repository, SubmissionRepository $submission_repository,
-			ChallengeDifficultyRepository $difficulty_repository, CupRepository $cup_repository,
+	public function profile(
+			UserRepository $user_repository,
+			SubmissionRepository $submission_repository,
+			ChallengeDifficultyRepository $difficulty_repository,
+			CupRepository $cup_repository,
+			TrophyRepository $trophy_repository,
 			RankingPositionRepository $position_repository): Response {
 
 		$user = $user_repository->find($this->getUser()->getId());
+		$users = $user_repository->findAll();
 		$user->countChallengesByDifficulty();
 		$user->countRankingPositions();
+		$user->countTrophies($users);
 
 		$difficulties = $difficulty_repository->findAll();
 		$cups = $cup_repository->findBy([], ['position' => 'DESC']);
+		$trophies = $trophy_repository->findBy([], ['position' => 'DESC']);
 
 		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user],
 				['validation_date' => 'DESC'], 3);
@@ -94,6 +102,7 @@ class MemberController extends AbstractController {
 				'last_ranking_positions' => $last_ranking_positions,
 				'difficulties'           => $difficulties,
 				'cups'                   => $cups,
+				'trophies'               => $trophies,
 		]);
 	}
 
@@ -112,7 +121,7 @@ class MemberController extends AbstractController {
 			$avatar = $form->get('avatar')->getData();
 
 			if (!empty($avatar)) {
-				$avatar_name = $user->getId() . '_' . uniqid() . '.' .$avatar->guessExtension();
+				$avatar_name = $user->getId() . '_' . uniqid() . '.' . $avatar->guessExtension();
 				$directory = $this->getParameter('avatars_directory');
 				$image_service->resizeImage($avatar, 200, 200);
 				$avatar->move($directory, $avatar_name);
@@ -233,9 +242,15 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/user/{id}', name: 'app_member_user', methods: ['GET'])]
-	public function user(int $id, UserRepository $user_repository,
-			SubmissionRepository $submission_repository, ChallengeDifficultyRepository $difficulty_repository,
-			CupRepository $cup_repository, RankingPositionRepository $position_repository): Response {
+	public function user(
+			int $id,
+			UserRepository $user_repository,
+			SubmissionRepository $submission_repository,
+			ChallengeDifficultyRepository $difficulty_repository,
+			CupRepository $cup_repository,
+			TrophyRepository $trophy_repository,
+			RankingPositionRepository $position_repository
+	): Response {
 
 		$user = $user_repository->find($id);
 
@@ -243,11 +258,15 @@ class MemberController extends AbstractController {
 			throw $this->createNotFoundException("L'utilisateur n'existe pas");
 		}
 
+		$users = $user_repository->findAll();
+
 		$user->countChallengesByDifficulty();
 		$user->countRankingPositions();
+		$user->countTrophies($users);
 
 		$difficulties = $difficulty_repository->findAll();
 		$cups = $cup_repository->findBy([], ['position' => 'DESC']);
+		$trophies = $trophy_repository->findBy([], ['position' => 'DESC']);
 
 		$last_submissions = $submission_repository->findBy(['valid' => true, 'user' => $user],
 				['validation_date' => 'DESC'], 3);
@@ -259,6 +278,7 @@ class MemberController extends AbstractController {
 				'last_ranking_positions' => $last_ranking_positions,
 				'difficulties'           => $difficulties,
 				'cups'                   => $cups,
+				'trophies'               => $trophies,
 		]);
 	}
 
