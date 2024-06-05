@@ -34,8 +34,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class MemberChallengeController extends AbstractController {
 
 	#[Route('/challenges', name: 'app_member_challenges', methods: ['GET'])]
-	public function challenges(Request $request, ChallengeRepository $challenge_repository,
-			PaginationService $pagination_service): Response {
+	public function challenges(
+			Request $request,
+			ChallengeRepository $challenge_repository,
+			PaginationService $pagination_service
+	): Response {
 
 		$elements_per_page = 12;
 
@@ -72,12 +75,19 @@ class MemberChallengeController extends AbstractController {
 
 
 	#[Route('/challenge/{id}', name: 'app_member_single_challenge', methods: ['GET', 'POST'])]
-	public function singleChallenge(Challenge $challenge, Request $request, SubmissionRepository $submission_repository,
-			SubmissionMessageRepository $message_repository, UserRepository $user_repository,
-			PeriodRepository $period_repository, SubmissionMessageImageRepository $image_repository,
-			ValidatorInterface $validator, ImageService $image_service,
+	public function singleChallenge(
+			Challenge $challenge,
+			Request $request,
+			SubmissionRepository $submission_repository,
+			SubmissionMessageRepository $message_repository,
+			UserRepository $user_repository,
+			PeriodRepository $period_repository,
+			SubmissionMessageImageRepository $image_repository,
+			ValidatorInterface $validator,
+			ImageService $image_service,
 			NotificationRepository $notification_repository,
-			AdminNotificationRepository $admin_notification_repository): Response {
+			AdminNotificationRepository $admin_notification_repository
+	): Response {
 
 		$new_message = new SubmissionMessage();
 		$form = $this->createForm(SubmissionMessageType::class, $new_message);
@@ -205,21 +215,17 @@ class MemberChallengeController extends AbstractController {
 	}
 
 
-	/**
-	 * @param bool $already_submitted
-	 * @param array $player_ids
-	 * @param Challenge $challenge
-	 * @param Period $period
-	 * @param User $current_user
-	 * @param UserRepository $user_repository
-	 * @param SubmissionRepository $submission_repository
-	 * @param NotificationRepository $notification_repository
-	 * @return Submission[]
-	 */
-	private function postSubmissions(bool $already_submitted, array $player_ids, Challenge $challenge,
-			Period $period, User $current_user, UserRepository $user_repository, SubmissionRepository $submission_repository,
+	private function postSubmissions(
+			bool $already_submitted,
+			array $player_ids,
+			Challenge $challenge,
+			Period $period,
+			User $current_user,
+			UserRepository $user_repository,
+			SubmissionRepository $submission_repository,
 			NotificationRepository $notification_repository,
-			AdminNotificationRepository $admin_notification_repository): array {
+			AdminNotificationRepository $admin_notification_repository
+	): array {
 
 		$submissions = [];
 
@@ -268,19 +274,15 @@ class MemberChallengeController extends AbstractController {
 	}
 
 
-	/**
-	 * @param SubmissionMessage $new_message
-	 * @param Submission[] $submissions
-	 * @param User $current_user
-	 * @param FormInterface $form
-	 * @param SubmissionMessageRepository $message_repository
-	 * @param ImageService $image_service
-	 * @param SubmissionMessageImageRepository $image_repository
-	 * @return void
-	 */
-	private function postSubmissionMessages(SubmissionMessage $new_message, array $submissions, User $current_user,
-			FormInterface $form, SubmissionMessageRepository $message_repository, ImageService $image_service,
-			SubmissionMessageImageRepository $image_repository): void {
+	private function postSubmissionMessages(
+			SubmissionMessage $new_message,
+			array $submissions,
+			User $current_user,
+			FormInterface $form,
+			SubmissionMessageRepository $message_repository,
+			ImageService $image_service,
+			SubmissionMessageImageRepository $image_repository
+	): void {
 
 		$image_names = [];
 		foreach ($submissions as $key => $submission) {
