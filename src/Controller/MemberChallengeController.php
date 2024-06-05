@@ -156,7 +156,11 @@ class MemberChallengeController extends AbstractController {
 				foreach ($checked_user->getSubmissions() as $submission) {
 					if ($submission->getChallenge() === $challenge && $submission->getPeriod() === $period) {
 						$errors[] = 'Le joueur ' . $checked_user->getUsername() .
-								' a déjà soumis ce défi à validation pour cette période';
+								' a déjà soumis ce défi à validation pour cette période.';
+					}
+					elseif ($submission->getChallenge() === $challenge) {
+						$errors[] = 'Le joueur ' . $checked_user->getUsername() .
+								'a déjà soumis ce défi à validation pour une autre prériode.';
 					}
 				}
 			}
