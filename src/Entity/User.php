@@ -474,6 +474,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 	 * @return void
 	 */
 	public function countTrophies(array $users): void {
+		$current_year = date('Y');
 		$counts = [1 => 0, 2 => 0, 3 => 0];
 		$sorted_users = [];
 		$years = [];
@@ -484,7 +485,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 			$sorted_users[] = $user;
 			foreach ($user->getRankingPositions() as $ranking_position) {
 				$year = $ranking_position->getRanking()->getPeriod()->getYear();
-				if ($year === 2022) {
+				if ($year === 2022 || $year >= $current_year) {
 					continue;
 				}
 				if (!in_array($year, $years)) {
