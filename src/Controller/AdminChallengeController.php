@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Challenge;
+use App\Form\ChallengeAddToYearType;
 use App\Form\ChallengeType;
 use App\Repository\ChallengeRepository;
+use App\Repository\PeriodRepository;
 use App\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +47,7 @@ class AdminChallengeController extends AbstractController {
 		}
 
 		// Pagination
-		$number_of_elements = $challenge_repository->count([]);
+		$number_of_elements = $challenge_repository->count();
 		$pages = $pagination_service->getPages($number_of_elements, $elements_per_page, $page);
 
 		return $this->render('admin_challenge/index.html.twig', [
@@ -105,4 +107,46 @@ class AdminChallengeController extends AbstractController {
 
 		return $this->redirectToRoute('app_admin_challenge_index', [], Response::HTTP_SEE_OTHER);
 	}
+
+
+	#[Route('/{id}/add_to_year', name: 'app_admin_challenge_add_to_year', methods: ['GET', 'POST'])]
+	public function addToYear(
+			Challenge $challenge,
+			Request $request,
+			ChallengeRepository $challenge_repository,
+			PeriodRepository $period_repository,
+	): Response {
+
+		$new_challenge = new Challenge();
+
+		$form = $this->createForm(ChallengeAddToYearType::class, $new_challenge);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$year = date('Y');
+			$current_year_period = $period_repository->findOneBy(['year' => $year, 'type' => 'year']);
+
+			$new_challenge->setName($challenge->getName());
+			$new_challenge->setDescription($challenge->getDescription());
+			$new_challenge->setGame($challenge->getGame());
+			$new_challenge->setNumberOfPlayers($challenge->getNumberOfPlayers());
+			$new_challenge->setEventChallenge($challenge);
+			$new_challenge->addPeriod($current_year_period);
+
+			$challenge_repository->save($new_challenge, true);
+
+			return $this->redirectToRoute(
+					'app_admin_challenge_edit',
+					['id' => $new_challenge->getId()],
+					Response::HTTP_SEE_OTHER
+			);
+		}
+
+		return $this->render('admin_challenge/add_to_year.html.twig', [
+				'challenge' => $challenge,
+				'form'      => $form->createView(),
+		]);
+	}
+
 }

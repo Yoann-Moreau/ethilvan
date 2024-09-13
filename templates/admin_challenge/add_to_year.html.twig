@@ -1,0 +1,41 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Ajouter le défi saisonnier à l'année{% endblock %}
+
+{% block body %}
+	<h1>Ajouter le défi saisonnier à l'année</h1>
+
+	<div class="col-50">
+		<div class="btns-container">
+			<div class="btns">
+				<a class="btn" href="{{ path('app_admin_challenge_edit', {id: challenge.id}) }}">
+					<i class="fa-solid fa-arrow-left"></i>
+					<span>Retour à l'édition du défi</span>
+				</a>
+			</div>
+		</div>
+
+		<h4>{{ challenge.name }}</h4>
+		<p>{{ challenge.description|nl2br }}</p>
+
+		<br>
+
+		{{ form_start(form) }}
+
+		<div class="input-container">
+			{{ form_label(form.difficulty) }}
+			{{ form_widget(form.difficulty) }}
+		</div>
+
+		<div class="btns right">
+			<button class="btn">
+				<i class="fa-solid fa-floppy-disk"></i>
+				<span>{{ button_label|default('Ajouter le défi à l\'année') }}</span>
+			</button>
+		</div>
+
+		{{ form_end(form) }}
+
+	</div>
+
+{% endblock %}

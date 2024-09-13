@@ -39,6 +39,12 @@ class Challenge {
 	#[ORM\OneToMany(mappedBy: 'challenge', targetEntity: Submission::class)]
 	private Collection $submissions;
 
+	#[ORM\OneToOne(inversedBy: 'year_challenge', targetEntity: self::class, cascade: ['persist'])]
+	private ?self $event_challenge = null;
+
+	#[ORM\OneToOne(mappedBy: 'event_challenge', targetEntity: self::class, cascade: ['persist'])]
+	private ?self $year_challenge = null;
+
 
 	public function __construct() {
 		$this->periods = new ArrayCollection();
@@ -155,6 +161,38 @@ class Challenge {
 				$submission->setChallenge(null);
 			}
 		}
+
+		return $this;
+	}
+
+
+
+	public function getEventChallenge(): ?self {
+		return $this->event_challenge;
+	}
+
+	public function setEventChallenge(?self $event_challenge): static {
+		$this->event_challenge = $event_challenge;
+
+		return $this;
+	}
+
+	public function getYearChallenge(): ?self {
+		return $this->year_challenge;
+	}
+
+	public function setYearChallenge(?self $year_challenge): static {
+		// unset the owning side of the relation if necessary
+		if ($year_challenge === null && $this->year_challenge !== null) {
+			$this->year_challenge->setEventChallenge(null);
+		}
+
+		// set the owning side of the relation if necessary
+		if ($year_challenge !== null && $year_challenge->getEventChallenge() !== $this) {
+			$year_challenge->setEventChallenge($this);
+		}
+
+		$this->year_challenge = $year_challenge;
 
 		return $this;
 	}
