@@ -136,7 +136,7 @@ class ChallengeRepository extends ServiceEntityRepository {
 
 		if ($difficulty !== null) {
 			$query_builder->andWhere('d = :d')
-				->setParameter('d', $difficulty);
+					->setParameter('d', $difficulty);
 		}
 
 		return $query_builder->getQuery()->getSingleScalarResult();

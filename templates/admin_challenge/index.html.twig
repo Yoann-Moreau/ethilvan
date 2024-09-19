@@ -11,6 +11,13 @@
 				<i class="fa-solid fa-plus"></i>
 				<span>Ajouter un défi</span>
 			</a>
+			<form method="get">
+				<div class="input-container search">
+					<label for="challenge-search"></label>
+					<input id="challenge-search" type="search" name="search" placeholder="Recherche" value="{{ search }}">
+					<button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+				</div>
+			</form>
 		</div>
 	</div>
 
@@ -19,17 +26,17 @@
 		<div class="head">
 			<div class="col col-25">Défi</div>
 			<div class="col col-20 sort {% if sort_by is same as 'game' %}active{% endif %}">
-				<a href="{{ path('app_admin_challenge_index', {'sort_by': 'game', 'page': 1}) }}">
+				<a href="{{ path('app_admin_challenge_index', {'sort_by': 'game', 'page': 1, 'search': search}) }}">
 					Jeu<i class="fa-solid fa-arrow-up-a-z"></i>
 				</a>
 			</div>
 			<div class="col col-15 sort {% if sort_by is same as 'difficulty' %}active{% endif %}">
-				<a href="{{ path('app_admin_challenge_index', {'sort_by': 'difficulty', 'page': 1}) }}">
+				<a href="{{ path('app_admin_challenge_index', {'sort_by': 'difficulty', 'page': 1, 'search': search}) }}">
 					Difficulté<i class="fa-solid fa-arrow-up-1-9"></i>
 				</a>
 			</div>
 			<div class="col col-15 sort {% if sort_by is same as 'period' %}active{% endif %}">
-				<a href="{{ path('app_admin_challenge_index', {'sort_by': 'period', 'page': 1}) }}">
+				<a href="{{ path('app_admin_challenge_index', {'sort_by': 'period', 'page': 1, 'search': search}) }}">
 					Période<i class="fa-solid fa-arrow-up-1-9"></i>
 				</a>
 			</div>
