@@ -207,6 +207,15 @@ class Challenge {
 			if ($submission->getChallenge() === $this && $submission->isValid()) {
 				return true;
 			}
+			// Check for valid submissions on linked event challenge
+			if ($this->getEventChallenge() !== null) {
+				$event_submissions = $this->getEventChallenge()->getSubmissions();
+				foreach ($event_submissions as $event_submission) {
+					if ($event_submission->isValid() && $event_submission->getUser() === $user) {
+						return true;
+					}
+				}
+			}
 		}
 
 		return false;

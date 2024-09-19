@@ -120,6 +120,18 @@ class MemberChallengeController extends AbstractController {
 				break;
 			}
 		}
+		// Check for valid submission on linked event challenge
+		if ($challenge->getEventChallenge() !== null) {
+			$event_submissions = $challenge->getEventChallenge()->getSubmissions();
+			foreach ($event_submissions as $event_submission) {
+				if ($event_submission->isValid() && $event_submission->getUser() === $current_user) {
+					$already_submitted = true;
+					$current_submission = $event_submission;
+					$is_valid = $event_submission->isValid();
+					break;
+				}
+			}
+		}
 
 		$messages = null;
 		if ($already_submitted) {
