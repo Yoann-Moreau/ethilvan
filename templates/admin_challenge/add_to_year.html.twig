@@ -17,7 +17,8 @@
 
 		<h4>{{ challenge.name }}</h4>
 		<p>{{ challenge.description|nl2br }}</p>
-
+		<br>
+		<p>Difficulté initiale : {{ challenge.difficulty.name }}</p>
 		<br>
 
 		{{ form_start(form) }}
