@@ -273,6 +273,14 @@ class Game {
 							$count++;
 						}
 					}
+					if ($challenge->getEventChallenge() !== null) {
+						$event_submissions = $challenge->getEventChallenge()->getSubmissions();
+						foreach ($event_submissions as $event_submission) {
+							if ($event_submission->getUser() === $user && $event_submission->isValid()) {
+								$count++;
+							}
+						}
+					}
 				}
 			}
 		}
