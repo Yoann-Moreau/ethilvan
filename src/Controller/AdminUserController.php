@@ -23,8 +23,12 @@ class AdminUserController extends AbstractController {
 
 
 	#[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
-	public function edit(Request $request, User $user, UserRepository $user_repository,
-			MailjetService $mailjet_service): Response {
+	public function edit(
+			Request $request,
+			User $user,
+			UserRepository $user_repository,
+			MailjetService $mailjet_service
+	): Response {
 
 		$old_user_roles = $user->getRoles();
 
@@ -55,8 +59,12 @@ class AdminUserController extends AbstractController {
 	}
 
 
-	#[Route('/{id}', name: 'app_admin_user_delete', methods: ['POST'])]
-	public function delete(Request $request, User $user, UserRepository $user_repository): Response {
+	#[Route('/delete/{id}', name: 'app_admin_user_delete', methods: ['POST'])]
+	public function delete(
+			Request $request,
+			User $user,
+			UserRepository $user_repository
+	): Response {
 
 		if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
 
@@ -69,8 +77,33 @@ class AdminUserController extends AbstractController {
 				]);
 			}
 
-			$user->setUsername('[Utilisateur supprimé]');
-			$user->setEmail('contact@ethilvan.fr');
+			$user_repository->remove($user, true);
+		}
+
+		return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
+	}
+
+
+	#[Route('/anonymize/{id}', name: 'app_admin_user_anonymize', methods: ['POST'])]
+	public function anonymize(
+			Request $request,
+			User $user,
+			UserRepository $user_repository
+	): Response {
+
+		if ($this->isCsrfTokenValid('anonymize' . $user->getId(), $request->request->get('_token'))) {
+
+			if (count($user->getRoles()) > 1) {
+				$this->addFlash('error', "Seuls les utilisateurs n'ayant que le rôle 'utilisateur' peuvent être 
+						anonymisés");
+
+				return $this->redirectToRoute('app_admin_user_edit', [
+						'id' => $user->getId(),
+				]);
+			}
+
+			$user->setUsername('deleted_user_' . $user->getId());
+			$user->setEmail('deleted_user_' . $user->getId() . '@ethilvan.fr');
 			$user->setPassword('');
 			$user->setAvatar(null);
 			$user->setFavoriteGames(null);

@@ -1,0 +1,8 @@
+<form method="post" action="{{ path('app_admin_user_anonymize', {'id': user.id}) }}"
+      onsubmit="return confirm('Êtes-vous sûr(e) de vouloir anonymiser cet utilisateur ?');">
+	<input type="hidden" name="_token" value="{{ csrf_token('anonymize' ~ user.id) }}">
+	<button class="btn delete">
+		<i class="fa-solid fa-user-secret"></i>
+		<span>Anonymiser</span>
+	</button>
+</form>
