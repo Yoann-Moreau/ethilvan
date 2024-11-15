@@ -40,6 +40,11 @@ class IdentificationController extends AbstractController {
 				$errors[] = 'Ce nom d\'utilisateur est déjà utilisé';
 			}
 
+			$lastname = $form->get('lastname')->getData();
+			if ($lastname !== null) {
+				$errors[] = 'Erreur de Captcha';
+			}
+
 			$email = $form->get('email')->getData();
 			$email_exists = (bool)$user_repository->findOneBy(['email' => $email]);
 			if ($email_exists) {
