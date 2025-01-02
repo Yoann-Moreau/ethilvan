@@ -39,16 +39,17 @@ class Challenge {
 	#[ORM\OneToMany(mappedBy: 'challenge', targetEntity: Submission::class)]
 	private Collection $submissions;
 
-	#[ORM\OneToOne(inversedBy: 'year_challenge', targetEntity: self::class, cascade: ['persist'])]
+	#[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'year_challenge')]
 	private ?self $event_challenge = null;
 
-	#[ORM\OneToOne(mappedBy: 'event_challenge', targetEntity: self::class, cascade: ['persist'])]
-	private ?self $year_challenge = null;
+	#[ORM\OneToMany(mappedBy: 'event_challenge', targetEntity: self::class)]
+	private Collection $year_challenges;
 
 
 	public function __construct() {
 		$this->periods = new ArrayCollection();
 		$this->submissions = new ArrayCollection();
+		$this->year_challenges = new ArrayCollection();
 	}
 
 
@@ -166,7 +167,6 @@ class Challenge {
 	}
 
 
-
 	public function getEventChallenge(): ?self {
 		return $this->event_challenge;
 	}
@@ -177,25 +177,33 @@ class Challenge {
 		return $this;
 	}
 
-	public function getYearChallenge(): ?self {
-		return $this->year_challenge;
+	/**
+	 * @return Collection<int, Challenge>
+	 */
+	public function getYearChallenges(): Collection {
+		return $this->year_challenges;
 	}
 
-	public function setYearChallenge(?self $year_challenge): static {
-		// unset the owning side of the relation if necessary
-		if ($year_challenge === null && $this->year_challenge !== null) {
-			$this->year_challenge->setEventChallenge(null);
-		}
-
-		// set the owning side of the relation if necessary
-		if ($year_challenge !== null && $year_challenge->getEventChallenge() !== $this) {
+	public function addYearChallenge(Challenge $year_challenge): self {
+		if (!$this->year_challenges->contains($year_challenge)) {
+			$this->year_challenges->add($year_challenge);
 			$year_challenge->setEventChallenge($this);
 		}
 
-		$this->year_challenge = $year_challenge;
+		return $this;
+	}
+
+	public function removeYearChallenge(Challenge $year_challenge): self {
+		if ($this->submissions->removeElement($year_challenge)) {
+			// set the owning side to null (unless already changed)
+			if ($year_challenge->getEventChallenge() === $this) {
+				$year_challenge->setEventChallenge(null);
+			}
+		}
 
 		return $this;
 	}
+
 
 	// ==========================================================================
 	// Other methods
