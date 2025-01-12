@@ -34,8 +34,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class MemberController extends AbstractController {
 
 	#[Route('/', name: 'app_member', methods: ['GET'])]
-	public function index(UserRepository $user_repository, SubmissionRepository $submission_repository,
-			PeriodRepository $period_repository): Response {
+	public function index(
+			UserRepository $user_repository,
+			SubmissionRepository $submission_repository,
+			PeriodRepository $period_repository,
+	): Response {
 
 		$current_user = $user_repository->find($this->getUser()->getId());
 
@@ -80,7 +83,8 @@ class MemberController extends AbstractController {
 			ChallengeDifficultyRepository $difficulty_repository,
 			CupRepository $cup_repository,
 			TrophyRepository $trophy_repository,
-			RankingPositionRepository $position_repository): Response {
+			RankingPositionRepository $position_repository,
+	): Response {
 
 		$user = $user_repository->find($this->getUser()->getId());
 		$users = $user_repository->findAll();
@@ -108,8 +112,12 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/profile/edit', name: 'app_member_profile_edit', methods: ['GET', 'POST'])]
-	public function profileEdit(Request $request, UserRepository $user_repository,
-			ValidatorInterface $validator, ImageService $image_service): Response {
+	public function profileEdit(
+			Request $request,
+			UserRepository $user_repository,
+			ValidatorInterface $validator,
+			ImageService $image_service,
+	): Response {
 
 		$form_errors = [];
 
@@ -146,8 +154,11 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/change_email', name: 'app_member_change_email', methods: ['GET', 'POST'])]
-	public function changeEmail(Request $request, UserRepository $user_repository,
-			ValidatorInterface $validator): Response {
+	public function changeEmail(
+			Request $request,
+			UserRepository $user_repository,
+			ValidatorInterface $validator,
+	): Response {
 
 		$form_errors = [];
 		$errors = [];
@@ -187,8 +198,12 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/change_password', name: 'app_member_change_password', methods: ['GET', 'POST'])]
-	public function changePassword(Request $request, UserRepository $user_repository,
-			ValidatorInterface $validator, UserPasswordHasherInterface $password_hasher): Response {
+	public function changePassword(
+			Request $request,
+			UserRepository $user_repository,
+			ValidatorInterface $validator,
+			UserPasswordHasherInterface $password_hasher,
+	): Response {
 
 		$form_errors = [];
 		$errors = [];
@@ -249,7 +264,7 @@ class MemberController extends AbstractController {
 			ChallengeDifficultyRepository $difficulty_repository,
 			CupRepository $cup_repository,
 			TrophyRepository $trophy_repository,
-			RankingPositionRepository $position_repository
+			RankingPositionRepository $position_repository,
 	): Response {
 
 		$user = $user_repository->find($id);
@@ -284,8 +299,13 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/user/{id}/challenges', name: 'app_member_user_challenges', methods: ['GET'])]
-	public function userChallenges(int $id, Request $request, UserRepository $user_repository,
-			SubmissionRepository $submission_repository, PaginationService $pagination_service) {
+	public function userChallenges(
+			int $id,
+			Request $request,
+			UserRepository $user_repository,
+			SubmissionRepository $submission_repository,
+			PaginationService $pagination_service,
+	): Response {
 
 		$user = $user_repository->find($id);
 
@@ -329,8 +349,13 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/user/{id}/challenges_by_game', name: 'app_member_user_challenges_by_game', methods: ['GET'])]
-	public function userChallengesByGame(int $id, UserRepository $user_repository, GameRepository $game_repository,
-			SubmissionRepository $submission_repository, ChallengeDifficultyRepository $difficulty_repository) {
+	public function userChallengesByGame(
+			int $id,
+			UserRepository $user_repository,
+			GameRepository $game_repository,
+			SubmissionRepository $submission_repository,
+			ChallengeDifficultyRepository $difficulty_repository,
+	): Response {
 
 		$user = $user_repository->find($id);
 
@@ -357,8 +382,12 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/notifications', name: 'app_member_notifications', methods: ['GET', 'POST'])]
-	public function notifications(Request $request, UserRepository $user_repository,
-			EntityManagerInterface $entity_manager, NotificationRepository $notification_repository): Response {
+	public function notifications(
+			Request $request,
+			UserRepository $user_repository,
+			EntityManagerInterface $entity_manager,
+			NotificationRepository $notification_repository,
+	): Response {
 
 		$current_user = $user_repository->find($this->getUser()->getId());
 		$notifications = $notification_repository->findBy(
@@ -397,11 +426,20 @@ class MemberController extends AbstractController {
 
 
 	#[Route('/real_time_final_ranking', name: 'app_member_real_time_final_ranking', methods: ['GET'])]
-	public function realTimeFinalRanking(PeriodRepository $period_repository, TextRepository $text_repository,
-			ToolsService $tools_service): Response {
+	public function realTimeFinalRanking(
+			Request $request,
+			PeriodRepository $period_repository,
+			TextRepository $text_repository,
+			ToolsService $tools_service,
+	): Response {
 
+		$year = (int)$request->query->get('year');
 		$current_year = (int)date("Y");
-		$periods = $period_repository->findBy(['year' => $current_year], ['start_date' => 'DESC']);
+
+		if ($year === 0) {
+			$year = $current_year;
+		}
+		$periods = $period_repository->findBy(['year' => $year], ['start_date' => 'DESC']);
 		$texts = $text_repository->findBy(['page' => 'real_time_final_ranking'], ['text_order' => 'ASC']);
 		$final_rankings = [];
 
