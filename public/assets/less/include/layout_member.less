@@ -789,3 +789,116 @@ body {
 		}
 	}
 }
+
+
+// ==============================================
+// Adventure
+// ==============================================
+
+.main-container.adventure {
+	padding: 0;
+
+	.images-container {
+		position: relative;
+		width: 1600px;
+		height: 900px;
+		margin: 0 auto;
+	}
+
+	.cockpit {
+
+	}
+
+	.ship-menu,
+	.map-menu,
+	.tablet-menu {
+		position: absolute;
+		cursor: pointer;
+		z-index: 1;
+
+		img {
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+		}
+
+		&:hover {
+
+			img {
+				opacity: 1;
+			}
+		}
+	}
+
+	.ship-menu {
+		top: 624px;
+		left: 464px;
+		width: 213px;
+	}
+
+	.map-menu {
+		top: 635px;
+		left: 694px;
+		width: 114px;
+	}
+
+	.tablet-menu {
+		top: 641px;
+		left: 828px;
+		width: 220px;
+	}
+
+	.tablet-container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		background-color: #00000070;
+		z-index: 2;
+
+		.tablet {
+			position: relative;
+
+			.text-container {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 330px;
+				height: 470px;
+				padding: 1.5em;
+				margin: 39px 33px;
+				overflow-y: auto;
+
+				h2 {
+					font-size: 2rem;
+				}
+
+				p {
+					font-size: 1.4rem;
+				}
+			}
+
+			.button-container {
+				position: absolute;
+				top: 517px;
+				left: 181px;
+				cursor: pointer;
+
+				&:hover {
+
+					img {
+						opacity: 1;
+					}
+				}
+
+				img {
+					opacity: 0;
+				}
+			}
+		}
+	}
+}

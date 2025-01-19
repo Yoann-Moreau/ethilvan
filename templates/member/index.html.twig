@@ -8,8 +8,10 @@
 	<div class="current-year">
 		{% if current_year is not null %}
 			<div class="banner-container">
-				<img class="banner" src="/uploads/period_banner/{{ current_year.banner }}"
-				     alt="Bannière de l'année {{ current_year.year }}">
+				<a href="{{ path('app_member_adventure') }}" title="Partons à l'aventure">
+					<img class="banner" src="/uploads/period_banner/{{ current_year.banner }}"
+					     alt="Bannière de l'année {{ current_year.year }}">
+				</a>
 			</div>
 		{% endif %}
 

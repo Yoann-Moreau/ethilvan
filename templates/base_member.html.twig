@@ -55,11 +55,16 @@
 				<i class="fa-solid fa-medal"></i>
 				<span>Défis</span>
 			</a>
+			<a href="{{ path('app_member_adventure') }}">
+				<i class="fa-brands fa-space-awesome"></i>
+				<span>Aventure</span>
+			</a>
 			<a class="notifications {{ new_notification }}" href="{{ path('app_member_notifications') }}">
 				<i class="fa-solid fa-bell"></i>
 				<span>Notifications</span>
 			</a>
 		</div>
+
 		<div class="subnav bottom">
 			{% if is_granted('ROLE_ADMIN') %}
 				<a href="{{ path('app_admin') }}">

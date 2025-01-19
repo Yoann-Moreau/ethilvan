@@ -1,0 +1,46 @@
+{% extends 'base_member.html.twig' %}
+
+{% block title %}Aventure{% endblock %}
+
+{% block javascripts %}
+	<script src="/assets/js/member_adventure.js" defer></script>
+{% endblock %}
+
+{% block main_class %}adventure{% endblock %}
+
+{% block body %}
+
+	<div class="images-container">
+		<div class="cockpit">
+			<img src="/assets/img/adventure/cockpit.jpg" alt="Cockpit du vaisseau">
+		</div>
+		<div class="ship-menu" title="Vaisseau">
+			<img src="/assets/img/adventure/ship-menu.png" alt="Menu du vaisseau">
+		</div>
+		<div class="map-menu" title="Carte">
+			<img src="/assets/img/adventure/map-menu.png" alt="Menu de la carte">
+		</div>
+		<div class="tablet-menu" title="Log">
+			<img src="/assets/img/adventure/tablet-menu.png" alt="Menu de la tablette">
+		</div>
+		<div class="tablet-container hidden">
+			<div class="tablet">
+				<img src="/assets/img/adventure/tablet.png" alt="Tablette">
+				<div class="text-container">
+					{% for text in texts %}
+						{% if text.title %}
+							<h2>{{ text.title }}</h2>
+						{% endif %}
+						{% if text.text %}
+							<p>{{ text.text|nl2br }}</p>
+						{% endif %}
+					{% endfor %}
+				</div>
+				<div class="button-container">
+					<img src="/assets/img/adventure/tablet-button.png" alt="Bouton quitter tablette" class="tablet-button">
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
