@@ -14,6 +14,7 @@
 		<div class="cockpit">
 			<img src="/assets/img/adventure/cockpit.jpg" alt="Cockpit du vaisseau">
 		</div>
+
 		<div class="ship-menu" title="Vaisseau">
 			<img src="/assets/img/adventure/ship-menu.png" alt="Menu du vaisseau">
 		</div>
@@ -23,22 +24,37 @@
 		<div class="tablet-menu" title="Log">
 			<img src="/assets/img/adventure/tablet-menu.png" alt="Menu de la tablette">
 		</div>
+
 		<div class="tablet-container hidden">
 			<div class="tablet">
 				<img src="/assets/img/adventure/tablet.png" alt="Tablette">
 				<div class="text-container">
 					{% for text in texts %}
-						{% if text.title %}
-							<h2>{{ text.title }}</h2>
-						{% endif %}
-						{% if text.text %}
-							<p>{{ text.text|nl2br }}</p>
-						{% endif %}
+						<div class="text">
+							{% if text.title %}
+								<h2>{{ text.title }}</h2>
+							{% endif %}
+							{% if text.text %}
+								<p>{{ text.text|nl2br }}</p>
+							{% endif %}
+						</div>
 					{% endfor %}
 				</div>
 				<div class="button-container">
 					<img src="/assets/img/adventure/tablet-button.png" alt="Bouton quitter tablette" class="tablet-button">
 				</div>
+			</div>
+		</div>
+
+		<div class="icons-container">
+			<div class="icon ship hidden">
+				<i class="fa-brands fa-space-awesome"></i>
+			</div>
+			<div class="icon map hidden">
+				<i class="fa-solid fa-map"></i>
+			</div>
+			<div class="icon tablet" title="Log">
+				<i class="fa-solid fa-tablet-button"></i>
 			</div>
 		</div>
 	</div>

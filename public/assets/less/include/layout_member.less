@@ -869,16 +869,24 @@ body {
 				left: 0;
 				width: 330px;
 				height: 470px;
-				padding: 1.5em;
+				padding: 1.2em;
 				margin: 39px 33px;
 				overflow-y: auto;
+				scrollbar-width: thin;
+
+				.text:not(:last-child) {
+					padding-bottom: 1em;
+					border-bottom: 1px solid @white;
+					margin-bottom: 1em;
+				}
 
 				h2 {
 					font-size: 2rem;
 				}
 
 				p {
-					font-size: 1.4rem;
+					font-size: 1.3rem;
+					text-align: justify;
 				}
 			}
 
@@ -898,6 +906,33 @@ body {
 				img {
 					opacity: 0;
 				}
+			}
+		}
+	}
+
+	.icons-container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: flex;
+		padding: 1em;
+
+		.icon {
+			display:flex;
+			justify-content: center;
+			align-items: center;
+			width: 2.2em;
+			height: 2.2em;
+			background-color: @light-grey;
+			color: @white;
+			font-size: 1.8rem;
+			border-radius: 50%;
+			margin-right: 1em;
+			cursor: pointer;
+
+			&:hover {
+				background-color: @light-green;
+				color: @dark-grey;
 			}
 		}
 	}

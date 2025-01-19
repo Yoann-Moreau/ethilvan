@@ -2,6 +2,7 @@
 // Variables
 // ============================================================================
 
+const openTabletButton = document.querySelector(".icon.tablet");
 const tabletMenu = document.querySelector('.tablet-menu');
 const tabletContainer = document.querySelector('.tablet-container');
 const closeTabletButton = document.querySelector('.tablet .button-container');
@@ -30,5 +31,6 @@ function hideTablet() {
 // Event listeners
 // ============================================================================
 
+openTabletButton.addEventListener('click', displayTablet);
 tabletMenu.addEventListener('click', displayTablet);
 closeTabletButton.addEventListener('click', hideTablet);
