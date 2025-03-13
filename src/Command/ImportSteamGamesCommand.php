@@ -4,41 +4,36 @@
 namespace App\Command;
 
 
-use App\Entity\SteamGame;
-use App\Repository\SteamGameRepository;
+use JsonMachine\Exception\InvalidArgumentException;
+use JsonMachine\Items;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
+#[AsCommand(name: 'app:steam_games:import')]
 class ImportSteamGamesCommand extends Command {
 
-	private SteamGameRepository $steam_game_repository;
 	private HttpClientInterface $client;
 
-	protected static $defaultName = 'app:steam_games:import';
 
-
-	public function __construct(SteamGameRepository $steam_game_repository, HttpClientInterface $client) {
-		$this->steam_game_repository = $steam_game_repository;
+	public function __construct(HttpClientInterface $client) {
 		$this->client = $client;
 
 		parent::__construct();
 	}
 
 
-	protected function configure() {
+	protected function configure(): void {
 		$this
-				->setDescription('Imports steam app ids and names into database')
-				->addOption('dry-run', null, InputOption::VALUE_NONE, 'Dry run');
+				->setDescription('Imports steam app ids and names into a JSON file.');
 	}
 
 
@@ -47,73 +42,46 @@ class ImportSteamGamesCommand extends Command {
 	 * @param OutputInterface $output
 	 * @return int
 	 * @throws ClientExceptionInterface
-	 * @throws DecodingExceptionInterface
 	 * @throws RedirectionExceptionInterface
 	 * @throws ServerExceptionInterface
 	 * @throws TransportExceptionInterface
+	 * @throws InvalidArgumentException
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$io = new SymfonyStyle($input, $output);
 
-		$url = "https://api.steampowered.com/ISteamApps/GetAppList/v0002/?format=json";
+		$url = "https://api.steampowered.com/ISteamApps/GetAppList/v2/?format=json";
 
 		$response = $this->client->request('GET', $url);
 		$status_code = $response->getStatusCode();
 
 		if ($status_code !== 200) {
 			$io->error('Error when fetching Steam data.');
-			return 0;
+			return Command::FAILURE;
 		}
 
-		$content = $response->toArray();
-		$apps = $content['applist']['apps'];
+		file_put_contents('data/steam_games.json', $response->getContent());
 
-		$max_id = 0;
-		$max_id_app = $this->steam_game_repository->findOneBy([], ['id' => 'DESC']);
-		if ($max_id_app !== null) {
-			$max_id = $max_id_app->getId();
+		$input_file = 'data/steam_games.json';
+		$output_file = 'data/steam_games_delimited.json';
+
+		// Open the output file for writing
+		$output_handle = fopen($output_file, 'w');
+		if (!$output_handle) {
+			$io->error('Failed to create output file.');
+			return Command::FAILURE;
 		}
 
-		if ($input->getOption('dry-run')) {
-			$io->note('Dry mode enabled');
-
-			$count = 0;
-
-			foreach ($apps as $key => $app) {
-				if ($key < $max_id) {
-					continue;
-				}
-
-				$stored_app = $this->steam_game_repository->findOneBy(['app_id' => $app['appid']]);
-				if (empty($stored_app)) {
-					$count++;
-				}
-			}
-		}
-		else {
-			$count = 0;
-
-			foreach ($apps as $key => $app) {
-				if ($key < $max_id) {
-					continue;
-				}
-
-				$stored_app = $this->steam_game_repository->findOneBy(['app_id' => $app['appid']]);
-
-				if (empty($stored_app)) {
-					$new_app = new SteamGame();
-					$new_app->setAppId($app['appid']);
-					$new_app->setName($app['name']);
-
-					$this->steam_game_repository->save($new_app, true);
-
-					$count++;
-				}
-			}
+		// Process the JSON file incrementally
+		$json_stream = Items::fromFile($input_file, ['pointer' => '/applist/apps']);
+		foreach ($json_stream as $game) {
+			fwrite($output_handle, json_encode($game, JSON_UNESCAPED_UNICODE) . PHP_EOL);
 		}
 
-		$io->success(sprintf('Imported "%d" new games.', $count));
+		fclose($output_handle);
 
-		return 0;
+		$io->success('Imported Steam games list as a json file');
+
+		return Command::SUCCESS;
 	}
 }
