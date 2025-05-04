@@ -31,12 +31,8 @@
 				<div class="text-container">
 					{% for text in texts %}
 						<div class="text">
-							{% if text.title %}
-								<h2>{{ text.title }}</h2>
-							{% endif %}
-							{% if text.text %}
-								<p>{{ text.text|nl2br }}</p>
-							{% endif %}
+							<h2 class="text-title closed">{{ text.title }}</h2>
+							<p class="text-text hidden">{{ text.text|nl2br }}</p>
 						</div>
 					{% endfor %}
 				</div>

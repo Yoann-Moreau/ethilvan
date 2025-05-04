@@ -881,11 +881,28 @@ body {
 					margin-bottom: 1em;
 				}
 
-				h2 {
+				.text-title {
 					font-size: 2rem;
+					cursor: pointer;
+
+					&::after {
+						content: '\f0d7';
+						font-family: 'Font Awesome 6 Free';
+						font-weight: 900;
+						margin-left: 0.5em;
+						color: @tc-title;
+					}
+
+					&:hover {
+						color: @tc-main;
+					}
+
+					&.closed::after {
+						content: '\f0da';
+					}
 				}
 
-				p {
+				.text-text {
 					font-size: 1.3rem;
 					text-align: justify;
 				}
