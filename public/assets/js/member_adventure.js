@@ -32,8 +32,8 @@ const menus = document.querySelector('.menus');
 
 function displayShip() {
 	hideTablet();
-	hideMenus();
 	hideMap();
+	hideMenus();
 	shipContainer.classList.remove('hidden');
 }
 
@@ -52,8 +52,8 @@ function toggleShip() {
 
 function displayMap() {
 	hideTablet();
-	hideMenus();
 	hideShip();
+	hideMenus();
 	mapImage.classList.remove('hidden');
 }
 
@@ -67,11 +67,13 @@ function hideMap() {
 function displayTablet() {
 	hideMap();
 	hideShip();
+	hideMenus();
 	tabletContainer.classList.remove('hidden');
 }
 
 
 function hideTablet() {
+	displayMenus();
 	tabletContainer.classList.add('hidden');
 }
 
@@ -95,7 +97,7 @@ function displayMenus() {
 
 
 // ============================================================================
-// Code to execute
+// Code to execute on load
 // ============================================================================
 
 
