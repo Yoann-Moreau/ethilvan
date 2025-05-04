@@ -803,10 +803,52 @@ body {
 		width: 1600px;
 		height: 900px;
 		margin: 0 auto;
-	}
 
-	.cockpit {
+		.cockpit {
 
+		}
+
+		.map {
+			position: absolute;
+			top: 0;
+
+			.map-text {
+				position: absolute;
+				top: 28rem;
+				left: 2rem;
+				width: 17%;
+				height: 60rem;
+				overflow-y: auto;
+				scrollbar-width: thin;
+
+				h2 {
+					font-size: 2.2rem;
+				}
+
+				p {
+					font-size: 1.5rem;
+					line-height: 1.3;
+				}
+			}
+
+			.close-button {
+				position: absolute;
+				top: 1em;
+				right: 1em;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 2em;
+				height: 2em;
+				background-color: @bg-button;
+				border-radius: 50%;
+				cursor: pointer;
+
+				&:hover {
+					background-color: @light-grey;
+				}
+			}
+		}
 	}
 
 	.ship-menu,
@@ -940,7 +982,7 @@ body {
 		padding: 1em;
 
 		.icon {
-			display:flex;
+			display: flex;
 			justify-content: center;
 			align-items: center;
 			width: 2.2em;
