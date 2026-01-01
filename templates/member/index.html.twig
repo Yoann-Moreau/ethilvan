@@ -56,7 +56,11 @@
 					</ul>
 				</div>
 
-				<a class="btn" href="{{ path('app_member_valid_submissions', {'id': current_year.id}) }}">
+				{% set path = '' %}
+				{% if current_year %}
+					{% set path = path('app_member_valid_submissions', {'id': current_year.id}) %}
+				{% endif %}
+				<a class="btn" href="{{ path }}">
 					Voir tous les défis validés
 				</a>
 			</div>
@@ -68,20 +72,23 @@
 						{% set position = 1 %}
 						{% set player = 1 %}
 						{% set previous_points = 0 %}
-						{% for row in current_year.rankings|sort((a, b) => b.points <=> a.points) %}
-							{% if previous_points != row.points %}
-								{% set position = player %}
-							{% endif %}
-							<li>
-								<div class="position">{{ position }}</div>
-								<div class="player">
-									<a href="{{ path('app_member_user', {'id': row.player.id}) }}">{{ row.player.username }}</a>
-								</div>
-								<div class="points">{{ row.points }} pts</div>
-							</li>
-							{% set player = player + 1 %}
-							{% set previous_points = row.points %}
-						{% endfor %}
+
+						{% if current_year %}
+							{% for row in current_year.rankings|sort((a, b) => b.points <=> a.points) %}
+								{% if previous_points != row.points %}
+									{% set position = player %}
+								{% endif %}
+								<li>
+									<div class="position">{{ position }}</div>
+									<div class="player">
+										<a href="{{ path('app_member_user', {'id': row.player.id}) }}">{{ row.player.username }}</a>
+									</div>
+									<div class="points">{{ row.points }} pts</div>
+								</li>
+								{% set player = player + 1 %}
+								{% set previous_points = row.points %}
+							{% endfor %}
+						{% endif %}
 					</ul>
 				</div>
 
