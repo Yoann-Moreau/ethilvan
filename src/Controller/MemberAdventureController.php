@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Repository\TextRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/member/adventure')]
 class MemberAdventureController extends AbstractController {
